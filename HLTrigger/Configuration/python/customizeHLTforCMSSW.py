@@ -211,6 +211,12 @@ def customiseForOffline(process):
     return process
 
 
+def customiseFor2018Input(process):
+    """Customise the HLT to run on Run 2 data/MC"""
+    process = customisePixelGainForRun2Input(process)
+    process = synchronizeHCALHLTofflineRun3on2018data(process)
+
+
 # CMSSW version specific customizations
 def customizeHLTforCMSSW(process, menuType="GRun"):
 
