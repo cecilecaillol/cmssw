@@ -53,8 +53,16 @@ private:
   int highPtTracks_;  // saturate or truncate
   bool displaced_;    //prompt/displaced tracks
 
+<<<<<<< HEAD
   const edm::EDGetTokenT<TkPrimaryVertexCollection> pvToken_;
   const edm::EDGetTokenT<std::vector<TTTrack<Ref_Phase2TrackerDigi_> > > trackToken_;
+=======
+  std::string L1MetCollectionName;
+  std::string L1ExtendedMetCollectionName;
+
+  const edm::EDGetTokenT< TkPrimaryVertexCollection > pvToken_;
+  const edm::EDGetTokenT<std::vector<TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken_;
+>>>>>>> 3f75f9ffbbc... Update for code formatting
 };
 
 //constructor//
@@ -74,10 +82,21 @@ L1TrackerEtMissProducer::L1TrackerEtMissProducer(const edm::ParameterSet& iConfi
   highPtTracks_ = iConfig.getParameter<int>("highPtTracks");
   displaced_ = iConfig.getParameter<bool>("displaced");
 
+<<<<<<< HEAD
   if (displaced_)
     produces<TkEtMissCollection>("L1TrackerEtMissExtended");
   else
     produces<TkEtMissCollection>("L1TrackerEtMiss");
+=======
+  L1MetCollectionName = (std::string)iConfig.getParameter<std::string>("L1MetCollectionName");
+  
+
+  if (displaced_) {
+    L1ExtendedMetCollectionName = (std::string)iConfig.getParameter<std::string>("L1MetExtendedCollectionName");
+    produces<TkEtMissCollection>(L1ExtendedMetCollectionName);
+  }
+  else produces<TkEtMissCollection>(L1MetCollectionName);
+>>>>>>> 3f75f9ffbbc... Update for code formatting
 }
 
 L1TrackerEtMissProducer::~L1TrackerEtMissProducer() {}
@@ -184,18 +203,12 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
         deltaZ_ = 2.2;
     }
 
-<<<<<<< HEAD
-    if (fabs(z0 - zVTX) <= deltaZ_) {
-      sumPx += pt * cos(phi);
-      sumPy += pt * sin(phi);
-=======
     if ( fabs(z0 - zVTX) <= deltaZ_) {
       
       numassoctracks++;
 
       sumPx += pt*cos(phi);
       sumPy += pt*sin(phi);
->>>>>>> 4ccd147ed65... Debug statements and write LUTs
       etTot += pt;
     } else {  // PU sums
       sumPx_PU += pt * cos(phi);
@@ -204,58 +217,20 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     }
   }  // end loop over tracks
 
-<<<<<<< HEAD
-  float et = sqrt(sumPx * sumPx + sumPy * sumPy);
-  double etmiss_PU = sqrt(sumPx_PU * sumPx_PU + sumPy_PU * sumPy_PU);
-
-  math::XYZTLorentzVector missingEt(-sumPx, -sumPy, 0, et);
-  int ibx = 0;
-  METCollection->push_back(TkEtMiss(missingEt, TkEtMiss::kMET, etTot, etmiss_PU, etTot_PU, ibx));
-=======
   float et = sqrt(sumPx*sumPx + sumPy*sumPy);
   float etphi = atan2(sumPy,sumPx);
   double etmiss_PU = sqrt(sumPx_PU*sumPx_PU + sumPy_PU*sumPy_PU);
 
   math::XYZTLorentzVector missingEt( -sumPx, -sumPy, 0, et);
 
-  etphi = etphi + M_PI;
-  /*
-  std::cout << "====Global Pt====" << std::endl;
-  std::cout << sumPx << "|" << sumPy << std::endl;
-  std::cout << "====MET===" << std::endl;
-  std::cout << et << "|" << etphi << std::endl;
-
-  std::cout << "numTracks: " << numtracks << std::endl;
-  std::cout << "quality Tracks: " << numqualitytracks << std::endl;
-  std::cout << "assoc_tracks: " << numassoctracks << std::endl;
-  std::cout << "========================================================" << std::endl;
-  */
-
-  /*
-  if (etphi < 0)
-    etphi = etphi+2*M_PI;
-  else if ((sumPx < 0) && (sumPy > 0))
-    etphi = 2*M_PI - etphi;
-  else
-    etphi = etphi;
-  */
-
-  
-
   int ibx = 0;
-  METCollection->push_back( TkEtMiss( missingEt,
-    TkEtMiss::hwMET,
-    et,
-    etphi,
-    (unsigned int)numassoctracks,
-    ibx )
-  );
->>>>>>> 4ccd147ed65... Debug statements and write LUTs
+  METCollection->push_back(
+      TkEtMiss(missingEt, TkEtMiss::kMET, etphi, numassoctracks, ibx));
 
   if (displaced_)
-    iEvent.put(std::move(METCollection), "L1TrackerEtMissExtended");
+    iEvent.put(std::move(METCollection), L1ExtendedMetCollectionName);
   else
-    iEvent.put(std::move(METCollection), "L1TrackerEtMiss");
+    iEvent.put(std::move(METCollection), L1MetCollectionName);
 }  // end producer
 
 void L1TrackerEtMissProducer::beginJob() {}
