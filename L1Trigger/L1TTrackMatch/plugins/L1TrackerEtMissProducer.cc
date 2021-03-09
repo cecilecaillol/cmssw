@@ -36,9 +36,9 @@ public:
   ~L1TrackerEtMissProducer() override;
 
 private:
-  void beginJob() override;
+  virtual void beginJob();
   void produce(edm::Event&, const edm::EventSetup&) override;
-  void endJob() override;
+  virtual void endJob();
 
   // ----------member data ---------------------------
   float maxZ0_;   // in cm
@@ -53,16 +53,12 @@ private:
   int highPtTracks_;  // saturate or truncate
   bool displaced_;    //prompt/displaced tracks
 
-<<<<<<< HEAD
-  const edm::EDGetTokenT<TkPrimaryVertexCollection> pvToken_;
-  const edm::EDGetTokenT<std::vector<TTTrack<Ref_Phase2TrackerDigi_> > > trackToken_;
-=======
   std::string L1MetCollectionName;
   std::string L1ExtendedMetCollectionName;
 
   const edm::EDGetTokenT< TkPrimaryVertexCollection > pvToken_;
   const edm::EDGetTokenT<std::vector<TTTrack< Ref_Phase2TrackerDigi_ > > > trackToken_;
->>>>>>> 3f75f9ffbbc... Update for code formatting
+
 };
 
 //constructor//
@@ -82,21 +78,14 @@ L1TrackerEtMissProducer::L1TrackerEtMissProducer(const edm::ParameterSet& iConfi
   highPtTracks_ = iConfig.getParameter<int>("highPtTracks");
   displaced_ = iConfig.getParameter<bool>("displaced");
 
-<<<<<<< HEAD
-  if (displaced_)
-    produces<TkEtMissCollection>("L1TrackerEtMissExtended");
-  else
-    produces<TkEtMissCollection>("L1TrackerEtMiss");
-=======
   L1MetCollectionName = (std::string)iConfig.getParameter<std::string>("L1MetCollectionName");
-  
 
   if (displaced_) {
     L1ExtendedMetCollectionName = (std::string)iConfig.getParameter<std::string>("L1MetExtendedCollectionName");
     produces<TkEtMissCollection>(L1ExtendedMetCollectionName);
   }
-  else produces<TkEtMissCollection>(L1MetCollectionName);
->>>>>>> 3f75f9ffbbc... Update for code formatting
+  } else
+    produces<TkEtMissCollection>(L1MetCollectionName);
 }
 
 L1TrackerEtMissProducer::~L1TrackerEtMissProducer() {}
@@ -141,7 +130,7 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
   int numassoctracks = 0;
 
   for (trackIter = L1TTTrackHandle->begin(); trackIter != L1TTTrackHandle->end(); ++trackIter) {
-    numtracks ++;
+    numtracks++;
     float pt = trackIter->momentum().perp();
     float phi = trackIter->momentum().phi();
     float eta = trackIter->momentum().eta();
@@ -203,12 +192,11 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
         deltaZ_ = 2.2;
     }
 
-    if ( fabs(z0 - zVTX) <= deltaZ_) {
-      
+    if (fabs(z0 - zVTX) <= deltaZ_) {
       numassoctracks++;
 
-      sumPx += pt*cos(phi);
-      sumPy += pt*sin(phi);
+      sumPx += pt * cos(phi);
+      sumPy += pt * sin(phi);
       etTot += pt;
     } else {  // PU sums
       sumPx_PU += pt * cos(phi);
@@ -217,11 +205,11 @@ void L1TrackerEtMissProducer::produce(edm::Event& iEvent, const edm::EventSetup&
     }
   }  // end loop over tracks
 
-  float et = sqrt(sumPx*sumPx + sumPy*sumPy);
-  float etphi = atan2(sumPy,sumPx);
-  double etmiss_PU = sqrt(sumPx_PU*sumPx_PU + sumPy_PU*sumPy_PU);
+  float et = sqrt(sumPx * sumPx + sumPy * sumPy);
+  double etphi = atan2(sumPy, sumPx);
+  double etmiss_PU = sqrt(sumPx_PU * sumPx_PU + sumPy_PU * sumPy_PU);
 
-  math::XYZTLorentzVector missingEt( -sumPx, -sumPy, 0, et);
+  math::XYZTLorentzVector missingEt(-sumPx, -sumPy, 0, et);
 
   int ibx = 0;
   METCollection->push_back(
