@@ -125,10 +125,14 @@ namespace l1tVertexFinder {
                                        const std::vector<unsigned int>& counts);
     /// DBSCAN algorithm
     void DBSCAN();
-    /// TDR histogramming algorithmn
-    void FastHistoLooseAssociation();
     /// Histogramming algorithm
     void FastHisto(const TrackerTopology* tTopo);
+    /// Histogramming algorithm (emulation)
+    void FastHistoEmulation();
+    /// TDR histogramming algorithmn
+    void FastHistoLooseAssociation();
+    /// Gap Clustering Algorithm
+    void GapClustering();
     /// High pT Vertex Algorithm
     void HPV();
     /// Kmeans Algorithm
