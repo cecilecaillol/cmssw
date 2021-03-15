@@ -112,6 +112,41 @@ namespace l1tVertexFinder {
       }
     }
 
+    /// Vertexing algorithms
+
+    /// Adaptive Vertex Reconstruction algorithm
+    void AdaptiveVertexReconstruction();
+    /// Simple Merge Algorithm
+    void AgglomerativeHierarchicalClustering();
+    /// Find distance between centres of two clusters
+    float CentralDistance(RecoVertex<> cluster0, RecoVertex<> cluster1);
+    /// Compute the vertex parameters
+    void computeAndSetVertexParameters(RecoVertex<>& vertex,
+                                       const std::vector<float>& bin_centers,
+                                       const std::vector<unsigned int>& counts);
+    /// DBSCAN algorithm
+    void DBSCAN();
+    /// Histogramming algorithm
+    void FastHisto(const TrackerTopology* tTopo);
+    /// Histogramming algorithm (emulation)
+    void FastHistoEmulation();
+    /// TDR histogramming algorithmn
+    void FastHistoLooseAssociation();
+    /// Gap Clustering Algorithm
+    void GapClustering();
+    /// High pT Vertex Algorithm
+    void HPV();
+    /// Kmeans Algorithm
+    void Kmeans();
+    /// Find maximum distance in two clusters of tracks
+    float MaxDistance(RecoVertex<> cluster0, RecoVertex<> cluster1);
+    /// Find minimum distance in two clusters of tracks
+    float MinDistance(RecoVertex<> cluster0, RecoVertex<> cluster1);
+    /// Find average distance in two clusters of tracks
+    float MeanDistance(RecoVertex<> cluster0, RecoVertex<> cluster1);
+    /// Principal Vertex Reconstructor algorithm
+    void PVR();
+
   private:
     const AlgoSettings* settings_;
     std::vector<RecoVertex<>> vertices_;

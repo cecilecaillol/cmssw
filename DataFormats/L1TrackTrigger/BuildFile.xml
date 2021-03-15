@@ -5,8 +5,12 @@
 <use name="DataFormats/Phase2TrackerDigi"/>
 <use name="DataFormats/SiStripDetId"/>
 <use name="DataFormats/TrackerCommon"/>
+<<<<<<< HEAD
 <use name="FWCore/MessageLogger"/>
 <use name="FWCore/Utilities"/>
+=======
+<use name="hls"/>
+>>>>>>> 8fbff6777ec... Update the TTTrack_TrackWord, create an emulator for the q/R->pt and tanl(lambda)->eta conversions. Also start the emulation for the VertexFinder package. Make sure that the TTTrack_TrackWord DataFormat is backwards compatible with the previous version of the TTTrack_TrackWord.
 <export>
   <lib name="1"/>
 </export>
