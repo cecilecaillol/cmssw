@@ -4,7 +4,9 @@
 // packing scheme given below.
 //
 // author: Mike Hildreth
-// date:   April 9, 2019
+// modified by: Alexx Perloff
+// created:     April 9, 2019
+// modified:    March 9, 2021
 //
 ///////
 
@@ -14,82 +16,48 @@
 #include <string>
 
 //Constructor - turn track parameters into 96-bit word
-
-TTTrack_TrackWord::TTTrack_TrackWord(const GlobalVector& Momentum,
+TTTrack_TrackWord::TTTrack_TrackWord(unsigned int valid,
+                                     const GlobalVector& momentum,
                                      const GlobalPoint& POCA,
-                                     double theRinv,
-                                     double theChi2XY,
-                                     double theChi2Z,
-                                     double theBendChi2,
-                                     unsigned int theHitPattern,
-                                     unsigned int iSpare) {
-  setTrackWord(Momentum, POCA, theRinv, theChi2XY, theChi2Z, theBendChi2, theHitPattern, iSpare);
+                                     double rInv,
+                                     double chi2RPhi,  // would be xy chisq if chi2Z is non-zero
+                                     double chi2RZ,
+                                     double bendChi2,
+                                     unsigned int hitPattern,
+                                     unsigned int mvaQuality,
+                                     unsigned int mvaOther) {
+  setTrackWord(valid, momentum, POCA, rInv, chi2RPhi, chi2RZ, bendChi2, hitPattern, mvaQuality, mvaOther);
 }
 
-TTTrack_TrackWord::TTTrack_TrackWord(unsigned int theRinv,
+TTTrack_TrackWord::TTTrack_TrackWord(unsigned int valid,
+                                     unsigned int rInv,
                                      unsigned int phi0,
                                      unsigned int tanl,
                                      unsigned int z0,
                                      unsigned int d0,
-                                     unsigned int theChi2XY,
-                                     unsigned int theChi2Z,
-                                     unsigned int theBendChi2,
-                                     unsigned int theHitPattern,
-                                     unsigned int iSpare)
-    : iRinv(theRinv),
-      iphi(phi0),
-      itanl(tanl),
-      iz0(z0),
-      id0(d0),
-      ichi2XY(theChi2XY),      //revert to other packing?  Or will be unpacked wrong
-      ichi2Z(theChi2Z),        //revert to other packing?  Or will be unpacked wrong
-      iBendChi2(theBendChi2),  // revert to ogher packing? Or will be unpacked wrong
-      ispare(iSpare),
-      iHitPattern(theHitPattern) {
-  initialize();
+                                     unsigned int chi2RPhi,  // would be total chisq if chi2Z is zero
+                                     unsigned int chi2RZ,
+                                     unsigned int bendChi2,
+                                     unsigned int hitPattern,
+                                     unsigned int mvaQuality,
+                                     unsigned int mvaOther) {
+  setTrackWord(valid, rInv, phi0, tanl, z0, d0, chi2RPhi, chi2RZ, bendChi2, hitPattern, mvaQuality, mvaOther);
 }
 
-// one for already-digitized values:
-
-void TTTrack_TrackWord::setTrackWord(unsigned int theRinv,
-                                     unsigned int phi0,
-                                     unsigned int tanl,
-                                     unsigned int z0,
-                                     unsigned int d0,
-                                     unsigned int theChi2XY,
-                                     unsigned int theChi2Z,
-                                     unsigned int theBendChi2,
-                                     unsigned int theHitPattern,
-                                     unsigned int iSpare) {
-  iRinv = theRinv;
-  iphi = phi0;
-  itanl = tanl;
-  iz0 = z0;
-  id0 = d0;
-  ichi2XY = theChi2XY;      //revert to other packing?  Or will be unpacked wrong
-  ichi2Z = theChi2Z;        //revert to other packing?  Or will be unpacked wrong
-  iBendChi2 = theBendChi2;  // revert to ogher packing? Or will be unpacked wrong
-  ispare = iSpare;
-  iHitPattern = theHitPattern;
-
-  initialize();
-}
-
-// one for floats:
-void TTTrack_TrackWord::setTrackWord(const GlobalVector& Momentum,
+// A setter for the floating point values
+void TTTrack_TrackWord::setTrackWord(unsigned int valid,
+                                     const GlobalVector& momentum,
                                      const GlobalPoint& POCA,
-                                     double theRinv,
-                                     double theChi2XY,
-                                     double theChi2Z,
-                                     double theBendChi2,
-                                     unsigned int theHitPattern,
-                                     unsigned int iSpare) {
-  initialize();
-
+                                     double rInv,
+                                     double chi2RPhi,  // would be total chisq if chi2Z is zero
+                                     double chi2RZ,
+                                     double bendChi2,
+                                     unsigned int hitPattern,
+                                     unsigned int mvaQuality,
+                                     unsigned int mvaOther) {
   // first, derive quantities to be packed
-
-  float rPhi = Momentum.phi();  // this needs to be phi relative to center of sector ****
-  float rTanl = Momentum.z() / Momentum.perp();
+  float rPhi = momentum.phi();  // this needs to be phi relative to center of sector ****
+  float rTanl = momentum.z() / momentum.perp();
   float rZ0 = POCA.z();
   float rD0 = POCA.perp();
 
@@ -337,86 +305,36 @@ float TTTrack_TrackWord::unpack_Signed(unsigned int bits, unsigned int nBits, fl
     isign = -1;
     bits = (1 << (nBits + 1)) - bits;  // if negative, flip everything for two's complement encoding
   }
-  float unpacked = (float(bits & maxVal) + 0.5) * lsb;
-  unpacked = isign * unpacked;
-  return unpacked;
+  offset += TrackBitWidths::kTanlSize;
+  for (unsigned int b = offset; b < (offset + TrackBitWidths::kZ0Size); b++) {
+    trackWord_.set(b, z0[b - offset]);
+  }
+  offset += TrackBitWidths::kZ0Size;
+  for (unsigned int b = offset; b < (offset + TrackBitWidths::kD0Size); b++) {
+    trackWord_.set(b, d0[b - offset]);
+  }
+  offset += TrackBitWidths::kD0Size;
+  for (unsigned int b = offset; b < (offset + TrackBitWidths::kChi2RPhiSize); b++) {
+    trackWord_.set(b, chi2RPhi[b - offset]);
+  }
+  offset += TrackBitWidths::kChi2RPhiSize;
+  for (unsigned int b = offset; b < (offset + TrackBitWidths::kChi2RZSize); b++) {
+    trackWord_.set(b, chi2RZ[b - offset]);
+  }
+  offset += TrackBitWidths::kChi2RZSize;
+  for (unsigned int b = offset; b < (offset + TrackBitWidths::kBendChi2Size); b++) {
+    trackWord_.set(b, bendChi2[b - offset]);
+  }
+  offset += TrackBitWidths::kBendChi2Size;
+  for (unsigned int b = offset; b < (offset + TrackBitWidths::kHitPatternSize); b++) {
+    trackWord_.set(b, hitPattern[b - offset]);
+  }
+  offset += TrackBitWidths::kHitPatternSize;
+  for (unsigned int b = offset; b < (offset + TrackBitWidths::kMVAQualitySize); b++) {
+    trackWord_.set(b, mvaQuality[b - offset]);
+  }
+  offset += TrackBitWidths::kMVAQualitySize;
+  for (unsigned int b = offset; b < (offset + TrackBitWidths::kMVAOtherSize); b++) {
+    trackWord_.set(b, mvaOther[b - offset]);
+  }
 }
-
-void TTTrack_TrackWord::initialize() {
-  /* bits for packing, constants defined in TTTrack_TrackWord.h :
-
-  signed quantities (one bit for sign):
-  
-  q/R = 14+1
-  phi = 11+1  (relative to sector center)
-  tanl = 15+1
-  z0  = 11+1
-  d0  = 12+1
-
-  unsigned:
-
-  chi2     = 4
-  BendChi2 = 3
-  hitPattern  = 7
-  Spare    = 10
-  chi2Z    = 4
-
-  */
-
-  // define bits, 1<<N = 2^N
-
-  unsigned int CurvBins = (1 << NCurvBits);
-  unsigned int phiBins = (1 << NPhiBits);
-  unsigned int tanlBins = (1 << NTanlBits);
-  unsigned int z0Bins = (1 << NZ0Bits);
-  unsigned int d0Bins = (1 << ND0Bits);
-
-  Nchi2 = (1 << NChi2Bits);
-  NBchi2 = (1 << NBChi2Bits);
-
-  valLSBCurv = maxCurv / float(CurvBins);
-  valLSBPhi = maxPhi / float(phiBins);
-  valLSBTanl = maxTanl / float(tanlBins);
-  valLSBZ0 = maxZ0 / float(z0Bins);
-  valLSBD0 = maxD0 / float(d0Bins);
-
-  chi2Bins[0] = 0.25;
-  chi2Bins[1] = 0.5;
-  chi2Bins[2] = 1.0;
-  chi2Bins[3] = 2.;
-  chi2Bins[4] = 3.;
-  chi2Bins[5] = 5.;
-  chi2Bins[6] = 7.;
-  chi2Bins[7] = 10.;
-  chi2Bins[8] = 20.;
-  chi2Bins[9] = 40.;
-  chi2Bins[10] = 100.;
-  chi2Bins[11] = 200.;
-  chi2Bins[12] = 500.;
-  chi2Bins[13] = 1000.;
-  chi2Bins[14] = 3000.;
-
-  chi2ZBins[0] = 0.25;
-  chi2ZBins[1] = 0.5;
-  chi2ZBins[2] = 1.0;
-  chi2ZBins[3] = 2.;
-  chi2ZBins[4] = 3.;
-  chi2ZBins[5] = 5.;
-  chi2ZBins[6] = 7.;
-  chi2ZBins[7] = 10.;
-  chi2ZBins[8] = 20.;
-  chi2ZBins[9] = 40.;
-  chi2ZBins[10] = 100.;
-  chi2ZBins[11] = 200.;
-  chi2ZBins[12] = 500.;
-  chi2ZBins[13] = 1000.;
-  chi2ZBins[14] = 3000.;
-
-  Bchi2Bins[0] = 0.5;
-  Bchi2Bins[1] = 1.25;
-  Bchi2Bins[2] = 2.0;
-  Bchi2Bins[3] = 3.0;
-  Bchi2Bins[4] = 5.0;
-  Bchi2Bins[5] = 10.;
-  Bchi2Bins[6] = 50.;
-};

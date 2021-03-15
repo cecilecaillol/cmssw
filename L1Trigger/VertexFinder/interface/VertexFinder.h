@@ -125,10 +125,17 @@ namespace l1tVertexFinder {
                                        const std::vector<unsigned int>& counts);
     /// DBSCAN algorithm
     void DBSCAN();
-    /// TDR histogramming algorithmn
-    void FastHistoLooseAssociation();
     /// Histogramming algorithm
     void FastHisto(const TrackerTopology* tTopo);
+<<<<<<< HEAD
+=======
+    /// Histogramming algorithm (emulation)
+    void FastHistoEmulation();
+    /// TDR histogramming algorithmn
+    void FastHistoLooseAssociation();
+    /// Gap Clustering Algorithm
+    void GapClustering();
+>>>>>>> 8fbff6777ec... Update the TTTrack_TrackWord, create an emulator for the q/R->pt and tanl(lambda)->eta conversions. Also start the emulation for the VertexFinder package. Make sure that the TTTrack_TrackWord DataFormat is backwards compatible with the previous version of the TTTrack_TrackWord.
     /// High pT Vertex Algorithm
     void HPV();
     /// Kmeans Algorithm
