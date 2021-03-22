@@ -175,4 +175,12 @@ void TTTrack_TrackWord::setTrackWord(
   for (unsigned int b = offset; b < offset + TrackBitWidths::kValidSize; b++) {
     trackWord_.set(b, valid[b - offset]);
   }
+  offset += TrackBitWidths::kPhiSize;
+  for (unsigned int b = offset; b < (offset + TrackBitWidths::kRinvSize); b++) {
+    trackWord_.set(b, rInv[b - offset]);
+  }
+  offset += TrackBitWidths::kRinvSize;
+  for (unsigned int b = offset; b < offset + TrackBitWidths::kValidSize; b++) {
+    trackWord_.set(b, valid[b - offset]);
+  }
 }
