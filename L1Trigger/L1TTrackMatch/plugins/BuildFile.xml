@@ -8,6 +8,9 @@
 <use   name="DataFormats/L1TrackTrigger"/>
 <use   name="FWCore/Utilities"/>
 <use   name="RecoJets/JetProducers"/>
+<use   name="L1Trigger/TrackTrigger"/>
+<use   name="hepmc"/>
+<use name="hls"/>
 <use   name="root"/>
 <flags   EDM_PLUGIN="1"/>
 </library>
