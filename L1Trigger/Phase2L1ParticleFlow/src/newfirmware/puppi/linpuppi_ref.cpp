@@ -67,9 +67,8 @@ l1ct::LinPuppiEmulator::LinPuppiEmulator(unsigned int nTrack,
       priorNe_(2),
       priorPh_(2),
       ptCut_(2),
-      nFinalSort_(nFinalSort ? nFinalSort : nOut),
-      finalSortAlgo_(finalSortAlgo),
-      debug_(false) {
+      debug_(false),
+      fakePuppi_(false) {
   ptSlopeNe_[0] = ptSlopeNe_0;
   ptSlopeNe_[1] = ptSlopeNe_1;
   ptSlopePh_[0] = ptSlopePh_0;
@@ -113,8 +112,15 @@ l1ct::LinPuppiEmulator::LinPuppiEmulator(const edm::ParameterSet &iConfig)
       priorNe_(iConfig.getParameter<std::vector<double>>("priors")),
       priorPh_(iConfig.getParameter<std::vector<double>>("priorsPhoton")),
       ptCut_(edm::vector_transform(iConfig.getParameter<std::vector<double>>("ptCut"), l1ct::Scales::makePtFromFloat)),
+<<<<<<< HEAD
       nFinalSort_(iConfig.getParameter<uint32_t>("nFinalSort")),
       debug_(iConfig.getUntrackedParameter<bool>("debug", false)) {
+=======
+      debug_(iConfig.getUntrackedParameter<bool>("debug", false)),
+      fakePuppi_(iConfig.existsAs<bool>("fakePuppi") ? iConfig.getParameter<bool>("fakePuppi")
+                                                     : false)  // it's only for debug, but still better be tracked
+{
+>>>>>>> e912a34fd8a... Add a 'FakePuppi' option where the output puppi candidate has no selection applied but contains debug info (useful for debugging in the firmware or hardware)
   if (absEtaBins_.size() + 1 != ptSlopeNe_.size())
     throw cms::Exception("Configuration", "size mismatch for ptSlopes parameter");
   if (absEtaBins_.size() + 1 != ptSlopePh_.size())
@@ -186,27 +192,43 @@ void l1ct::LinPuppiEmulator::linpuppi_chs_ref(const PFRegionEmu &region,
   outallch.resize(nTrack);
   for (unsigned int i = 0; i < nTrack; ++i) {
     int z0diff = pfch[i].hwZ0 - pv.hwZ0;
-    if (pfch[i].hwPt != 0 && region.isFiducial(pfch[i]) && (std::abs(z0diff) <= int(dzCut_) || pfch[i].hwId.isMuon())) {
+    bool accept = pfch[i].hwPt != 0;
+    if (!fakePuppi_)
+      accept = accept && region.isFiducial(pfch[i]) && (std::abs(z0diff) <= int(dzCut_) || pfch[i].hwId.isMuon());
+    if (accept) {
       outallch[i].fill(region, pfch[i]);
+      if (fakePuppi_) {  // overwrite Dxy & TkQuality with debug information
+        outallch[i].setHwDxy(dxy_t(pv.hwZ0));
+        outallch[i].setHwTkQuality(region.isFiducial(pfch[i]) ? 1 : 0);
+      }
       if (debug_ && pfch[i].hwPt > 0)
+<<<<<<< HEAD
         printf("ref candidate %02u pt %7.2f pid %1d   vz %+6d  dz %+6d (cut %5d) -> pass, packed %s\n",
+=======
+        printf("ref candidate %02u pt %7.2f pid %1d   vz %+6d  dz %+6d (cut %5d), fid %1d -> pass, packed %s\n",
+>>>>>>> e912a34fd8a... Add a 'FakePuppi' option where the output puppi candidate has no selection applied but contains debug info (useful for debugging in the firmware or hardware)
                i,
                pfch[i].floatPt(),
                pfch[i].intId(),
                int(pfch[i].hwZ0),
                z0diff,
                dzCut_,
+<<<<<<< HEAD
+=======
+               region.isFiducial(pfch[i]),
+>>>>>>> e912a34fd8a... Add a 'FakePuppi' option where the output puppi candidate has no selection applied but contains debug info (useful for debugging in the firmware or hardware)
                outallch[i].pack().to_string(16).c_str());
     } else {
       outallch[i].clear();
       if (debug_ && pfch[i].hwPt > 0)
-        printf("ref candidate %02u pt %7.2f pid %1d   vz %+6d  dz %+6d (cut %5d) -> fail\n",
+        printf("ref candidate %02u pt %7.2f pid %1d   vz %+6d  dz %+6d (cut %5d), fid %1d -> fail\n",
                i,
                pfch[i].floatPt(),
                pfch[i].intId(),
                int(pfch[i].hwZ0),
                z0diff,
-               dzCut_);
+               dzCut_,
+               region.isFiducial(pfch[i]));
     }
   }
 }
@@ -427,6 +449,7 @@ void l1ct::LinPuppiEmulator::linpuppi_ref(const PFRegionEmu &region,
     unsigned int ieta = find_ieta(region, pfallne[in].hwEta);
     bool isEM = (pfallne[in].hwId.isPhoton());
     std::pair<pt_t, puppiWgt_t> ptAndW = sum2puppiPt_ref(sum, pfallne[in].hwPt, ieta, isEM, in);
+<<<<<<< HEAD
     outallne_nocut[in].fill(region, pfallne[in], ptAndW.first, ptAndW.second);
     if (debug_ && pfallne[in].hwPt > 0 && ptAndW.first > 0)
       printf("ref candidate %02u pt %7.2f  -> puppi pt %7.2f, fiducial %1d, packed %s\n",
@@ -436,6 +459,17 @@ void l1ct::LinPuppiEmulator::linpuppi_ref(const PFRegionEmu &region,
              int(region.isFiducial(pfallne[in])),
              outallne_nocut[in].pack().to_string(16).c_str());
     if (region.isFiducial(pfallne[in]) && outallne_nocut[in].hwPt >= ptCut_[ieta]) {
+=======
+    if (!fakePuppi_) {
+      outallne_nocut[in].fill(region, pfallne[in], ptAndW.first, ptAndW.second);
+      if (region.isFiducial(pfallne[in]) && outallne_nocut[in].hwPt >= ptCut_[ieta]) {
+        outallne[in] = outallne_nocut[in];
+      }
+    } else {  // fakePuppi: keep the full candidate, but set the Puppi weight and some debug info into it
+      outallne_nocut[in].fill(region, pfallne[in], pfallne[in].hwPt, ptAndW.second);
+      outallne_nocut[in].hwData[9] = region.isFiducial(pfallne[in]);
+      outallne_nocut[in].hwData(20, 10) = ptAndW.first(10, 0);
+>>>>>>> e912a34fd8a... Add a 'FakePuppi' option where the output puppi candidate has no selection applied but contains debug info (useful for debugging in the firmware or hardware)
       outallne[in] = outallne_nocut[in];
     }
   }
