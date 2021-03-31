@@ -4,7 +4,11 @@
 <use name="DataFormats/L1GlobalMuonTrigger"/>
 <use name="DataFormats/L1TrackTrigger"/>
 <use name="DataFormats/HcalDetId"/>
+<<<<<<< HEAD
 <use name="FWCore/Concurrency"/>
+=======
+<use name="hls"/>
+>>>>>>> d4f0112cab2... Clean up some header files.
 <export>
   <lib name="1"/>
 </export>
