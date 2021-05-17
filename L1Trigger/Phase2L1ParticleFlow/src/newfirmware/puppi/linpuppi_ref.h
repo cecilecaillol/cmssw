@@ -124,14 +124,8 @@ namespace l1ct {
           priorNe_(priorNe),
           priorPh_(priorPh),
           ptCut_(ptCut),
-<<<<<<< HEAD
-          nFinalSort_(nFinalSort),
-          finalSortAlgo_(finalSortAlgo),
-          debug_(false) {}
-=======
           debug_(false),
           fakePuppi_(false) {}
->>>>>>> e912a34fd8a... Add a 'FakePuppi' option where the output puppi candidate has no selection applied but contains debug info (useful for debugging in the firmware or hardware)
 
     LinPuppiEmulator(const edm::ParameterSet &iConfig);
 

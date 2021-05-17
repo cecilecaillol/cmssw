@@ -12,6 +12,12 @@
 #include "../common/bitonic_sort_ref.h"
 
 #ifdef CMSSW_GIT_HASH
+#include "L1Trigger/Phase2L1ParticleFlow/src/dbgPrintf.h"
+#else
+#include "../../../utils/dbgPrintf.h"
+#endif
+
+#ifdef CMSSW_GIT_HASH
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Utilities/interface/transform.h"
 #include "FWCore/Utilities/interface/Exception.h"
@@ -112,15 +118,10 @@ l1ct::LinPuppiEmulator::LinPuppiEmulator(const edm::ParameterSet &iConfig)
       priorNe_(iConfig.getParameter<std::vector<double>>("priors")),
       priorPh_(iConfig.getParameter<std::vector<double>>("priorsPhoton")),
       ptCut_(edm::vector_transform(iConfig.getParameter<std::vector<double>>("ptCut"), l1ct::Scales::makePtFromFloat)),
-<<<<<<< HEAD
-      nFinalSort_(iConfig.getParameter<uint32_t>("nFinalSort")),
-      debug_(iConfig.getUntrackedParameter<bool>("debug", false)) {
-=======
       debug_(iConfig.getUntrackedParameter<bool>("debug", false)),
       fakePuppi_(iConfig.existsAs<bool>("fakePuppi") ? iConfig.getParameter<bool>("fakePuppi")
                                                      : false)  // it's only for debug, but still better be tracked
 {
->>>>>>> e912a34fd8a... Add a 'FakePuppi' option where the output puppi candidate has no selection applied but contains debug info (useful for debugging in the firmware or hardware)
   if (absEtaBins_.size() + 1 != ptSlopeNe_.size())
     throw cms::Exception("Configuration", "size mismatch for ptSlopes parameter");
   if (absEtaBins_.size() + 1 != ptSlopePh_.size())
@@ -202,33 +203,36 @@ void l1ct::LinPuppiEmulator::linpuppi_chs_ref(const PFRegionEmu &region,
         outallch[i].setHwTkQuality(region.isFiducial(pfch[i]) ? 1 : 0);
       }
       if (debug_ && pfch[i].hwPt > 0)
-<<<<<<< HEAD
-        printf("ref candidate %02u pt %7.2f pid %1d   vz %+6d  dz %+6d (cut %5d) -> pass, packed %s\n",
-=======
         printf("ref candidate %02u pt %7.2f pid %1d   vz %+6d  dz %+6d (cut %5d), fid %1d -> pass, packed %s\n",
->>>>>>> e912a34fd8a... Add a 'FakePuppi' option where the output puppi candidate has no selection applied but contains debug info (useful for debugging in the firmware or hardware)
                i,
                pfch[i].floatPt(),
                pfch[i].intId(),
                int(pfch[i].hwZ0),
                z0diff,
                dzCut_,
-<<<<<<< HEAD
-=======
                region.isFiducial(pfch[i]),
->>>>>>> e912a34fd8a... Add a 'FakePuppi' option where the output puppi candidate has no selection applied but contains debug info (useful for debugging in the firmware or hardware)
                outallch[i].pack().to_string(16).c_str());
+        dbgPrintf("ref candidate %02u pt %7.2f pid %1d   vz %+6d  dz %+6d (cut %5d), fid %1d -> pass, packed %s\n",
+                  i,
+                  pfch[i].floatPt(),
+                  pfch[i].intId(),
+                  int(pfch[i].hwZ0),
+                  z0diff,
+                  dzCut_,
+                  region.isFiducial(pfch[i]),
+                  outallch[i].pack().to_string(16).c_str());
+>>>>>>> 935fb1883fb... Code & sequence cleanup
     } else {
       outallch[i].clear();
       if (debug_ && pfch[i].hwPt > 0)
-        printf("ref candidate %02u pt %7.2f pid %1d   vz %+6d  dz %+6d (cut %5d), fid %1d -> fail\n",
-               i,
-               pfch[i].floatPt(),
-               pfch[i].intId(),
-               int(pfch[i].hwZ0),
-               z0diff,
-               dzCut_,
-               region.isFiducial(pfch[i]));
+        dbgPrintf("ref candidate %02u pt %7.2f pid %1d   vz %+6d  dz %+6d (cut %5d), fid %1d -> fail\n",
+                  i,
+                  pfch[i].floatPt(),
+                  pfch[i].intId(),
+                  int(pfch[i].hwZ0),
+                  z0diff,
+                  dzCut_,
+                  region.isFiducial(pfch[i]));
     }
   }
 }
@@ -302,13 +306,13 @@ std::pair<pt_t, puppiWgt_t> l1ct::LinPuppiEmulator::sum2puppiPt_ref(
       x2a_lut += alphaSlope * (1 << alpha_bits);
     }
     x2a_lut += alphaSlope * int(std::log2(float(logarg)) * (1 << alpha_bits));
-    /*if (in <= 3) printf("ref [%d]:  x2a(sum = %9lu): logarg = %9lu, sumterm = %9d, table[logarg] = %9d, ret pre-crop = %9d\n", 
+    /*if (in <= 3) dbgPrintf("ref [%d]:  x2a(sum = %9lu): logarg = %9lu, sumterm = %9d, table[logarg] = %9d, ret pre-crop = %9d\n", 
           in, sum, logarg, 
           alphaSlope * int((std::log2(LINPUPPI_pt2DR2_scale) - sum_bitShift)*(1 << alpha_bits) + 0.5) - alphaSlope * alphaZero,
           alphaSlope * int(std::log2(float(logarg))*(1 << alpha_bits)), 
           x2a_lut); */
   } else {
-    //if (in <= 3) printf("ref [%d]:  x2a(sum = %9lu): logarg = %9lu, ret pre-crop = %9d\n",
+    //if (in <= 3) dbgPrintf("ref [%d]:  x2a(sum = %9lu): logarg = %9lu, ret pre-crop = %9d\n",
     //        in, sum, logarg, x2a_lut);
   }
   x2a_lut = std::min(std::max(x2a_lut >> (alphaSlope_bits + alpha_bits - x2_bits), -alphaCrop), alphaCrop);
@@ -328,7 +332,7 @@ std::pair<pt_t, puppiWgt_t> l1ct::LinPuppiEmulator::sum2puppiPt_ref(
   pt_t ptPuppi = Scales::makePt((Scales::ptToInt(pt) * weight) >> weight_bits);
 
   if (debug_)
-    printf(
+    dbgPrintf(
         "ref candidate %02d pt %7.2f  em %1d  ieta %1d: alpha %+7.2f   x2a %+5d = %+7.3f  x2pt %+5d = %+7.3f   x2 %+5d "
         "= %+7.3f  --> weight %4d = %.4f  puppi pt %7.2f\n",
         icand,
@@ -379,11 +383,11 @@ void l1ct::LinPuppiEmulator::fwdlinpuppi_ref(const PFRegionEmu &region,
         //      dr2short >= (dR2Min_ >> 5) = 2
         //      num <= (PTMAX2 >> 5) << sum_bitShift = (2^11) << 15 = 2^26
         //      ==> term <= 2^25
-        //printf("ref term [%2d,%2d]: dr = %8d  pt2_shift = %8lu  term = %12lu\n", in, it, dr2, std::min<uint64_t>(pt2 >> 5, PTMAX2 >> 5), term);
+        //dbgPrintf("ref term [%2d,%2d]: dr = %8d  pt2_shift = %8lu  term = %12lu\n", in, it, dr2, std::min<uint64_t>(pt2 >> 5, PTMAX2 >> 5), term);
         assert(uint64_t(PTMAX2 << (sum_bitShift - 5)) / (dR2Min_ >> 5) <= (1 << 25));
         assert(term < (1 << 25));
         sum += term;
-        //printf("    pT cand %5.1f    pT item %5.1f    dR = %.3f   term = %.1f [dbl] = %lu [int]\n",
+        //dbgPrintf("    pT cand %5.1f    pT item %5.1f    dR = %.3f   term = %.1f [dbl] = %lu [int]\n",
         //            caloin[in].floatPt(), caloin[it].floatPt(), std::sqrt(dr2*LINPUPPI_DR2LSB),
         //            double(std::min<uint64_t>(pt2 >> 5, 131071)<<15)/double(std::max<int>(dr2,dR2Min_) >> 5),
         //            term);
@@ -435,11 +439,11 @@ void l1ct::LinPuppiEmulator::linpuppi_ref(const PFRegionEmu &region,
         //      dr2short >= (dR2Min_ >> 5) = 2
         //      num <= (PTMAX2 >> 5) << sum_bitShift = (2^11) << 15 = 2^26
         //      ==> term <= 2^25
-        //printf("ref term [%2d,%2d]: dr = %8d  pt2_shift = %8lu  term = %12lu\n", in, it, dr2, std::min<uint64_t>(pt2 >> 5, PTMAX2 >> 5), term);
+        //dbgPrintf("ref term [%2d,%2d]: dr = %8d  pt2_shift = %8lu  term = %12lu\n", in, it, dr2, std::min<uint64_t>(pt2 >> 5, PTMAX2 >> 5), term);
         assert(uint64_t(PTMAX2 << (sum_bitShift - 5)) / (dR2Min_ >> 5) <= (1 << 25));
         assert(term < (1 << 25));
         sum += term;
-        //printf("    pT cand %5.1f    pT item %5.1f    dR = %.3f   term = %.1f [dbl] = %lu [int]\n",
+        //dbgPrintf("    pT cand %5.1f    pT item %5.1f    dR = %.3f   term = %.1f [dbl] = %lu [int]\n",
         //            pfallne[in].floatPt(), track[it].floatPt(), std::sqrt(dr2*LINPUPPI_DR2LSB),
         //            double(std::min<uint64_t>(pt2 >> 5, 131071)<<15)/double(std::max<int>(dr2,dR2Min_) >> 5),
         //            term);
@@ -449,17 +453,6 @@ void l1ct::LinPuppiEmulator::linpuppi_ref(const PFRegionEmu &region,
     unsigned int ieta = find_ieta(region, pfallne[in].hwEta);
     bool isEM = (pfallne[in].hwId.isPhoton());
     std::pair<pt_t, puppiWgt_t> ptAndW = sum2puppiPt_ref(sum, pfallne[in].hwPt, ieta, isEM, in);
-<<<<<<< HEAD
-    outallne_nocut[in].fill(region, pfallne[in], ptAndW.first, ptAndW.second);
-    if (debug_ && pfallne[in].hwPt > 0 && ptAndW.first > 0)
-      printf("ref candidate %02u pt %7.2f  -> puppi pt %7.2f, fiducial %1d, packed %s\n",
-             in,
-             pfallne[in].floatPt(),
-             outallne_nocut[in].floatPt(),
-             int(region.isFiducial(pfallne[in])),
-             outallne_nocut[in].pack().to_string(16).c_str());
-    if (region.isFiducial(pfallne[in]) && outallne_nocut[in].hwPt >= ptCut_[ieta]) {
-=======
     if (!fakePuppi_) {
       outallne_nocut[in].fill(region, pfallne[in], ptAndW.first, ptAndW.second);
       if (region.isFiducial(pfallne[in]) && outallne_nocut[in].hwPt >= ptCut_[ieta]) {
@@ -469,8 +462,15 @@ void l1ct::LinPuppiEmulator::linpuppi_ref(const PFRegionEmu &region,
       outallne_nocut[in].fill(region, pfallne[in], pfallne[in].hwPt, ptAndW.second);
       outallne_nocut[in].hwData[9] = region.isFiducial(pfallne[in]);
       outallne_nocut[in].hwData(20, 10) = ptAndW.first(10, 0);
->>>>>>> e912a34fd8a... Add a 'FakePuppi' option where the output puppi candidate has no selection applied but contains debug info (useful for debugging in the firmware or hardware)
       outallne[in] = outallne_nocut[in];
+    }
+    if (debug_ && pfallne[in].hwPt > 0 && outallne_nocut[in].hwPt > 0) {
+      dbgPrintf("ref candidate %02u pt %7.2f  -> puppi pt %7.2f, fiducial %1d, packed %s\n",
+                in,
+                pfallne[in].floatPt(),
+                outallne_nocut[in].floatPt(),
+                int(region.isFiducial(pfallne[in])),
+                outallne_nocut[in].pack().to_string(16).c_str());
     }
   }
   puppisort_and_crop_ref(nOut_, outallne, outselne);
@@ -494,7 +494,7 @@ std::pair<float, float> l1ct::LinPuppiEmulator::sum2puppiPt_flt(
 
   float puppiPt = pt * weight;
   if (debug_)
-    printf(
+    dbgPrintf(
         "flt candidate %02d pt %7.2f  em %1d  ieta %1d: alpha %+7.2f   x2a         %+7.3f  x2pt         %+7.3f   x2    "
         "     %+7.3f  --> weight        %.4f  puppi pt %7.2f\n",
         icand,
