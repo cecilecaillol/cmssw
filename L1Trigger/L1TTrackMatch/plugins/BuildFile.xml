@@ -1,5 +1,4 @@
 <library   file="*.cc" name="L1TrackTriggerPlugins">
-<use   name="CommonTools/UtilAlgos"/>
 <use   name="CommonTools/BaseParticlePropagator"/>
 <use   name="CommonTools/UtilAlgos"/>
 <use   name="DataFormats/Common"/>
@@ -7,7 +6,6 @@
 <use   name="Geometry/TrackerGeometryBuilder"/>
 <use   name="Geometry/Records"/>
 <use   name="L1Trigger/L1TTrackMatch"/>
-<use   name="SimDataFormats/GeneratorProducts"/>
 <use   name="SimTracker/TrackTriggerAssociation"/>
 <use   name="DataFormats/L1TrackTrigger"/>
 <use   name="FWCore/Utilities"/>
