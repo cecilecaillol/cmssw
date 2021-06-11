@@ -20,7 +20,8 @@
   <class name="TrackingParticleRef" />
   <class name="edm::Ptr<TrackingParticle>" />
   <class name="std::vector<edm::Ptr<TrackingParticle>>" />
-
+  <class name="edm::reftobase::BaseHolder<TrackingParticle>"/>
+  <class name="std::map<edm::Ptr<TrackingParticle>,edm::RefToBase<TrackingParticle> >"/>
   <class name="TrackingParticleRefVector" />
   <class name="edm::Wrapper<TrackingParticleRefVector>"/>
  
