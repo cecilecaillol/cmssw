@@ -74,9 +74,12 @@ void SectorProcessorShower::process(const CSCShowerDigiCollection& in_showers,
 
   if (accept) {
     // shower output
-    l1t::RegionalMuonShower out_shower(hasOneNominalInTime, hasOneNominalOutOfTime,
-                                       hasTwoLooseInTime, hasTwoLooseOutOfTime,
-                                       hasOneTightInTime, hasOneTightOutOfTime);
+    l1t::RegionalMuonShower out_shower(hasOneNominalInTime,
+                                       hasOneNominalOutOfTime,
+                                       hasTwoLooseInTime,
+                                       hasTwoLooseOutOfTime,
+                                       hasOneTightInTime,
+                                       hasOneTightOutOfTime);
     out_shower.setEndcap(endcap_);
     out_shower.setSector(sector_);
     out_showers.push_back(0, out_shower);

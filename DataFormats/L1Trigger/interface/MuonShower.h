@@ -54,26 +54,26 @@ namespace l1t {
       This is done separately for the in-time and out-of-time trigger data
     */
 
-    void setMus0(const bool bit) {mus0_ = bit;}
-    void setMus1(const bool bit) {mus1_ = bit;}
-    void setMusOutOfTime0(const bool bit) {musOutOfTime0_ = bit;}
-    void setMusOutOfTime1(const bool bit) {musOutOfTime1_ = bit;}
+    void setMus0(const bool bit) { mus0_ = bit; }
+    void setMus1(const bool bit) { mus1_ = bit; }
+    void setMusOutOfTime0(const bool bit) { musOutOfTime0_ = bit; }
+    void setMusOutOfTime1(const bool bit) { musOutOfTime1_ = bit; }
 
-    bool mus0() const {return mus0_;}
-    bool mus1() const {return mus1_;}
-    bool musOutOfTime0() const {return musOutOfTime0_;}
-    bool musOutOfTime1() const {return musOutOfTime1_;}
+    bool mus0() const { return mus0_; }
+    bool mus1() const { return mus1_; }
+    bool musOutOfTime0() const { return musOutOfTime0_; }
+    bool musOutOfTime1() const { return musOutOfTime1_; }
 
     // at least one bit must be valid
     bool isValid() const;
 
     // useful members for trigger performance studies
-    bool isOneNominalInTime() const {return mus0_;}
-    bool isOneNominalOutOfTime() const {return musOutOfTime0_;}
-    bool isTwoLooseInTime() const {return mus1_;}
-    bool isTwoLooseOutOfTime() const {return musOutOfTime1_;}
-    bool isOneTightInTime() const {return mus0_ and mus1_;}
-    bool isOneTightOutOfTime() const {return musOutOfTime0_ and musOutOfTime1_;}
+    bool isOneNominalInTime() const { return mus0_; }
+    bool isOneNominalOutOfTime() const { return musOutOfTime0_; }
+    bool isTwoLooseInTime() const { return mus1_; }
+    bool isTwoLooseOutOfTime() const { return musOutOfTime1_; }
+    bool isOneTightInTime() const { return mus0_ and mus1_; }
+    bool isOneTightOutOfTime() const { return musOutOfTime0_ and musOutOfTime1_; }
 
     virtual bool operator==(const l1t::MuonShower& rhs) const;
     virtual inline bool operator!=(const l1t::MuonShower& rhs) const { return !(operator==(rhs)); };

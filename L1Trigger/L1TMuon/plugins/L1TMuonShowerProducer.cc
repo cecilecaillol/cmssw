@@ -87,11 +87,15 @@ void L1TMuonShowerProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
   }
 
   // Check for at least one nominal shower
-  const bool acceptCondition(isOneNominalInTime or isOneNominalOutOfTime or
-                             isTwoLooseInTime or isTwoLooseOutOfTime  or
+  const bool acceptCondition(isOneNominalInTime or isOneNominalOutOfTime or isTwoLooseInTime or isTwoLooseOutOfTime or
                              isOneNominalInTime or isOneNominalOutOfTime);
   if (acceptCondition) {
-    MuonShower outShower(isOneNominalInTime, isOneNominalOutOfTime, isTwoLooseInTime, isTwoLooseOutOfTime, isOneTightInTime, isOneTightOutOfTime);
+    MuonShower outShower(isOneNominalInTime,
+                         isOneNominalOutOfTime,
+                         isTwoLooseInTime,
+                         isTwoLooseOutOfTime,
+                         isOneTightInTime,
+                         isOneTightOutOfTime);
     outShowers->push_back(0, outShower);
   }
   iEvent.put(std::move(outShowers));
