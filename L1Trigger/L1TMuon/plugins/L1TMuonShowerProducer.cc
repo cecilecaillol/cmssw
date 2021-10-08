@@ -63,6 +63,8 @@ void L1TMuonShowerProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
   bool isOneNominalOutOfTime = false;
   bool isTwoLooseInTime = false;
   bool isTwoLooseOutOfTime = false;
+  bool isOneTightInTime = false;
+  bool isOneTightOutOfTime = false;
   for (size_t i = 0; i < emtfShowers->size(0); ++i) {
     auto shower = emtfShowers->at(0, i);
     if (shower.isValid()) {
@@ -76,13 +78,20 @@ void L1TMuonShowerProducer::produce(edm::Event& iEvent, const edm::EventSetup& i
         isTwoLooseInTime = true;
       if (shower.isTwoLooseOutOfTime())
         isTwoLooseOutOfTime = true;
+      // tight
+      if (shower.isOneTightInTime())
+        isOneTightInTime = true;
+      if (shower.isOneTightOutOfTime())
+        isOneTightOutOfTime = true;
     }
   }
 
   // Check for at least one nominal shower
-  const bool acceptCondition(isOneNominalInTime or isOneNominalOutOfTime or isTwoLooseInTime or isTwoLooseOutOfTime);
+  const bool acceptCondition(isOneNominalInTime or isOneNominalOutOfTime or
+                             isTwoLooseInTime or isTwoLooseOutOfTime  or
+                             isOneNominalInTime or isOneNominalOutOfTime);
   if (acceptCondition) {
-    MuonShower outShower(isOneNominalInTime, isOneNominalOutOfTime, isTwoLooseInTime, isTwoLooseOutOfTime);
+    MuonShower outShower(isOneNominalInTime, isOneNominalOutOfTime, isTwoLooseInTime, isTwoLooseOutOfTime, isOneTightInTime, isOneTightOutOfTime);
     outShowers->push_back(0, outShower);
   }
   iEvent.put(std::move(outShowers));
@@ -94,6 +103,7 @@ void L1TMuonShowerProducer::fillDescriptions(edm::ConfigurationDescriptions& des
   desc.add<edm::InputTag>("showerInput", edm::InputTag("simEmtfShowers", "EMTF"));
   desc.add<int32_t>("bxMin", 0);
   desc.add<int32_t>("bxMax", 0);
+  desc.add<uint32_t>("minTightShowers", 1);
   desc.add<uint32_t>("minNominalShowers", 1);
   desc.add<uint32_t>("minTwoLooseShowers", 0);
   descriptions.add("simGmtShowerDigisDef", desc);
