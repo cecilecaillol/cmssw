@@ -9,10 +9,10 @@ l1t::MuonShower::MuonShower(bool oneNominalInTime,
     : L1Candidate(math::PtEtaPhiMLorentzVector{0., 0., 0., 0.}, 0., 0., 0., 0, 0),
       // in this object it makes more sense to the different shower types to
       // the 4 bits, so that the object easily interfaces with the uGT emulator
-      mus0_(oneNominalInTime or oneTightInTime),
-      mus1_(twoLooseInTime or oneTightInTime),
-      musOutOfTime0_(oneNominalOutOfTime or oneTightOutOfTime),
-      musOutOfTime1_(twoLooseOutOfTime or oneTightOutOfTime) {}
+      mus0_(oneNominalInTime),
+      mus1_(oneTightInTime),
+      musOutOfTime0_(false),
+      musOutOfTime1_(false) {}
 
 l1t::MuonShower::~MuonShower() {}
 

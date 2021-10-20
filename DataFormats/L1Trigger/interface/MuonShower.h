@@ -39,19 +39,19 @@ namespace l1t {
     /*
       In CMSSW we consider 3 valid cases:
       - 1 nominal shower (baseline trigger for physics at Run-3)
-      - 2 loose showers (to extend the physics reach)
       - 1 tight shower (backup trigger)
+      - 2 loose showers (to extend the physics reach)
 
       In the uGT and UTM library, the hadronic shower trigger data is split
       over 4 bits: 2 for in-time trigger data, 2 for out-of-time trigger data
       - mus0, mus1 for in-time
       - musOutOfTime0, musOutOfTime1 for out-of-time
 
-      The mapping for Run-3 is as follows:
-      - 1 nominal shower -> 0b01
-      - 2 loose showers -> 0b10
-      - 1 tight shower -> 0b11
-      This is done separately for the in-time and out-of-time trigger data
+      The mapping for Run-3 startup is as follows:
+      - 1 nominal shower -> 0b01 (mus0)
+      - 1 tight shower -> 0b10 (mus1)
+
+      The 2 loose showers case would be mapped onto musOutOfTime0 and musOutOfTime1 later during Run-3
     */
 
     void setMus0(const bool bit) { mus0_ = bit; }
@@ -68,12 +68,15 @@ namespace l1t {
     bool isValid() const;
 
     // useful members for trigger performance studies
+    // needed at startup Run-3
     bool isOneNominalInTime() const { return mus0_; }
-    bool isOneNominalOutOfTime() const { return musOutOfTime0_; }
-    bool isTwoLooseInTime() const { return mus1_; }
-    bool isTwoLooseOutOfTime() const { return musOutOfTime1_; }
-    bool isOneTightInTime() const { return mus0_ and mus1_; }
-    bool isOneTightOutOfTime() const { return musOutOfTime0_ and musOutOfTime1_; }
+    bool isOneTightInTime() const { return mus1_; }
+    // to be developed during Run-3
+    bool isTwoLooseInTime() const { return false; }
+    // these options require more study
+    bool isOneNominalOutOfTime() const { return false; }
+    bool isTwoLooseOutOfTime() const { return false; }
+    bool isOneTightOutOfTime() const { return false; }
 
     virtual bool operator==(const l1t::MuonShower& rhs) const;
     virtual inline bool operator!=(const l1t::MuonShower& rhs) const { return !(operator==(rhs)); };
