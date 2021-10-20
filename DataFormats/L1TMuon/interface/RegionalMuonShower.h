@@ -19,8 +19,8 @@ namespace l1t {
                        bool oneNominalOutOfTime = false,
                        bool twoLooseInTime = false,
                        bool twoLooseOutOfTime = false,
-                       bool twoTightInTime = false,
-                       bool twoTightOutOfTime = false);
+                       bool oneTightInTime = false,
+                       bool oneTightOutOfTime = false);
 
     ~RegionalMuonShower();
 

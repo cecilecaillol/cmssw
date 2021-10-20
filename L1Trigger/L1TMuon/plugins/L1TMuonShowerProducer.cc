@@ -107,8 +107,8 @@ void L1TMuonShowerProducer::fillDescriptions(edm::ConfigurationDescriptions& des
   desc.add<edm::InputTag>("showerInput", edm::InputTag("simEmtfShowers", "EMTF"));
   desc.add<int32_t>("bxMin", 0);
   desc.add<int32_t>("bxMax", 0);
-  desc.add<uint32_t>("minTightShowers", 1);
   desc.add<uint32_t>("minNominalShowers", 1);
+  desc.add<uint32_t>("minTightShowers", 1);
   desc.add<uint32_t>("minTwoLooseShowers", 0);
   descriptions.add("simGmtShowerDigisDef", desc);
 }

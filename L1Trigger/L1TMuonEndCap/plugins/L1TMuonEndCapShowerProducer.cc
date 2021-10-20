@@ -41,8 +41,8 @@ void L1TMuonEndCapShowerProducer::produce(edm::Event& iEvent, const edm::EventSe
 void L1TMuonEndCapShowerProducer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   edm::ParameterSetDescription desc;
   // these are different shower selections that can be enabled
-  desc.add<bool>("enableOneTightShowers", true);
   desc.add<bool>("enableOneNominalShowers", true);
+  desc.add<bool>("enableOneTightShowers", true);
   desc.add<bool>("enableTwoLooseShowers", false);
   desc.add<unsigned>("nLooseShowers", 2);
   desc.add<unsigned>("nNominalShowers", 1);

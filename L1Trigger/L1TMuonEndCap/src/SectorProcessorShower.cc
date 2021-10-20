@@ -61,6 +61,7 @@ void SectorProcessorShower::process(const CSCShowerDigiCollection& in_showers,
   const bool hasTwoLooseInTime(nLooseInTime >= nLooseShowers_);
   const bool hasOneNominalInTime(nNominalInTime >= nNominalShowers_);
   const bool hasOneTightInTime(nTightInTime >= nTightShowers_);
+
   const bool hasTwoLooseOutOfTime(nLooseOutOfTime >= nLooseShowers_);
   const bool hasOneNominalOutOfTime(nNominalOutOfTime >= nNominalShowers_);
   const bool hasOneTightOutOfTime(nTightOutOfTime >= nTightShowers_);
