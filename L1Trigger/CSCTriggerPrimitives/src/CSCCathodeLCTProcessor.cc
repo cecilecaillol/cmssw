@@ -99,7 +99,7 @@ CSCCathodeLCTProcessor::CSCCathodeLCTProcessor(unsigned endcap,
   showerMaxInTBin_ = shower.getParameter<unsigned>("showerMaxInTBin");
   showerMinOutTBin_ = shower.getParameter<unsigned>("showerMinOutTBin");
   showerMaxOutTBin_ = shower.getParameter<unsigned>("showerMaxOutTBin");
-
+  minLayersCentralTBin_ = shower.getParameter<unsigned>("minLayersCentralTBin");
   thePreTriggerDigis.clear();
 
   // quality control of stubs
@@ -1177,6 +1177,30 @@ void CSCCathodeLCTProcessor::encodeHighMultiplicityBits(
     const std::vector<int> halfstrip[CSCConstants::NUM_LAYERS][CSCConstants::MAX_NUM_HALF_STRIPS_RUN2_TRIGGER]) {
   inTimeHMT_ = 0;
   outTimeHMT_ = 0;
+
+  auto layerTime = [=](unsigned time) { return time == CSCConstants::CLCT_CENTRAL_BX; };
+  // Calculate layers with hits
+  unsigned nLayersWithHits = 0;
+  for (int i_layer = 0; i_layer < CSCConstants::NUM_LAYERS; i_layer++) {
+    bool atLeastOneWGHit = false;
+    for (int i_hstrip = 0; i_hstrip < CSCConstants::MAX_NUM_HALF_STRIPS_RUN2_TRIGGER; i_hstrip++) {
+      if (!halfstrip[i_layer][i_hstrip].empty()) {
+        auto times = halfstrip[i_layer][i_hstrip];
+        int nLayerTime = std::count_if(times.begin(), times.end(), layerTime);
+        if (nLayerTime > 0) {
+          atLeastOneWGHit = true;
+          break;
+        }
+      }
+    }
+    if (atLeastOneWGHit) {
+      nLayersWithHits++;
+    }
+  }
+
+  // do nothing if there are not enough layers with hits
+  if (nLayersWithHits < minLayersCentralTBin_)
+    return;
 
   // functions for in-time and out-of-time
   auto inTime = [=](unsigned time) { return time >= showerMinInTBin_ and time <= showerMaxInTBin_; };

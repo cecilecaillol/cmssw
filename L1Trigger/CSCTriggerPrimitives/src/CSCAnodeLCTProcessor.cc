@@ -88,6 +88,7 @@ CSCAnodeLCTProcessor::CSCAnodeLCTProcessor(unsigned endcap,
   showerMaxInTBin_ = shower.getParameter<unsigned>("showerMaxInTBin");
   showerMinOutTBin_ = shower.getParameter<unsigned>("showerMinOutTBin");
   showerMaxOutTBin_ = shower.getParameter<unsigned>("showerMaxOutTBin");
+  minLayersCentralTBin_ = shower.getParameter<unsigned>("minLayersCentralTBin");
 }
 
 void CSCAnodeLCTProcessor::loadPatternMask() {
@@ -1340,6 +1341,31 @@ void CSCAnodeLCTProcessor::encodeHighMultiplicityBits(
     const std::vector<int> wires[CSCConstants::NUM_LAYERS][CSCConstants::MAX_NUM_WIREGROUPS]) {
   inTimeHMT_ = 0;
   outTimeHMT_ = 0;
+
+  auto layerTime = [=](unsigned time) { return time == CSCConstants::LCT_CENTRAL_BX; };
+
+  // Calculate layers with hits
+  unsigned nLayersWithHits = 0;
+  for (int i_layer = 0; i_layer < CSCConstants::NUM_LAYERS; i_layer++) {
+    bool atLeastOneWGHit = false;
+    for (int i_wire = 0; i_wire < CSCConstants::MAX_NUM_WIREGROUPS; i_wire++) {
+      if (!wires[i_layer][i_wire].empty()) {
+        auto times = wires[i_layer][i_wire];
+        int nLayerTime = std::count_if(times.begin(), times.end(), layerTime);
+        if (nLayerTime > 0) {
+          atLeastOneWGHit = true;
+          break;
+        }
+      }
+    }
+    if (atLeastOneWGHit) {
+      nLayersWithHits++;
+    }
+  }
+
+  // do nothing if there are not enough layers with hits
+  if (nLayersWithHits < minLayersCentralTBin_)
+    return;
 
   // functions for in-time and out-of-time
   auto inTime = [=](unsigned time) { return time >= showerMinInTBin_ and time <= showerMaxInTBin_; };

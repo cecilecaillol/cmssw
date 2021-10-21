@@ -81,7 +81,9 @@ void SectorProcessorShower::process(const CSCShowerDigiCollection& in_showers,
                                        hasTwoLooseOutOfTime,
                                        hasOneTightInTime,
                                        hasOneTightOutOfTime);
-    out_shower.setEndcap(endcap_);
+    // convert [1,2] to [1, -1]
+    const int endcap(endcap_ == 1 ? 1 : -1);
+    out_shower.setEndcap(endcap);
     out_shower.setSector(sector_);
     out_showers.push_back(0, out_shower);
   }
