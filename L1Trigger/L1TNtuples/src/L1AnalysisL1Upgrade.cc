@@ -127,6 +127,7 @@ void L1Analysis::L1AnalysisL1Upgrade::SetMuonShower(const edm::Handle<l1t::MuonS
          it != muonShower->end(ibx) && l1upgrade_.nMuonShowers < maxL1Upgrade;
          it++) {
       if (it->isValid()) {
+        l1upgrade_.muonShowerBx.push_back(ibx);
         l1upgrade_.muonShowerOneNominal.push_back(it->isOneNominalInTime());
         l1upgrade_.muonShowerOneTight.push_back(it->isOneTightInTime());
         l1upgrade_.muonShowerTwoLoose.push_back(it->isTwoLooseInTime());

@@ -11,12 +11,14 @@ namespace L1Analysis {
 
     void Reset() {
       nTfMuonShowers = 0;
+      tfMuonShowerBx.clear();
       tfMuonShowerOneNominal.clear();
       tfMuonShowerOneTight.clear();
       tfMuonShowerTwoLoose.clear();
     }
 
     unsigned short int nTfMuonShowers;
+    std::vector<short int> tfMuonShowerBx;
     std::vector<short int> tfMuonShowerOneNominal;
     std::vector<short int> tfMuonShowerOneTight;
     std::vector<short int> tfMuonShowerTwoLoose;

@@ -126,6 +126,7 @@ namespace L1Analysis {
       muonBx.clear();
 
       nMuonShowers = 0;
+      muonShowerBx.clear();
       muonShowerOneNominal.clear();
       muonShowerOneTight.clear();
       muonShowerTwoLoose.clear();
@@ -217,6 +218,7 @@ namespace L1Analysis {
     std::vector<short int> muonBx;
 
     unsigned short int nMuonShowers;
+    std::vector<short int> muonShowerBx;
     std::vector<short int> muonShowerOneNominal;
     std::vector<short int> muonShowerOneTight;
     std::vector<short int> muonShowerTwoLoose;
