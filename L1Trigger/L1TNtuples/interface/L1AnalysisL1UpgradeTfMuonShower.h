@@ -3,7 +3,7 @@
 
 #include "DataFormats/L1TMuon/interface/RegionalMuonShower.h"
 
-#include "L1AnalysisL1UpgradeTfMuonShowerDataFormat.h"
+#include "L1Trigger/L1TNtuples/interface/L1AnalysisL1UpgradeTfMuonShowerDataFormat.h"
 namespace L1Analysis {
   class L1AnalysisL1UpgradeTfMuonShower {
   public:

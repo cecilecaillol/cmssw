@@ -11,9 +11,17 @@ void L1Analysis::L1AnalysisL1UpgradeTfMuonShower::SetTfMuonShower(const l1t::Reg
          it != muonShower.end(ibx) && l1upgradetfmuonshower_.nTfMuonShowers < maxL1UpgradeTfMuonShower;
          ++it) {
       if (it->isValid()) {
-        l1upgradetfmuonshower_.tfMuonShowerOneNominal.push_back(it->isOneNominalInTime());
-        l1upgradetfmuonshower_.tfMuonShowerOneTight.push_back(it->isOneTightInTime());
-        l1upgradetfmuonshower_.tfMuonShowerTwoLoose.push_back(it->isTwoLooseInTime());
+        l1upgradetfmuonshower_.tfMuonShowerBx.push_back(ibx);
+        int type;
+        if (it->isOneNominalInTime())
+          type = L1AnalysisL1UpgradeTfMuonShowerDataFormat::kOneNominal;
+        else if (it->isOneTightInTime())
+          type = L1AnalysisL1UpgradeTfMuonShowerDataFormat::kOneTight;
+        else if (it->isTwoLooseInTime())
+          type = L1AnalysisL1UpgradeTfMuonShowerDataFormat::kTwoLoose;
+        else
+          type = L1AnalysisL1UpgradeTfMuonShowerDataFormat::kInvalid;
+        l1upgradetfmuonshower_.tfMuonShowerType.push_back(type);
         l1upgradetfmuonshower_.nTfMuonShowers++;
       }
     }

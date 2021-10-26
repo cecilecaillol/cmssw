@@ -43,6 +43,13 @@ namespace L1Analysis {
     kAsymHtHF
   };
 
+  enum MuonShowerType {
+    kInvalid,
+    kOneNominal,
+    kOneTight,
+    kTwoLoose
+  };
+
   struct L1AnalysisL1UpgradeDataFormat {
     L1AnalysisL1UpgradeDataFormat() { Reset(); };
     ~L1AnalysisL1UpgradeDataFormat(){};
@@ -127,9 +134,7 @@ namespace L1Analysis {
 
       nMuonShowers = 0;
       muonShowerBx.clear();
-      muonShowerOneNominal.clear();
-      muonShowerOneTight.clear();
-      muonShowerTwoLoose.clear();
+      muonShowerType.clear();
 
       nSums = 0;
       sumType.clear();
@@ -219,9 +224,7 @@ namespace L1Analysis {
 
     unsigned short int nMuonShowers;
     std::vector<short int> muonShowerBx;
-    std::vector<short int> muonShowerOneNominal;
-    std::vector<short int> muonShowerOneTight;
-    std::vector<short int> muonShowerTwoLoose;
+    std::vector<short int> muonShowerType;
 
     unsigned short int nSums;
     std::vector<short int> sumType;

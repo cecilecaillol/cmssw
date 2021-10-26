@@ -128,9 +128,16 @@ void L1Analysis::L1AnalysisL1Upgrade::SetMuonShower(const edm::Handle<l1t::MuonS
          it++) {
       if (it->isValid()) {
         l1upgrade_.muonShowerBx.push_back(ibx);
-        l1upgrade_.muonShowerOneNominal.push_back(it->isOneNominalInTime());
-        l1upgrade_.muonShowerOneTight.push_back(it->isOneTightInTime());
-        l1upgrade_.muonShowerTwoLoose.push_back(it->isTwoLooseInTime());
+        int type;
+        if (it->isOneNominalInTime())
+          type = kOneNominal;
+        else if (it->isOneTightInTime())
+          type = kOneTight;
+        else if (it->isTwoLooseInTime())
+          type = kTwoLoose;
+        else
+          type = kInvalid;
+        l1upgrade_.muonShowerType.push_back(type);
         l1upgrade_.nMuonShowers++;
       }
     }

@@ -5,23 +5,28 @@
 #include <map>
 
 namespace L1Analysis {
+
   struct L1AnalysisL1UpgradeTfMuonShowerDataFormat {
+
+    enum TfMuonShowerType {
+      kInvalid,
+      kOneNominal,
+      kOneTight,
+      kTwoLoose
+    };
+
     L1AnalysisL1UpgradeTfMuonShowerDataFormat() { Reset(); };
     ~L1AnalysisL1UpgradeTfMuonShowerDataFormat(){};
 
     void Reset() {
       nTfMuonShowers = 0;
       tfMuonShowerBx.clear();
-      tfMuonShowerOneNominal.clear();
-      tfMuonShowerOneTight.clear();
-      tfMuonShowerTwoLoose.clear();
+      tfMuonShowerType.clear();
     }
 
     unsigned short int nTfMuonShowers;
     std::vector<short int> tfMuonShowerBx;
-    std::vector<short int> tfMuonShowerOneNominal;
-    std::vector<short int> tfMuonShowerOneTight;
-    std::vector<short int> tfMuonShowerTwoLoose;
+    std::vector<short int> tfMuonShowerType;
   };
 }  // namespace L1Analysis
 #endif
