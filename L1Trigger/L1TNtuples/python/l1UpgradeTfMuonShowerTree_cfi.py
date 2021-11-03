@@ -7,6 +7,6 @@ l1UpgradeTfMuonShowerTree = cms.EDAnalyzer(
 )
 
 from Configuration.Eras.Modifier_stage1L1Trigger_cff import stage1L1Trigger
-stage1L1Trigger.toModify( l1UpgradeTfMuonTree,
+stage1L1Trigger.toModify( l1UpgradeTfMuonShowerTree,
     emtfMuonShowerToken = "none",
 )
