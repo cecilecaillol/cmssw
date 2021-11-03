@@ -44,7 +44,7 @@ namespace L1Analysis {
   };
 
   enum MuonShowerType {
-    kInvalid,
+    kInvalid = 0,
     kOneNominal,
     kOneTight,
     kTwoLoose

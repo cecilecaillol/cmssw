@@ -9,7 +9,7 @@ namespace L1Analysis {
   struct L1AnalysisL1UpgradeTfMuonShowerDataFormat {
 
     enum TfMuonShowerType {
-      kInvalid,
+      kInvalid = 0,
       kOneNominal,
       kOneTight,
       kTwoLoose
