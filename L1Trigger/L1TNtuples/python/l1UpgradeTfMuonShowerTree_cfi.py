@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 l1UpgradeTfMuonShowerTree = cms.EDAnalyzer(
-    "L1UpgradeTfMuonTreeProducer",
+    "L1UpgradeTfMuonShowerTreeProducer",
     emtfMuonShowerToken = cms.untracked.InputTag("simEmtfShowers","EMTF"),
     maxL1UpgradeTfMuonShower = cms.uint32(12),
 )
