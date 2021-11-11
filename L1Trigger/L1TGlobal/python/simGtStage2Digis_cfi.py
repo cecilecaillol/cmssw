@@ -22,4 +22,4 @@ simGtStage2Digis = simGtStage2DigisDef.clone(
 
 from Configuration.Eras.Modifier_run3_common_cff import run3_common
 run3_common.toModify(simGtStage2Digis,
-                     useMuonShowers = False)
+                     useMuonShowers = cms.bool(True))
