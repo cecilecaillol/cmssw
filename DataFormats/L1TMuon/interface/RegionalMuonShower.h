@@ -46,7 +46,11 @@ namespace l1t {
     int endcap() const { return endcap_; }
     int sector() const { return sector_; }
     /// Get link on which the MicroGMT receives the candidate
-    int link() const { return link_; }
+    const int link() const { return link_; };
+    /// Get processor ID on which the candidate was found (0..5 for OMTF/EMTF; 0..11 for BMTF)
+    const int processor() const { return processor_; };
+    /// Get track-finder which found the muon (bmtf, emtf_pos/emtf_neg or omtf_pos/omtf_neg)
+    const tftype trackFinderType() const { return trackFinder_; };
 
     bool operator==(const l1t::RegionalMuonShower& rhs) const;
     inline bool operator!=(const l1t::RegionalMuonShower& rhs) const { return !(operator==(rhs)); };
