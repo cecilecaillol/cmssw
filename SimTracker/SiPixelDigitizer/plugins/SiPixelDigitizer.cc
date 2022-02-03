@@ -23,7 +23,7 @@
 
 // user include files
 #include "SiPixelDigitizer.h"
-#include "SiPixelDigitizerAlgorithm.h"
+#include "SimTracker/SiPixelDigitizer/plugins/SiPixelDigitizerAlgorithm.h"
 
 #include "SimDataFormats/TrackingHit/interface/PSimHit.h"
 #include "DataFormats/Common/interface/Handle.h"

@@ -34,7 +34,7 @@
 #include "DataFormats/TrackerCommon/interface/TrackerTopology.h"
 #include "Geometry/Records/interface/TrackerTopologyRcd.h"
 
-#include "TrackAssociatorByHitsImpl.h"
+#include "SimTracker/TrackAssociatorProducers/plugins/TrackAssociatorByHitsImpl.h"
 #include "SimDataFormats/Associations/interface/TrackToTrackingParticleAssociator.h"
 #include "SimTracker/TrackerHitAssociation/interface/TrackerHitAssociator.h"
 

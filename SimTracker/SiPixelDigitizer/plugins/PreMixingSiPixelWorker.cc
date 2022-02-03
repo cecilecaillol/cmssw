@@ -32,7 +32,7 @@
 #include "SimGeneral/PreMixingModule/interface/PreMixingWorker.h"
 #include "SimGeneral/PreMixingModule/interface/PreMixingWorkerFactory.h"
 
-#include "SiPixelDigitizerAlgorithm.h"
+#include "SimTracker/SiPixelDigitizer/plugins/SiPixelDigitizerAlgorithm.h"
 
 #include <map>
 #include <memory>

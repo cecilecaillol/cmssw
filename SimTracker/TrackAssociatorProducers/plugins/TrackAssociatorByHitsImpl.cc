@@ -2,7 +2,7 @@
 //
 #include "DataFormats/Common/interface/Ref.h"
 
-#include "TrackAssociatorByHitsImpl.h"
+#include "SimTracker/TrackAssociatorProducers/plugins/TrackAssociatorByHitsImpl.h"
 
 #include "SimTracker/TrackerHitAssociation/interface/TrackerHitAssociator.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
