@@ -101,7 +101,7 @@ L1TowerCalibration = L1TowerCalibrationProducer.clone(
 # ----    Produce the L1CaloJets
 from L1Trigger.L1CaloTrigger.L1CaloJetProducer_cfi import *
 L1CaloJet = L1CaloJetProducer.clone (
-    l1CaloTowers = cms.InputTag("L1TowerCalibrationProducer","L1CaloTowerCalibratedCollection",""),
+    l1CaloTowers = cms.InputTag("L1TowerCalibration","L1CaloTowerCalibratedCollection",""),
     L1CrystalClustersInputTag = cms.InputTag("L1EGammaClusterEmuProducer", "","")
 )
 # ----    Produce the CaloJet HTT Sums
@@ -115,6 +115,10 @@ _phase2_siml1emulator.add(L1CaloJetHTT)
 # ########################################################################
 # Phase-2 L1T - TrackTrigger dependent modules
 # ########################################################################
+
+from L1Trigger.VertexFinder.VertexProducer_cff import *
+L1VertexFinder = VertexProducer.clone()
+_phase2_siml1emulator.add(L1VertexFinder)
 
 # Tk + StandaloneObj, including L1TkPrimaryVertex
 # ########################################################################
