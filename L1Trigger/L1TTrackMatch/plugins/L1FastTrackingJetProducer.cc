@@ -33,12 +33,11 @@
 // geometry
 #include "Geometry/Records/interface/TrackerTopologyRcd.h"
 #include "DataFormats/TrackerCommon/interface/TrackerTopology.h"
+#include "RecoJets/JetProducers/plugins/VirtualJetProducer.h"
 
 //mc
 #include "SimTracker/TrackTriggerAssociation/interface/TTTrackAssociationMap.h"
 #include "SimDataFormats/TrackingAnalysis/interface/TrackingParticle.h"
-
-#include <fastjet/JetDefinition.hh>
 
 #include <string>
 #include "TMath.h"
@@ -80,8 +79,6 @@ private:
   double deltaZ0Cut_;      // save with |L1z-z0| < maxZ0
   double coneSize_;        // Use anti-kt with this cone size
   bool doTightChi2_;
-  float trkPtTightChi2_;
-  float trkChi2dofTightChi2_;
   bool displaced_;  //use prompt/displaced tracks
   bool selectTrkMatchGenTight_;
   bool selectTrkMatchGenLoose_;
@@ -91,6 +88,7 @@ private:
   edm::EDGetTokenT<std::vector<l1t::Vertex>> pvToken_;
   const edm::EDGetTokenT<TTTrackAssociationMap<Ref_Phase2TrackerDigi_>> genToken_;
   edm::ESGetToken<TrackerTopology, TrackerTopologyRcd> tTopoToken_;
+  edm::ESGetToken<TrackerGeometry, TrackerDigiGeometryRecord> tGeomToken_;
 };
 
 // constructor
@@ -100,7 +98,8 @@ L1FastTrackingJetProducer::L1FastTrackingJetProducer(const edm::ParameterSet& iC
       pvToken_(consumes<std::vector<l1t::Vertex>>(iConfig.getParameter<edm::InputTag>("L1PrimaryVertexTag"))),
       genToken_(
           consumes<TTTrackAssociationMap<Ref_Phase2TrackerDigi_>>(iConfig.getParameter<edm::InputTag>("GenInfo"))),
-      tTopoToken_(esConsumes<TrackerTopology, TrackerTopologyRcd>(edm::ESInputTag("", ""))) {
+      tTopoToken_(esConsumes<TrackerTopology, TrackerTopologyRcd>(edm::ESInputTag("", ""))),
+      tGeomToken_(esConsumes<TrackerGeometry, TrackerDigiGeometryRecord>(edm::ESInputTag("", ""))) {
   trkZMax_ = (float)iConfig.getParameter<double>("trk_zMax");
   trkChi2dofMax_ = (float)iConfig.getParameter<double>("trk_chi2dofMax");
   trkBendChi2Max_ = iConfig.getParameter<double>("trk_bendChi2Max");
@@ -111,8 +110,6 @@ L1FastTrackingJetProducer::L1FastTrackingJetProducer(const edm::ParameterSet& iC
   deltaZ0Cut_ = (float)iConfig.getParameter<double>("deltaZ0Cut");
   coneSize_ = (float)iConfig.getParameter<double>("coneSize");
   doTightChi2_ = iConfig.getParameter<bool>("doTightChi2");
-  trkPtTightChi2_ = (float)iConfig.getParameter<double>("trk_ptTightChi2");
-  trkChi2dofTightChi2_ = (float)iConfig.getParameter<double>("trk_chi2dofTightChi2");
   displaced_ = iConfig.getParameter<bool>("displaced");
   selectTrkMatchGenTight_ = iConfig.getParameter<bool>("selectTrkMatchGenTight");
   selectTrkMatchGenLoose_ = iConfig.getParameter<bool>("selectTrkMatchGenLoose");
@@ -142,6 +139,7 @@ void L1FastTrackingJetProducer::produce(edm::Event& iEvent, const edm::EventSetu
 
   // Tracker Topology
   const TrackerTopology& tTopo = iSetup.getData(tTopoToken_);
+  const TrackerGeometry& tGeom = iSetup.getData(tGeomToken_);
 
   edm::Handle<std::vector<l1t::Vertex>> L1VertexHandle;
   iEvent.getByToken(pvToken_, L1VertexHandle);
@@ -161,9 +159,9 @@ void L1FastTrackingJetProducer::produce(edm::Event& iEvent, const edm::EventSetu
         theStubs = iterL1Track->getStubRefs();
     int trk_nstub = (int)theStubs.size();
 
-    if (std::abs(trk_z0) > trkZMax_)
+    if (fabs(trk_z0) > trkZMax_)
       continue;
-    if (std::abs(iterL1Track->momentum().eta()) > trkEtaMax_)
+    if (fabs(iterL1Track->momentum().eta()) > trkEtaMax_)
       continue;
     if (trk_pt < trkPtMin_)
       continue;
@@ -173,7 +171,7 @@ void L1FastTrackingJetProducer::produce(edm::Event& iEvent, const edm::EventSetu
       continue;
     if (trk_bendchi2 > trkBendChi2Max_)
       continue;
-    if (doTightChi2_ && (trk_pt > trkPtTightChi2_ && trk_chi2dof > trkChi2dofTightChi2_))
+    if (doTightChi2_ && (trk_pt > 20.0 && trk_chi2dof > 5.0))
       continue;
 
     int trk_nPS = 0;
@@ -191,7 +189,7 @@ void L1FastTrackingJetProducer::produce(edm::Event& iEvent, const edm::EventSetu
     }
     if (trk_nPS < trkNPSStubMin_)
       continue;
-    if (std::abs(recoVtx - trk_z0) > deltaZ0Cut_)
+    if (fabs(recoVtx - trk_z0) > deltaZ0Cut_)
       continue;
     if (!iEvent.isRealData()) {
       edm::Ptr<TTTrack<Ref_Phase2TrackerDigi_>> trk_ptr(TTTrackHandle, this_l1track);
@@ -251,52 +249,11 @@ void L1FastTrackingJetProducer::beginJob() {}
 void L1FastTrackingJetProducer::endJob() {}
 
 void L1FastTrackingJetProducer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
-  {
-    // L1FastTrackingJets
-    edm::ParameterSetDescription desc;
-    desc.add<edm::InputTag>("L1TrackInputTag", edm::InputTag("TTTracksFromTrackletEmulation", "Level1TTTracks"));
-    desc.add<std::string>("L1PrimaryVertexTag", "l1vertices");
-    desc.add<edm::InputTag>("GenInfo", edm::InputTag("TTTrackAssociatorFromPixelDigis", "Level1TTTracks"));
-    desc.add<double>("trk_zMax", 15.0);
-    desc.add<double>("trk_chi2dofMax", 10.0);
-    desc.add<double>("trk_bendChi2Max", 2.2);
-    desc.add<double>("trk_ptMin", 2.0);
-    desc.add<double>("trk_etaMax", 2.5);
-    desc.add<int>("trk_nStubMin", 4);
-    desc.add<int>("trk_nPSStubMin", -1);
-    desc.add<double>("deltaZ0Cut", 0.5);
-    desc.add<bool>("doTightChi2", true);
-    desc.add<double>("trk_ptTightChi2", 20.0);
-    desc.add<double>("trk_chi2dofTightChi2", 5.0);
-    desc.add<double>("coneSize", 0.4);
-    desc.add<bool>("displaced", false);
-    desc.add<bool>("selectTrkMatchGenTight", true);
-    desc.add<bool>("selectTrkMatchGenLoose", false);
-    desc.add<bool>("selectTrkMatchGenOrPU", false);
-    descriptions.add("L1FastTrackingJets", desc);
-    // or use the following to generate the label from the module's C++ type
-    //descriptions.addWithDefaultLabel(desc);
-  }
-  /*{                                                                                                                           
-    // L1FastTrackingJetsExtended                                                                                             
-    desc.add<double>("trk_bendChi2Max", 2.4);
-    desc.add<double>("trk_ptMin", 3.0);
-    desc.add<double>("trk_etaMax", 2.5);
-    desc.add<int>("trk_nStubMin", 4);
-    desc.add<int>("trk_nPSStubMin", -1);
-    desc.add<double>("deltaZ0Cut", 3.0);
-    desc.add<bool>("doTightChi2", true);
-    desc.add<double>("trk_ptTightChi2", 20.0);
-    desc.add<double>("trk_chi2dofTightChi2", 5.0);
-    desc.add<double>("coneSize", 0.4);
-    desc.add<bool>("displaced", true);
-    desc.add<bool>("selectTrkMatchGenTight", true);
-    desc.add<bool>("selectTrkMatchGenLoose", false);
-    desc.add<bool>("selectTrkMatchGenOrPU", false);
-    descriptions.add("L1FastTrackingJetsExtended", desc);
-    // or use the following to generate the label from the module's C++ type
-    //descriptions.addWithDefaultLabel(desc);
-  }*/
+  //The following says we do not know what parameters are allowed so do no validation
+  // Please change this to state exactly what you do use, even if it is no parameters
+  edm::ParameterSetDescription desc;
+  desc.setUnknown();
+  descriptions.addDefault(desc);
 }
 
 //define this as a plug-in

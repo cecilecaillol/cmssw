@@ -487,20 +487,18 @@ L1CaloJetProducer::L1CaloJetProducer(const edm::ParameterSet &iConfig)
       }
       l1eg_bins.push_back(em_bins);
     }
-    tauPtCalibrationsHGCal.push_back(l1eg_bins);
-  }
-  if (debug) {
-    LogDebug("L1CaloJetProducer") << " Loading HGCal calibrations: Loaded " << index
-                                  << " values vs. size() of input calibration file: "
-                                  << int(tauCalibrationsHGCal.size()) << "\n";
-  }
+    if(debug) printf("\nLoading HGCal calibrations: Loaded %i values vs. size() of input calibration file: %i", index, int(tauCalibrationsHGCal.size()));
 
-  isoTauBarrel.SetParameter(0, 0.30);
-  isoTauBarrel.SetParameter(1, 0.31);
-  isoTauBarrel.SetParameter(2, 0.040);
-  isoTauHGCal.SetParameter(0, 0.34);
-  isoTauHGCal.SetParameter(1, 0.35);
-  isoTauHGCal.SetParameter(2, 0.051);
+
+
+    isoTauBarrel.SetParameter( 0, 0.30 );
+    isoTauBarrel.SetParameter( 1, 0.31 );
+    isoTauBarrel.SetParameter( 2, 0.040 );
+    isoTauHGCal.SetParameter( 0, 0.34 );
+    isoTauHGCal.SetParameter( 1, 0.35 );
+    isoTauHGCal.SetParameter( 2, 0.051 );
+
+    if (debug) printf("\nL1CaloJetProducer end\n");
 }
 
 void L1CaloJetProducer::produce(edm::Event &iEvent, const edm::EventSetup &iSetup) {

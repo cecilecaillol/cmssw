@@ -1,8 +1,10 @@
 import FWCore.ParameterSet.Config as cms
+from L1Trigger.VertexFinder.VertexProducer_cff import VertexProducer
+
 
 L1FastTrackingJets = cms.EDProducer("L1FastTrackingJetProducer",
     L1TrackInputTag = cms.InputTag("TTTracksFromTrackletEmulation", "Level1TTTracks"),
-    L1PrimaryVertexTag = cms.string("l1vertices"),
+    L1PrimaryVertexTag=cms.InputTag("VertexProducer", VertexProducer.l1VertexCollectionName.value()),
     GenInfo = cms.InputTag("TTTrackAssociatorFromPixelDigis", "Level1TTTracks"),
     trk_zMax = cms.double(15.),       # max track z0 [cm]
     trk_chi2dofMax = cms.double(10.), # max track chi2/dof
@@ -13,8 +15,6 @@ L1FastTrackingJets = cms.EDProducer("L1FastTrackingJetProducer",
     trk_nPSStubMin = cms.int32(-1),   # minimum number of PS stubs in track
     deltaZ0Cut=cms.double(0.5),       # cluster tracks within |dz|<X
     doTightChi2 = cms.bool( True ),   # chi2dof < 5 for tracks with PT > 20
-    trk_ptTightChi2 = cms.double(20.0),
-    trk_chi2dofTightChi2 = cms.double(5.0),
     coneSize=cms.double(0.4),         #cone size for anti-kt fast jet
     displaced = cms.bool(False),       # use prompt/displaced tracks
     selectTrkMatchGenTight=cms.bool(True),
@@ -24,7 +24,7 @@ L1FastTrackingJets = cms.EDProducer("L1FastTrackingJetProducer",
 
 L1FastTrackingJetsExtended = cms.EDProducer("L1FastTrackingJetProducer",
     L1TrackInputTag = cms.InputTag("TTTracksFromExtendedTrackletEmulation", "Level1TTTracks"),
-    L1PrimaryVertexTag = cms.string("l1vertices"),
+    L1PrimaryVertexTag=cms.InputTag("VertexProducer", VertexProducer.l1VertexCollectionName.value()),
     GenInfo = cms.InputTag("TTTrackAssociatorFromPixelDigisExtended", "Level1TTTracks"),
     trk_zMax = cms.double(15.),       # max track z0 [cm]
     trk_chi2dofMax = cms.double(40.),    # max track chi2 for extended tracks
@@ -35,8 +35,6 @@ L1FastTrackingJetsExtended = cms.EDProducer("L1FastTrackingJetProducer",
     trk_nPSStubMin = cms.int32(-1),   # minimum number of stubs in PS modules on track
     deltaZ0Cut=cms.double(3.0),       #cluster tracks within |dz|<X
     doTightChi2 = cms.bool( True ),   # chi2dof < 5 for tracks with PT > 20
-    trk_ptTightChi2 = cms.double(20.0),
-    trk_chi2dofTightChi2 = cms.double(5.0),
     coneSize=cms.double(0.4),         #cone size for anti-kt fast jet
     displaced = cms.bool(True),        # use prompt/displaced tracks
     selectTrkMatchGenTight=cms.bool(True),

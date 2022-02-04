@@ -1,8 +1,9 @@
 #ifndef __L1Trigger_VertexFinder_VertexProducer_h__
 #define __L1Trigger_VertexFinder_VertexProducer_h__
 
+#include "DataFormats/L1TrackTrigger/interface/TTTypes.h"
 #include "DataFormats/L1Trigger/interface/Vertex.h"
-#include "FWCore/Framework/interface/global/EDProducer.h"
+#include "DataFormats/L1Trigger/interface/VertexWord.h"
 #include "DataFormats/TrackerCommon/interface/TrackerTopology.h"
 #include "FWCore/Framework/interface/global/EDProducer.h"
 #include "FWCore/Framework/interface/Event.h"
@@ -13,6 +14,7 @@
 #include "Geometry/Records/interface/TrackerTopologyRcd.h"
 #include "L1Trigger/VertexFinder/interface/AlgoSettings.h"
 #include "L1Trigger/VertexFinder/interface/RecoVertex.h"
+#include "L1Trigger/VertexFinder/interface/VertexFinder.h"
 
 #include <iostream>
 #include <map>

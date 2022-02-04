@@ -14,7 +14,7 @@
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
-#include "DataFormats/L1TCorrelator/interface/TkPrimaryVertex.h"
+#include "DataFormats/L1Trigger/interface/Vertex.h"
 #include "DataFormats/L1TCorrelator/interface/TkHTMiss.h"
 #include "DataFormats/L1TCorrelator/interface/TkHTMissFwd.h"
 
@@ -26,9 +26,9 @@ public:
   ~L1TkHTMissProducer() override;
 
 private:
-  //void beginJob() override;
+  virtual void beginJob();
   void produce(edm::Event&, const edm::EventSetup&) override;
-  //void endJob() override;
+  virtual void endJob();
 
   // ----------member data ---------------------------
   float jetMinPt_;            // [GeV]
@@ -42,12 +42,12 @@ private:
   bool displaced_;  // Use prompt/displaced tracks
   unsigned int minNtracksHighPt_;
   unsigned int minNtracksLowPt_;
-  const edm::EDGetTokenT<TkPrimaryVertexCollection> pvToken_;
+  const edm::EDGetTokenT<VertexCollection> pvToken_;
   const edm::EDGetTokenT<TkJetCollection> jetToken_;
 };
 
 L1TkHTMissProducer::L1TkHTMissProducer(const edm::ParameterSet& iConfig)
-    : pvToken_(consumes<TkPrimaryVertexCollection>(iConfig.getParameter<edm::InputTag>("L1VertexInputTag"))),
+    : pvToken_(consumes<VertexCollection>(iConfig.getParameter<edm::InputTag>("L1VertexInputTag"))),
       jetToken_(consumes<TkJetCollection>(iConfig.getParameter<edm::InputTag>("L1TkJetInputTag"))) {
   jetMinPt_ = (float)iConfig.getParameter<double>("jet_minPt");
   jetMaxEta_ = (float)iConfig.getParameter<double>("jet_maxEta");
@@ -57,8 +57,6 @@ L1TkHTMissProducer::L1TkHTMissProducer(const edm::ParameterSet& iConfig)
   deltaZ_ = (float)iConfig.getParameter<double>("deltaZ");
   minNtracksHighPt_ = iConfig.getParameter<int>("jet_minNtracksHighPt");
   minNtracksLowPt_ = iConfig.getParameter<int>("jet_minNtracksLowPt");
-  minJetEtLowPt_ = iConfig.getParameter<double>("jet_minJetEtLowPt");
-  minJetEtHighPt_ = iConfig.getParameter<double>("jet_minJetEtHighPt");
   displaced_ = iConfig.getParameter<bool>("displaced");
 
   if (useCaloJets_)
@@ -76,8 +74,9 @@ void L1TkHTMissProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
   std::unique_ptr<TkHTMissCollection> MHTCollection(new TkHTMissCollection);
 
   // L1 primary vertex
-  edm::Handle<TkPrimaryVertexCollection> L1VertexHandle;
+  edm::Handle<VertexCollection> L1VertexHandle;
   iEvent.getByToken(pvToken_, L1VertexHandle);
+  std::vector<Vertex>::const_iterator vtxIter;
 
   // L1 track-trigger jets
   edm::Handle<TkJetCollection> L1TkJetsHandle;
@@ -99,21 +98,21 @@ void L1TkHTMissProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
   // ----------------------------------------------------------------------------------------------
   float evtZVtx = 999;
   bool foundVtx = false;
-  edm::Ref<TkPrimaryVertexCollection> L1VtxRef;  // null reference
+  edm::Ref<VertexCollection> L1VtxRef;  // null reference
 
   if (useCaloJets_) {
     if (doVtxConstrain_ && primaryVtxConstrain_) {
       if (!L1VertexHandle.isValid()) {
-        LogError("L1TkHTMissProducer") << "\nWarning: TkPrimaryVertexCollection not found in the event. Exit\n";
+        LogError("L1TkHTMissProducer") << "\nWarning: VertexCollection not found in the event. Exit\n";
         return;
       } else {
-        std::vector<TkPrimaryVertex>::const_iterator vtxIter = L1VertexHandle->begin();
+        std::vector<Vertex>::const_iterator vtxIter = L1VertexHandle->begin();
         // by convention, the first vertex in the collection is the one that should
         // be used by default
-        evtZVtx = vtxIter->zvertex();
+        evtZVtx = vtxIter->z0();
         foundVtx = true;
         int ivtx = 0;
-        edm::Ref<TkPrimaryVertexCollection> vtxRef(L1VertexHandle, ivtx);
+        edm::Ref<VertexCollection> vtxRef(L1VertexHandle, ivtx);
         L1VtxRef = vtxRef;
       }
     }  //endif primaryVtxConstrain_
@@ -212,9 +211,9 @@ void L1TkHTMissProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
         continue;
       if (fabs(jetIter->eta()) > jetMaxEta_)
         continue;
-      if (jetIter->ntracks() < minNtracksLowPt_ && tmp_jet_et > minJetEtLowPt_)
+      if (jetIter->ntracks() < minNtracksLowPt_ && tmp_jet_et > 50)
         continue;
-      if (jetIter->ntracks() < minNtracksHighPt_ && tmp_jet_et > minJetEtHighPt_)
+      if (jetIter->ntracks() < minNtracksHighPt_ && tmp_jet_et > 100)
         continue;
       sumPx += tmp_jet_px;
       sumPy += tmp_jet_py;
@@ -235,8 +234,8 @@ void L1TkHTMissProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSet
   }
 }  //end producer
 
-//void L1TkHTMissProducer::beginJob() {}
+void L1TkHTMissProducer::beginJob() {}
 
-//void L1TkHTMissProducer::endJob() {}
+void L1TkHTMissProducer::endJob() {}
 
 DEFINE_FWK_MODULE(L1TkHTMissProducer);

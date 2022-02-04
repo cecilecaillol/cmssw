@@ -28,6 +28,7 @@
 #include "DataFormats/L1TCorrelator/interface/TkJet.h"
 #include "DataFormats/L1TCorrelator/interface/TkJetFwd.h"
 #include "DataFormats/L1TCorrelator/interface/TkPrimaryVertex.h"
+#include "DataFormats/L1Trigger/interface/Vertex.h"
 
 // geometry
 #include "Geometry/Records/interface/TrackerTopologyRcd.h"
@@ -60,9 +61,9 @@ public:
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
 private:
-  //void beginJob() override;
+  virtual void beginJob();
   void produce(edm::Event&, const edm::EventSetup&) override;
-  //void endJob() override;
+  virtual void endJob();
 
   // track selection criteria
   float trkZMax_;          // in [cm]
@@ -75,13 +76,10 @@ private:
   double deltaZ0Cut_;      // save with |L1z-z0| < maxZ0
   double coneSize_;        // Use anti-kt with this cone size
   bool doTightChi2_;
-  float trkPtTightChi2_;
-  float trkChi2dofTightChi2_;
   bool displaced_;  //use prompt/displaced tracks
 
   const edm::EDGetTokenT<std::vector<TTTrack<Ref_Phase2TrackerDigi_> > > trackToken_;
-  edm::EDGetTokenT<TkPrimaryVertexCollection> pvToken_;
-  edm::ESGetToken<TrackerTopology, TrackerTopologyRcd> tTopoToken_;
+  edm::EDGetTokenT<l1t::VertexCollection> pvToken_;
 };
 
 // constructor
@@ -90,6 +88,7 @@ L1TrackFastJetProducer::L1TrackFastJetProducer(const edm::ParameterSet& iConfig)
           iConfig.getParameter<edm::InputTag>("L1TrackInputTag"))),
       pvToken_(consumes<TkPrimaryVertexCollection>(iConfig.getParameter<edm::InputTag>("L1PrimaryVertexTag"))),
       tTopoToken_(esConsumes<TrackerTopology, TrackerTopologyRcd>(edm::ESInputTag("", ""))) {
+      pvToken_(consumes<l1t::VertexCollection>(iConfig.getParameter<edm::InputTag>("L1PrimaryVertexTag"))) {
   trkZMax_ = (float)iConfig.getParameter<double>("trk_zMax");
   trkChi2dofMax_ = (float)iConfig.getParameter<double>("trk_chi2dofMax");
   trkBendChi2Max_ = iConfig.getParameter<double>("trk_bendChi2Max");
@@ -124,13 +123,13 @@ void L1TrackFastJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
   // Tracker Topology
   const TrackerTopology& tTopo = iSetup.getData(tTopoToken_);
 
-  edm::Handle<TkPrimaryVertexCollection> TkPrimaryVertexHandle;
+  edm::Handle<l1t::VertexCollection> TkPrimaryVertexHandle;
   iEvent.getByToken(pvToken_, TkPrimaryVertexHandle);
 
   fastjet::JetDefinition jet_def(fastjet::antikt_algorithm, coneSize_);
   std::vector<fastjet::PseudoJet> JetInputs;
 
-  float recoVtx = TkPrimaryVertexHandle->begin()->zvertex();
+  float recoVtx = TkPrimaryVertexHandle->begin()->z0();
   unsigned int this_l1track = 0;
   for (iterL1Track = TTTrackHandle->begin(); iterL1Track != TTTrackHandle->end(); iterL1Track++) {
     this_l1track++;
@@ -154,7 +153,7 @@ void L1TrackFastJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
       continue;
     if (trk_bendchi2 > trkBendChi2Max_)
       continue;
-    if (doTightChi2_ && (trk_pt > trkPtTightChi2_ && trk_chi2dof > trkChi2dofTightChi2_))
+    if (doTightChi2_ && (trk_pt > 20.0 && trk_chi2dof > 5.0))
       continue;
 
     int trk_nPS = 0;
@@ -162,9 +161,9 @@ void L1TrackFastJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
       DetId detId(theStubs.at(istub)->getDetId());
       bool tmp_isPS = false;
       if (detId.det() == DetId::Detector::Tracker) {
-        if (detId.subdetId() == StripSubdetector::TOB && tTopo.tobLayer(detId) <= 3)
+        if (detId.subdetId() == StripSubdetector::TOB && tTopo->tobLayer(detId) <= 3)
           tmp_isPS = true;
-        else if (detId.subdetId() == StripSubdetector::TID && tTopo.tidRing(detId) <= 9)
+        else if (detId.subdetId() == StripSubdetector::TID && tTopo->tidRing(detId) <= 9)
           tmp_isPS = true;
       }
       if (tmp_isPS)
@@ -214,9 +213,9 @@ void L1TrackFastJetProducer::produce(edm::Event& iEvent, const edm::EventSetup& 
     iEvent.put(std::move(L1TrackFastJets), "L1TrackFastJets");
 }
 
-//void L1TrackFastJetProducer::beginJob() {}
+void L1TrackFastJetProducer::beginJob() {}
 
-//void L1TrackFastJetProducer::endJob() {}
+void L1TrackFastJetProducer::endJob() {}
 
 void L1TrackFastJetProducer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   //The following says we do not know what parameters are allowed so do no validation

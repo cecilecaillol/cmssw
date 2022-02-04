@@ -22,6 +22,7 @@
 <use name="L1Trigger/CSCTrackFinder"/>
 <use name="L1Trigger/GlobalTriggerAnalyzer"/>
 <use name="L1Trigger/L1TMuon"/>
+<use name="L1Trigger/Phase2L1GMT"/>
 <use name="JetMETCorrections/Objects"/>
 <use name="PhysicsTools/Utilities"/>
 <use name="MuonAnalysis/MuonAssociators"/>

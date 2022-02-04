@@ -1,11 +1,6 @@
 #ifndef __L1Trigger_VertexFinder_InputData_h__
 #define __L1Trigger_VertexFinder_InputData_h__
 
-#include "FWCore/Framework/interface/EDProducer.h"
-#include "FWCore/Framework/interface/Event.h"
-#include "FWCore/Framework/interface/MakerMacros.h"
-#include "FWCore/Framework/interface/EventSetup.h"
-#include "FWCore/Utilities/interface/ESGetToken.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
@@ -13,11 +8,6 @@
 #include "L1Trigger/VertexFinder/interface/Stub.h"
 #include "L1Trigger/VertexFinder/interface/TP.h"
 #include "L1Trigger/VertexFinder/interface/Vertex.h"
-#include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
-#include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
-#include "DataFormats/TrackerCommon/interface/TrackerTopology.h"
-#include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
-#include "Geometry/Records/interface/TrackerTopologyRcd.h"
 
 #include <vector>
 
@@ -43,9 +33,7 @@ namespace l1tVertexFinder {
               const edm::EDGetTokenT<edm::View<reco::GenParticle>> genParticlesToken,
               const edm::EDGetTokenT<edm::View<TrackingParticle>> tpToken,
               const edm::EDGetTokenT<edm::ValueMap<l1tVertexFinder::TP>> tpValueMapToken,
-              const edm::EDGetTokenT<DetSetVec> stubToken,
-              const edm::ESGetToken<TrackerTopology, TrackerTopologyRcd> tTopoToken,
-              const edm::ESGetToken<TrackerGeometry, TrackerDigiGeometryRecord> tGeomToken);
+              const edm::EDGetTokenT<DetSetVec> stubToken);
     ~InputData();
 
     // Sort Tracking Particles by vertex z position

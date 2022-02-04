@@ -189,14 +189,25 @@ public:
     return r.position().Z();
   }
 
+<<<<<<< HEAD
   /// @brief dxy parameter.
+=======
+  /// @brief dxy parameter. (This is the transverse impact parameter w.r.t. to (0,0,0) ONLY if refPoint is close to (0,0,0)).
+>>>>>>> merge tags 3.3.8 to 3.4.15 - see SWGuideL1TPhase2Instructions twiki for PR list
   double dxy() const { return (-vx() * py() + vy() * px()) / pt(); }
 
   /// @brief dxy parameter in perigee convention (d0 = -dxy)
   double d0() const { return -dxy(); }
 
   /// @brief dz parameter (= dsz/cos(lambda)). This is the track z0 w.r.t (0,0,0) only if the refPoint is close to (0,0,0).
+<<<<<<< HEAD
   double dz() const { return vz() - (vx() * px() + vy() * py()) * pz() / p4().Perp2(); }
+=======
+  double dz() const {
+    const auto thept2inv = 1 / p4().Perp2();
+    return vz() - (vx() * px() + vy() * py()) * pz() * thept2inv;
+  }
+>>>>>>> merge tags 3.3.8 to 3.4.15 - see SWGuideL1TPhase2Instructions twiki for PR list
 
   /// @brief z0 parameter
   double z0() const { return dz(); }

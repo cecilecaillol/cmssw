@@ -1,4 +1,5 @@
 #include "DataFormats/TrackerCommon/interface/TrackerTopology.h"
+#include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Utilities/interface/InputTag.h"
@@ -27,12 +28,15 @@ namespace l1tVertexFinder {
                        const edm::EDGetTokenT<edm::View<reco::GenParticle>> genParticlesToken,
                        const edm::EDGetTokenT<edm::View<TrackingParticle>> tpToken,
                        const edm::EDGetTokenT<edm::ValueMap<l1tVertexFinder::TP>> tpValueMapToken,
-                       const edm::EDGetTokenT<DetSetVec> stubToken,
-                       edm::ESGetToken<TrackerTopology, TrackerTopologyRcd> tTopoToken,
-                       edm::ESGetToken<TrackerGeometry, TrackerDigiGeometryRecord> tGeomToken) {
+                       const edm::EDGetTokenT<DetSetVec> stubToken) {
     // Get the tracker geometry info needed to unpack the stub info.
-    const TrackerTopology& tTopo = iSetup.getData(tTopoToken);
-    const TrackerGeometry& tGeom = iSetup.getData(tGeomToken);
+    edm::ESHandle<TrackerGeometry> trackerGeometryHandle;
+    iSetup.get<TrackerDigiGeometryRecord>().get(trackerGeometryHandle);
+    const TrackerGeometry* trackerGeometry = trackerGeometryHandle.product();
+
+    edm::ESHandle<TrackerTopology> trackerTopologyHandle;
+    iSetup.get<TrackerTopologyRcd>().get(trackerTopologyHandle);
+    const TrackerTopology* trackerTopology = trackerTopologyHandle.product();
 
     // Get stub info, by looping over modules and then stubs inside each module.
     // Also get the association map from stubs to tracking particles.
@@ -47,13 +51,13 @@ namespace l1tVertexFinder {
     }
 
     std::map<DetId, DetId> stubGeoDetIdMap;
-    for (auto gd = tGeom.dets().begin(); gd != tGeom.dets().end(); gd++) {
+    for (auto gd = trackerGeometry->dets().begin(); gd != trackerGeometry->dets().end(); gd++) {
       DetId detid = (*gd)->geographicalId();
       if (detid.subdetId() != StripSubdetector::TOB && detid.subdetId() != StripSubdetector::TID)
         continue;  // only run on OT
-      if (!tTopo.isLower(detid))
-        continue;                             // loop on the stacks: choose the lower arbitrarily
-      DetId stackDetid = tTopo.stack(detid);  // Stub module detid
+      if (!trackerTopology->isLower(detid))
+        continue;                                        // loop on the stacks: choose the lower arbitrarily
+      DetId stackDetid = trackerTopology->stack(detid);  // Stub module detid
 
       if (lStubDetIds.count(stackDetid) > 0) {
         assert(stubGeoDetIdMap.count(stackDetid) == 0);
@@ -85,7 +89,7 @@ namespace l1tVertexFinder {
       } else {
         genPt_PU_ += tp->pt();
       }
-      if (settings.debug() > 0) {
+      if (settings.debug() > 2) {
         edm::LogInfo("InputData") << "InputData::genPt in the event " << genPt_;
       }
 
@@ -108,12 +112,11 @@ namespace l1tVertexFinder {
       }
     }
 
-    for (const Vertex& vertex : vertices_) {
+    for (Vertex vertex : vertices_) {
       if (vertex.numTracks() >= settings.vx_minTracks())
         recoVertices_.push_back(vertex);
     }
-
-    if (settings.debug() > 0)
+    if (settings.debug() > 2)
       edm::LogInfo("InputData") << "InputData::" << vertices_.size() << " pileup vertices in the event, "
                                 << recoVertices_.size() << " reconstructable";
 

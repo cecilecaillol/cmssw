@@ -64,8 +64,6 @@ private:
   const edm::EDGetTokenT<edm::ValueMap<l1tVertexFinder::TP>> tpValueMapToken_;
   const edm::EDGetTokenT<DetSetVec> stubToken_;
   const edm::EDGetTokenT<edm::ValueMap<l1tVertexFinder::Stub>> stubValueMapToken_;
-  const edm::ESGetToken<TrackerTopology, TrackerTopologyRcd> tTopoToken_;
-  const edm::ESGetToken<TrackerGeometry, TrackerDigiGeometryRecord> tGeomToken_;
 };
 
 //
@@ -80,9 +78,7 @@ InputDataProducer::InputDataProducer(const edm::ParameterSet& iConfig)
       tpToken_(consumes<edm::View<TrackingParticle>>(iConfig.getParameter<edm::InputTag>("tpInputTag"))),
       tpValueMapToken_(
           consumes<edm::ValueMap<l1tVertexFinder::TP>>(iConfig.getParameter<edm::InputTag>("tpValueMapInputTag"))),
-      stubToken_(consumes<DetSetVec>(iConfig.getParameter<edm::InputTag>("stubInputTag"))),
-      tTopoToken_(esConsumes<TrackerTopology, TrackerTopologyRcd>(edm::ESInputTag("", ""))),
-      tGeomToken_(esConsumes<TrackerGeometry, TrackerDigiGeometryRecord>(edm::ESInputTag("", ""))) {
+      stubToken_(consumes<DetSetVec>(iConfig.getParameter<edm::InputTag>("stubInputTag"))) {
   // Define EDM output to be written to file (if required)
   produces<l1tVertexFinder::InputData>(outputCollectionName_);
 
@@ -97,16 +93,8 @@ InputDataProducer::~InputDataProducer() {}
 
 // ------------ method called to produce the data  ------------
 void InputDataProducer::produce(edm::StreamID, edm::Event& iEvent, const edm::EventSetup& iSetup) const {
-  std::unique_ptr<l1tVertexFinder::InputData> product = std::make_unique<l1tVertexFinder::InputData>(iEvent,
-                                                                                                     iSetup,
-                                                                                                     settings_,
-                                                                                                     hepMCToken_,
-                                                                                                     genParticlesToken_,
-                                                                                                     tpToken_,
-                                                                                                     tpValueMapToken_,
-                                                                                                     stubToken_,
-                                                                                                     tTopoToken_,
-                                                                                                     tGeomToken_);
+  std::unique_ptr<l1tVertexFinder::InputData> product = std::make_unique<l1tVertexFinder::InputData>(
+      iEvent, iSetup, settings_, hepMCToken_, genParticlesToken_, tpToken_, tpValueMapToken_, stubToken_);
 
   iEvent.put(std::move(product), outputCollectionName_);
 }
