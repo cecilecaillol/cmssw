@@ -21,7 +21,7 @@ namespace l1ct {
     rawid_t hwRawId;  // will contain isolation or MVA output
     lepid_t hwIdVsMu;
     lepid_t hwIdVsEle;
-    hwRawId hwIsoOrMVA;
+    rawid_t hwIsoOrMVA;
 
     inline bool operator==(const Tau &other) const {
       return hwPt == other.hwPt && hwEta == other.hwEta && hwPhi == other.hwPhi && hwSeedPt == other.hwSeedPt &&
