@@ -74,32 +74,32 @@ namespace l1ct {
     inline ap_uint<BITWIDTH> pack() const {
       ap_uint<BITWIDTH> ret;
       unsigned int start = 0;
-      _pack_into_bits(ret, start, hwPt);
-      _pack_into_bits(ret, start, hwEta);
-      _pack_into_bits(ret, start, hwPhi);
-      _pack_into_bits(ret, start, hwSeedPt);
-      _pack_into_bits(ret, start, hwSeedZ0);
-      _pack_bool_into_bits(ret, start, hwCharge);
-      _pack_into_bits(ret, start, hwType);
-      _pack_into_bits(ret, start, hwRawId);
-      _pack_into_bits(ret, start, hwIdVsMu);
-      _pack_into_bits(ret, start, hwIdVsEle);
-      _pack_into_bits(ret, start, hwIsoOrMVA);
+      pack_into_bits(ret, start, hwPt);
+      pack_into_bits(ret, start, hwEta);
+      pack_into_bits(ret, start, hwPhi);
+      pack_into_bits(ret, start, hwSeedPt);
+      pack_into_bits(ret, start, hwSeedZ0);
+      pack_bool_into_bits(ret, start, hwCharge);
+      pack_into_bits(ret, start, hwType);
+      pack_into_bits(ret, start, hwRawId);
+      pack_into_bits(ret, start, hwIdVsMu);
+      pack_into_bits(ret, start, hwIdVsEle);
+      pack_into_bits(ret, start, hwIsoOrMVA);
       return ret;
     }
     inline static Tau unpack(const ap_uint<BITWIDTH> &src) {
       Tau ret;
       unsigned int start = 0;
-      _unpack_from_bits(src, start, ret.hwPt);
-      _unpack_from_bits(src, start, ret.hwEta);
-      _unpack_from_bits(src, start, ret.hwPhi);
-      _unpack_from_bits(src, start, ret.hwSeedPt);
-      _unpack_from_bits(src, start, ret.hwSeedZ0);
-      _unpack_from_bits(src, start, ret.hwType);
-      _unpack_from_bits(src, start, ret.hwRawId);
-      _unpack_from_bits(src, start, ret.hwIdVsMu);
-      _unpack_from_bits(src, start, ret.hwIdVsEle);
-      _unpack_from_bits(src, start, ret.hwIsoOrMVA);
+      unpack_from_bits(src, start, ret.hwPt);
+      unpack_from_bits(src, start, ret.hwEta);
+      unpack_from_bits(src, start, ret.hwPhi);
+      unpack_from_bits(src, start, ret.hwSeedPt);
+      unpack_from_bits(src, start, ret.hwSeedZ0);
+      unpack_from_bits(src, start, ret.hwType);
+      unpack_from_bits(src, start, ret.hwRawId);
+      unpack_from_bits(src, start, ret.hwIdVsMu);
+      unpack_from_bits(src, start, ret.hwIdVsEle);
+      unpack_from_bits(src, start, ret.hwIsoOrMVA);
       return ret;
     }
   };
