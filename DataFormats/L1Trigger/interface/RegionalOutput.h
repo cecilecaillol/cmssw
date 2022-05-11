@@ -123,7 +123,12 @@ namespace l1t {
     const_iterator begin() const { return const_iterator(this, 0); }
     const_iterator end() const { return const_iterator(this, values_.size()); }
 
-    Region region(unsigned int ireg) const { return Region(this, (ireg == 0 or ireg>=regions_.size()) ? 0 : regions_[ireg - 1], regions_[ireg]); }
+    Region region(unsigned int ireg) const {
+      if (ireg >= regions_.size())
+        throw cms::Exception("Region index out of bounds");
+      return Region(this, ireg == 0 ? 0 : regions_[ireg - 1], regions_[ireg]);
+    }
+
     const float eta(unsigned int ireg) const { return etas_[ireg]; }
     const float phi(unsigned int ireg) const { return phis_[ireg]; }
 

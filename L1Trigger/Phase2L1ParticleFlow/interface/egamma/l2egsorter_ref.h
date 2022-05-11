@@ -25,8 +25,8 @@ namespace l1ct {
 
   class L2EgSorterEmulator {
   public:
-    L2EgSorterEmulator(unsigned int nBoards, unsigned int nEGPerBoard, unsigned int nEGOut)
-        : nBOARDS(nBoards), nEGPerBoard(nEGPerBoard), nEGOut(nEGOut) {}
+    L2EgSorterEmulator(unsigned int nBoards, unsigned int nEGPerBoard, unsigned int nEGOut, bool debug)
+        : nBOARDS(nBoards), nEGPerBoard(nEGPerBoard), nEGOut(nEGOut), debug_(debug) {}
 
     L2EgSorterEmulator(const edm::ParameterSet &iConfig);
 
@@ -64,6 +64,8 @@ namespace l1ct {
     void run(const std::vector<l1ct::OutputBoard> &in,
              std::vector<EGIsoObjEmu> &out_photons,
              std::vector<EGIsoEleObjEmu> &out_eles) const;
+
+    void setDebug(int verbose) { debug_ = verbose; }
 
     unsigned int nInputBoards() const { return nBOARDS; }
     unsigned int nInputObjPerBoard() const { return nEGPerBoard; }
@@ -137,6 +139,7 @@ namespace l1ct {
     const unsigned int nBOARDS;
     const unsigned int nEGPerBoard;
     const unsigned int nEGOut;
+    int debug_;
   };
 }  // namespace l1ct
 
