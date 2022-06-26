@@ -11,7 +11,7 @@ from ..modules.l1pfProducerHGCal_cfi import *
 from ..modules.l1pfProducerHGCalNoTK_cfi import *
 from ..modules.hltL1TkElectronsEllipticMatchCrystal_cfi import *
 from ..modules.hltL1TkElectronsEllipticMatchHGC_cfi import *
-from ..modules.hltL1TkMuons_cfi import *
+# from ..modules.hltL1TkMuons_cfi import *
 from ..modules.hltL1TkPhotonsCrystal_cfi import *
 from ..modules.hltL1TkPhotonsHGC_cfi import *
 from ..modules.L1TkPrimaryVertex_cfi import *
@@ -40,7 +40,7 @@ l1tReconstructionTask = cms.Task(
     L1EGammaClusterEmuProducer,
     hltL1TkElectronsEllipticMatchCrystal,
     hltL1TkElectronsEllipticMatchHGC,
-    hltL1TkMuons,
+#    hltL1TkMuons,
     hltL1TkPhotonsCrystal,
     hltL1TkPhotonsHGC,
     L1TkPrimaryVertex,
