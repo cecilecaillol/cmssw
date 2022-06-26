@@ -13,7 +13,7 @@ from ..modules.l1pfProducerHGCalNoTK_cfi import *
 #from ..modules.hltL1TkElectronsEllipticMatchHGC_cfi import *
 # from ..modules.hltL1TkMuons_cfi import *
 # from ..modules.hltL1TkPhotonsCrystal_cfi import *
-from ..modules.hltL1TkPhotonsHGC_cfi import *
+# from ..modules.hltL1TkPhotonsHGC_cfi import *
 from ..modules.L1TkPrimaryVertex_cfi import *
 from ..modules.l1tSlwPFPuppiJets_cfi import *
 from ..modules.l1tSlwPFPuppiJetsCorrected_cfi import *
