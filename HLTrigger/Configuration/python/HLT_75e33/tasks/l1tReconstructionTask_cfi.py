@@ -23,6 +23,7 @@ from ..modules.hltL1TkPhotonsHGC_cfi import *
 #from ..modules.pfClustersFromL1EGClusters_cfi import *
 #from ..modules.pfTracksFromL1TracksBarrel_cfi import *
 #from ..modules.pfTracksFromL1TracksHGCal_cfi import *
+
 from ..modules.simCaloStage2Layer1Digis_cfi import *
 from ..modules.simCscTriggerPrimitiveDigis_cfi import *
 from ..modules.simDtTriggerPrimitiveDigis_cfi import *
