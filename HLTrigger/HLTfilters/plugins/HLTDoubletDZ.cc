@@ -431,12 +431,19 @@ bool HLTDoubletDZ<reco::RecoChargedCandidate, reco::RecoChargedCandidate>::compu
 }
 
 template <>
+<<<<<<< HEAD
 bool HLTDoubletDZ<l1t::TkMuon, l1t::TkMuon>::computeDZ(edm::Event& iEvent,
                                                        l1t::TkMuonRef& r1,
                                                        l1t::TkMuonRef& r2) const {
   const l1t::TkMuon& candidate1(*r1);
   const l1t::TkMuon& candidate2(*r2);
   if (reco::deltaR(candidate1, candidate2) < minDR_)
+=======
+bool HLTDoubletDZ<l1t::TrackerMuon, l1t::TrackerMuon>::computeDZ(edm::Event& iEvent,
+                                                                 l1t::TrackerMuonRef& r1,
+                                                                 l1t::TrackerMuonRef& r2) const {
+  if (reco::deltaR2(r1->phEta(), r1->phPhi(), r2->phEta(), r2->phPhi()) < minDR_ * minDR_)
+>>>>>>> b1a99749b19... code format
     return false;
 
   // We don't care about minPixHitsForDZ_ with the L1TkMuons,
@@ -518,9 +525,14 @@ bool HLTDoubletDZ<T1, T2>::hltFilter(edm::Event& iEvent,
 /// L1TkMuon are *not* RecoCandidates, therefore they don't implement superCluster()
 /// They are LeafCandidates instead
 template <>
+<<<<<<< HEAD
 bool HLTDoubletDZ<l1t::TkMuon, l1t::TkMuon>::hltFilter(edm::Event& iEvent,
                                                        const edm::EventSetup& iSetup,
                                                        trigger::TriggerFilterObjectWithRefs& filterproduct) const {
+=======
+bool HLTDoubletDZ<l1t::TrackerMuon, l1t::TrackerMuon>::hltFilter(
+    edm::Event& iEvent, const edm::EventSetup& iSetup, trigger::TriggerFilterObjectWithRefs& filterproduct) const {
+>>>>>>> b1a99749b19... code format
   // All HLT filters must create and fill an HLT filter object,
   // recording any reconstructed physics objects satisfying (or not)
   // this HLT filter, and place it in the Event.

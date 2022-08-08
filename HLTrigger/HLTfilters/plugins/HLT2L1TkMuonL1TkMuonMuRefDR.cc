@@ -97,6 +97,7 @@ bool HLT2L1TkMuonL1TkMuonMuRefDR::getCollections(edm::Event& iEvent,
     return false;
 }
 
+<<<<<<< HEAD
 std::pair<float, float> HLT2L1TkMuonL1TkMuonMuRefDR::convertEtaPhi(l1t::TkMuonRef& tkmu) const {
   float muRefEta = 0.;
   float muRefPhi = 0.;
@@ -122,6 +123,11 @@ std::pair<float, float> HLT2L1TkMuonL1TkMuonMuRefDR::convertEtaPhi(l1t::TkMuonRe
 }
 
 bool HLT2L1TkMuonL1TkMuonMuRefDR::computeDR(edm::Event& iEvent, l1t::TkMuonRef& r1, l1t::TkMuonRef& r2) const {
+=======
+bool HLT2L1TkMuonL1TkMuonMuRefDR::computeDR(edm::Event& iEvent,
+                                            l1t::TrackerMuonRef& r1,
+                                            l1t::TrackerMuonRef& r2) const {
+>>>>>>> b1a99749b19... code format
   if (minDR_ < 0.)
     return true;
 

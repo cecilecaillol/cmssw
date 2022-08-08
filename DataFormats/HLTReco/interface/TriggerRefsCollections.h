@@ -86,7 +86,14 @@ namespace trigger {
   typedef l1t::EtSumVectorRef VRl1tetsum;
 
   /* Phase-2 */
+<<<<<<< HEAD
   typedef l1t::TkMuonVectorRef VRl1ttkmuon;
+=======
+  // This is a std::vector<TrackerMuonRef>,
+  // and should be called TrackerMuonVectorRef upstream.
+  // The L1T group should be made aware of that
+  typedef l1t::TrackerMuonRefVector VRl1ttkmuon;
+>>>>>>> b1a99749b19... code format
   typedef l1t::TkElectronVectorRef VRl1ttkele;
   typedef l1t::TkEmVectorRef VRl1ttkem;
   typedef l1t::PFJetVectorRef VRl1tpfjet;

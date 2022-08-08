@@ -102,6 +102,7 @@ bool L1TEnergySumFilterT<T>::hltFilter(edm::Event& iEvent,
   auto const& l1tSums = iEvent.getHandle(l1tSumToken_);
 
   int nSum(0);
+<<<<<<< HEAD
   for (auto iSum = l1tSums->begin(); iSum != l1tSums->end(); ++iSum) {
     double offlinePt = 0.0;
     // pt or sumEt?
@@ -118,6 +119,40 @@ bool L1TEnergySumFilterT<T>::hltFilter(edm::Event& iEvent,
       edm::Ref<std::vector<T>> ref(l1tSums, std::distance(l1tSums->begin(), iSum));
       filterproduct.addObject(l1tSumType_, ref);
     }
+=======
+  double onlinePt(0.0);
+  double offlinePt(0.0);
+  auto iSum = l1tSums->begin();
+
+  // The correct way of doing this would be using the EtSumHelper class.
+  // However, it doesn't support std::vector<l1t::EtSum>, only the
+  // older BXVector<l1t::EtSum> collection.
+  if (l1tSumType_ == trigger::TriggerObjectType::TriggerL1PFMET) {
+    // MET is index [0], and uses .et() method
+    onlinePt = iSum->et();
+  }
+  if (l1tSumType_ == trigger::TriggerObjectType::TriggerL1PFHT) {
+    // HT is index [0], and uses .pt() method
+    onlinePt = iSum->pt();
+  }
+  if (l1tSumType_ == trigger::TriggerObjectType::TriggerL1PFMHT) {
+    // MHT is index [1], and uses .pt() method
+    ++iSum;
+    onlinePt = iSum->pt();
+  }
+  if (l1tSumType_ == trigger::TriggerObjectType::TriggerL1PFETT) {
+    // As of now, L1 doesn't support this object it seems.
+  }
+
+  // Do the scaling
+  offlinePt = offlineEnergySum(onlinePt);
+
+  // Add the passing element to the filterproduct.
+  if (offlinePt >= minPt_) {
+    ++nSum;
+    edm::Ref<std::vector<T>> ref(l1tSums, std::distance(l1tSums->begin(), iSum));
+    filterproduct.addObject(l1tSumType_, ref);
+>>>>>>> b1a99749b19... code format
   }
 
   // return final filter decision
