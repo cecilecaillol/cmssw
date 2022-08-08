@@ -124,9 +124,6 @@ bool L1TTkMuonFilter::hltFilter(edm::Event& iEvent,
       }
     }
   }
-  for (const auto& muon : passingMuons) {
-    filterproduct.addObject(trigger::TriggerObjectType::TriggerL1TkMu, muon);
-  }
 
   // return with final filter decision
   const bool accept(static_cast<int>(passingMuons.size()) >= min_N_);
@@ -145,14 +142,6 @@ L1TTkMuonFilter::MuonQualityCut::MuonQualityCut(const edm::ParameterSet& iConfig
   }
 }
 
-<<<<<<< HEAD
-bool L1TTkMuonFilter::MuonQualityCut::operator()(const l1t::TkMuon& muon) const {
-  const auto& qualities = allowedQualities_.find(muon.muonDetector());
-  if (qualities != allowedQualities_.end()) {
-    return std::binary_search(qualities->second.begin(), qualities->second.end(), muon.quality());
-  } else {
-    return true;  //if qualities for that detector is not specified, we return true
-=======
 bool L1TTkMuonFilter::MuonQualityCut::operator()(const l1t::TrackerMuon& muon) const {
   bool passesQuality(false);
 
@@ -167,7 +156,6 @@ bool L1TTkMuonFilter::MuonQualityCut::operator()(const l1t::TrackerMuon& muon) c
   // so for the time being we just take the union of all quality vectors for all muon detectors.
   for (const auto& detQuality : allowedQualities_) {
     passesQuality = std::binary_search(detQuality.second.begin(), detQuality.second.end(), muon.hwQual());
->>>>>>> b1a99749b19... code format
   }
 }
 
