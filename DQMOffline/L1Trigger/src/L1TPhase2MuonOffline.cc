@@ -93,50 +93,41 @@ double GenMuonGMTPair::getVar(const L1TPhase2MuonOffline::EffType type) const {
 }
 
 //__________DQM_base_class_______________________________________________
-L1TPhase2MuonOffline::L1TPhase2MuonOffline(const ParameterSet& ps) :
-  gmtMuonToken_(consumes<l1t::SAMuonCollection>(ps.getParameter<edm::InputTag>("gmtMuonToken"))),
-  gmtTkMuonToken_(consumes<l1t::TrackerMuonCollection>(ps.getParameter<edm::InputTag>("gmtTkMuonToken"))),
-  genParticleToken_(consumes<std::vector<reco::GenParticle>>(ps.getUntrackedParameter<edm::InputTag>("genParticlesInputTag"))),
-  muonTypes_({kSAMuon, kTkMuon}),
-  effTypes_({kEffPt, kEffPhi, kEffEta}),
-  resTypes_({kResPt, kResQOverPt, kResPhi, kResEta}),
-  etaRegions_({kEtaRegionAll, kEtaRegionBmtf, kEtaRegionOmtf, kEtaRegionEmtf}),
-  qualLevels_({kQualOpen, kQualDouble, kQualSingle}),
-  resNames_({{kResPt, "pt"}, 
- 	     {kRes1OverPt, "1overpt"},
- 	     {kResQOverPt, "qoverpt"},
- 	     {kResPhi, "phi"}, 
- 	     {kResEta, "eta"}, 
- 	     {kResCh, "charge"}}),
-  resLabels_({{kResPt, "(p_{T}^{L1} - p_{T}^{reco})/p_{T}^{reco}"},
- 	      {kRes1OverPt, "(p_{T}^{reco} - p_{T}^{L1})/p_{T}^{L1}"}, 
- 	      {kResQOverPt, "(q^{L1}*q^{reco}*p_{T}^{reco} - p_{T}^{L1})/p_{T}^{L1}"}, 
- 	      {kResPhi, "#phi_{L1} - #phi_{reco}"}, 
- 	      {kResEta, "#eta_{L1} - #eta_{reco}"}, 
- 	      {kResCh, "charge^{L1} - charge^{reco}"}}),
-  etaNames_({{kEtaRegionAll, "etaMin0_etaMax2p4"},
-	     {kEtaRegionBmtf, "etaMin0_etaMax0p83"},
-	     {kEtaRegionOmtf, "etaMin0p83_etaMax1p24"},
-	     {kEtaRegionEmtf, "etaMin1p24_etaMax2p4"}}),
-  qualNames_({{kQualOpen, "qualOpen"}, 
-	      {kQualDouble, "qualDouble"}, 
-	      {kQualSingle, "qualSingle"}}),
-  muonNames_({{kSAMuon, "SAMuon"}, {kTkMuon, "TkMuon"}}),
-  histFolder_(ps.getUntrackedParameter<string>("histFolder")),
-  cutsVPSet_(ps.getUntrackedParameter<std::vector<edm::ParameterSet>>("cuts")),
-  effVsPtBins_(ps.getUntrackedParameter<std::vector<double>>("efficiencyVsPtBins")),
-  effVsPhiBins_(ps.getUntrackedParameter<std::vector<double>>("efficiencyVsPhiBins")),
-  effVsEtaBins_(ps.getUntrackedParameter<std::vector<double>>("efficiencyVsEtaBins")),
-  maxGmtMuonDR_(0.3){
-  
+L1TPhase2MuonOffline::L1TPhase2MuonOffline(const ParameterSet& ps)
+    : gmtMuonToken_(consumes<l1t::SAMuonCollection>(ps.getParameter<edm::InputTag>("gmtMuonToken"))),
+      gmtTkMuonToken_(consumes<l1t::TrackerMuonCollection>(ps.getParameter<edm::InputTag>("gmtTkMuonToken"))),
+      genParticleToken_(
+          consumes<std::vector<reco::GenParticle>>(ps.getUntrackedParameter<edm::InputTag>("genParticlesInputTag"))),
+      muonTypes_({kSAMuon, kTkMuon}),
+      effTypes_({kEffPt, kEffPhi, kEffEta}),
+      resTypes_({kResPt, kResQOverPt, kResPhi, kResEta}),
+      etaRegions_({kEtaRegionAll, kEtaRegionBmtf, kEtaRegionOmtf, kEtaRegionEmtf}),
+      qualLevels_({kQualOpen, kQualDouble, kQualSingle}),
+      resNames_({{kResPt, "pt"},
+                 {kRes1OverPt, "1overpt"},
+                 {kResQOverPt, "qoverpt"},
+                 {kResPhi, "phi"},
+                 {kResEta, "eta"},
+                 {kResCh, "charge"}}),
+      resLabels_({{kResPt, "(p_{T}^{L1} - p_{T}^{reco})/p_{T}^{reco}"},
+                  {kRes1OverPt, "(p_{T}^{reco} - p_{T}^{L1})/p_{T}^{L1}"},
+                  {kResQOverPt, "(q^{L1}*q^{reco}*p_{T}^{reco} - p_{T}^{L1})/p_{T}^{L1}"},
+                  {kResPhi, "#phi_{L1} - #phi_{reco}"},
+                  {kResEta, "#eta_{L1} - #eta_{reco}"},
+                  {kResCh, "charge^{L1} - charge^{reco}"}}),
+      etaNames_({{kEtaRegionAll, "etaMin0_etaMax2p4"},
+                 {kEtaRegionBmtf, "etaMin0_etaMax0p83"},
+                 {kEtaRegionOmtf, "etaMin0p83_etaMax1p24"},
+                 {kEtaRegionEmtf, "etaMin1p24_etaMax2p4"}}),
+      qualNames_({{kQualOpen, "qualOpen"}, {kQualDouble, "qualDouble"}, {kQualSingle, "qualSingle"}}),
+      muonNames_({{kSAMuon, "SAMuon"}, {kTkMuon, "TkMuon"}}),
+      histFolder_(ps.getUntrackedParameter<string>("histFolder")),
+      cutsVPSet_(ps.getUntrackedParameter<std::vector<edm::ParameterSet>>("cuts")),
+      effVsPtBins_(ps.getUntrackedParameter<std::vector<double>>("efficiencyVsPtBins")),
+      effVsPhiBins_(ps.getUntrackedParameter<std::vector<double>>("efficiencyVsPhiBins")),
+      effVsEtaBins_(ps.getUntrackedParameter<std::vector<double>>("efficiencyVsEtaBins")),
+      maxGmtMuonDR_(ps.getUntrackedParameter<double>("maxDR")) {
   edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::L1TPhase2MuonOffline()" << endl;
-    
-  // Get Muon constants
-  lsb_pt = Phase2L1GMT::LSBpt;
-  lsb_phi = Phase2L1GMT::LSBphi;
-  lsb_eta = Phase2L1GMT::LSBeta;
-  lsb_z0 = Phase2L1GMT::LSBSAz0;
-  lsb_d0 = Phase2L1GMT::LSBSAd0;
 
   for (const auto& c : cutsVPSet_) {
     const auto qCut = c.getUntrackedParameter<int>("qualCut");
