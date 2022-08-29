@@ -292,6 +292,7 @@ void GTTFileWriter::endJob() {
 void GTTFileWriter::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   // GTTFileWriter
   edm::ParameterSetDescription desc;
+<<<<<<< HEAD
   desc.addUntracked<edm::InputTag>("tracks", edm::InputTag("TTTracksFromTrackletEmulation", "Level1TTTracks"));
   desc.addUntracked<edm::InputTag>("convertedTracks", edm::InputTag("L1GTTInputProducer", "Level1TTTracksConverted"));
   desc.addUntracked<edm::InputTag>("selectedTracks",
@@ -302,6 +303,11 @@ void GTTFileWriter::fillDescriptions(edm::ConfigurationDescriptions& description
   desc.addUntracked<edm::InputTag>("jets", edm::InputTag("L1TrackJetsEmulation", "L1TrackJets"));
   desc.addUntracked<edm::InputTag>("htmiss", edm::InputTag("L1TrackerEmuHTMiss", "L1TrackerEmuHTMiss"));
   desc.addUntracked<edm::InputTag>("etmiss", edm::InputTag("L1TrackerEmuEtMiss", "L1TrackerEmuEtMiss"));
+=======
+  desc.addUntracked<edm::InputTag>("tracks", edm::InputTag("l1tTTTracksFromTrackletEmulation", "Level1TTTracks"));
+  desc.addUntracked<edm::InputTag>("convertedTracks", edm::InputTag("l1tGTTInputProducer", "Level1TTTracksConverted"));
+  desc.addUntracked<edm::InputTag>("vertices", edm::InputTag("l1tVertexProducer", "l1verticesEmulation"));
+>>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
   desc.addUntracked<std::string>("inputFilename", "L1GTTInputFile");
   desc.addUntracked<std::string>("inputConvertedFilename", "L1GTTInputConvertedFile");
   desc.addUntracked<std::string>("selectedTracksFilename", "L1GTTSelectedTracksFile");

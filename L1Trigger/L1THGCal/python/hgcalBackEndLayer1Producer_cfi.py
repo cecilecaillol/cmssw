@@ -62,12 +62,24 @@ be_proc = cms.PSet(ProcessorName  = cms.string('HGCalBackendLayer1Processor2DClu
                    C2d_parameters = dummy_C2d_params.clone()
                    )
 
-hgcalBackEndLayer1Producer = cms.EDProducer(
+l1tHGCalBackEndLayer1Producer = cms.EDProducer(
     "HGCalBackendLayer1Producer",
-    InputTriggerCells = cms.InputTag('hgcalConcentratorProducer:HGCalConcentratorProcessorSelection'),
+    InputTriggerCells = cms.InputTag('l1tHGCalConcentratorProducer:HGCalConcentratorProcessorSelection'),
     ProcessorParameters = be_proc.clone()
     )
 
+<<<<<<< HEAD
 hgcalBackEndLayer1ProducerHFNose = hgcalBackEndLayer1Producer.clone(
     InputTriggerCells = cms.InputTag('hgcalConcentratorProducerHFNose:HGCalConcentratorProcessorSelection')
+=======
+l1tHGCalBackEndStage1Producer = cms.EDProducer(
+    "HGCalBackendStage1Producer",
+    InputTriggerCells = cms.InputTag('l1tHGCalConcentratorProducer:HGCalConcentratorProcessorSelection'),
+    C2d_parameters = dummy_C2d_params.clone(),
+    ProcessorParameters = stage1truncation_proc.clone()
+    )
+
+l1tHGCalBackEndLayer1ProducerHFNose = l1tHGCalBackEndLayer1Producer.clone(
+    InputTriggerCells = 'l1tHGCalConcentratorProducerHFNose:HGCalConcentratorProcessorSelection'
+>>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 )

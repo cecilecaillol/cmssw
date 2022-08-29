@@ -15,5 +15,14 @@ def create_vfe(process,
             compressionCfg_ldm = compression_ldm,
             compressionCfg_hdm = compression_hdm,
         )
+<<<<<<< HEAD
     )
     return producer
+=======
+
+    def __call__(self, process):
+        producer = process.l1tHGCalVFEProducer.clone(
+            ProcessorParameters = self.processor
+        )
+        return producer
+>>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
