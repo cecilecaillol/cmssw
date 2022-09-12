@@ -1,8 +1,8 @@
 import FWCore.ParameterSet.Config as cms
 
-from L1Trigger.L1CaloTrigger.Phase1L1TJetProducer_cfi import l1tPhase1JetProducer
-from L1Trigger.L1CaloTrigger.Phase1L1TJetCalibrator_9x9Jets_cfi import l1tPhase1JetCalibrator9
-from L1Trigger.L1CaloTrigger.Phase1L1TJetSumsProducer_cfi import l1tPhase1JetSumsProducer
+from L1Trigger.L1CaloTrigger.l1tPhase1JetProducer_cfi import l1tPhase1JetProducer
+from L1Trigger.L1CaloTrigger.l1tPhase1JetCalibrator9_cfi import l1tPhase1JetCalibrator9
+from L1Trigger.L1CaloTrigger.l1tPhase1JetSumsProducer_cfi import l1tPhase1JetSumsProducer
 
 <<<<<<< HEAD
 Phase1L1TJetProducer9x9 = Phase1L1TJetProducer.clone(

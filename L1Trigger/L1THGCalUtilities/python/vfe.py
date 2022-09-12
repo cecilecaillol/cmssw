@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-from L1Trigger.L1THGCal.hgcalVFEProducer_cfi import vfe_proc
+from L1Trigger.L1THGCal.l1tHGCalVFEProducer_cfi import vfe_proc
 
 def create_vfe(process,
         linearization_si=vfe_proc.linearizationCfg_si,

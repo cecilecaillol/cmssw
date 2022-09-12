@@ -62,7 +62,12 @@ process.options = cms.untracked.PSet(
     numberOfStreams = cms.untracked.uint32(options.streams if options.streams>0 else 0)
 )
 
+<<<<<<< HEAD
 process.load('L1Trigger.L1TTrackMatch.L1GTTInputProducer_cfi')
+=======
+process.load("L1Trigger.TrackFindingTracklet.L1HybridEmulationTracks_cff")
+process.load('L1Trigger.L1TTrackMatch.l1tGTTInputProducer_cfi')
+>>>>>>> 780186283da... rename cfis
 process.load('L1Trigger.VertexFinder.VertexProducer_cff')
 process.load("L1Trigger.L1TTrackMatch.L1TrackSelectionProducer_cfi")
 process.load("L1Trigger.L1TTrackMatch.L1TrackJetEmulationProducer_cfi")

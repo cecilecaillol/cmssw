@@ -1,6 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 from L1Trigger.Phase2L1ParticleFlow.L1SeedConePFJetProducer_cfi import L1SeedConePFJetProducer, L1SeedConePFJetEmulatorProducer
 from L1Trigger.Phase2L1ParticleFlow.DeregionizerProducer_cfi import DeregionizerProducer as l1ctLayer2Deregionizer
 scPFL1PF            = L1SeedConePFJetProducer.clone(L1PFObjects = 'l1ctLayer1:PF')
@@ -9,6 +10,10 @@ scPFL1PuppiEmulator = L1SeedConePFJetEmulatorProducer.clone(L1PFObject = cms.Inp
 =======
 from L1Trigger.Phase2L1ParticleFlow.L1SeedConePFJetProducer_cfi import l1tSeedConePFJetProducer, l1tSeedConePFJetEmulatorProducer
 from L1Trigger.Phase2L1ParticleFlow.DeregionizerProducer_cfi import l1tDeregionizerProducer as l1tLayer2Deregionizer
+=======
+from L1Trigger.Phase2L1ParticleFlow.l1tSeedConePFJetProducer_cfi import l1tSeedConePFJetProducer, l1tSeedConePFJetEmulatorProducer
+from L1Trigger.Phase2L1ParticleFlow.l1tDeregionizerProducer_cfi import l1tDeregionizerProducer as l1tLayer2Deregionizer
+>>>>>>> 780186283da... rename cfis
 l1tSCPFL1PF            = l1tSeedConePFJetProducer.clone(L1PFObjects = 'l1tLayer1:PF')
 l1tSCPFL1Puppi         = l1tSeedConePFJetProducer.clone()
 l1tSCPFL1PuppiEmulator = l1tSeedConePFJetEmulatorProducer.clone(L1PFObjects = 'l1tLayer2Deregionizer:Puppi')
@@ -28,11 +33,15 @@ phase2_hgcalV11.toModify(_correctedJets, correctorFile = "L1Trigger/Phase2L1Part
 l1tSCPFL1PuppiCorrectedEmulator = _correctedJets.clone(jets = 'l1tSCPFL1PuppiEmulator', correctorDir = 'L1PuppiSC4EmuDeregJets')
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 from L1Trigger.Phase2L1ParticleFlow.L1MhtPfProducer_cfi import L1MhtPfProducer
 scPFL1PuppiCorrectedEmulatorMHT = L1MhtPfProducer.clone() #(jets = cms.InputTag("scPFL1PuppiCorrectedEmulator"))
 
 =======
 from L1Trigger.Phase2L1ParticleFlow.L1MhtPfProducer_cfi import l1tMHTPFProducer
+=======
+from L1Trigger.Phase2L1ParticleFlow.l1tMHTPFProducer_cfi import l1tMHTPFProducer
+>>>>>>> 780186283da... rename cfis
 l1tSCPFL1PuppiCorrectedEmulatorMHT = l1tMHTPFProducer.clone() 
 >>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 
