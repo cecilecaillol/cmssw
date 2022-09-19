@@ -68,10 +68,6 @@ l1tHGCalBackEndLayer1Producer = cms.EDProducer(
     ProcessorParameters = be_proc.clone()
     )
 
-<<<<<<< HEAD
-hgcalBackEndLayer1ProducerHFNose = hgcalBackEndLayer1Producer.clone(
-    InputTriggerCells = cms.InputTag('hgcalConcentratorProducerHFNose:HGCalConcentratorProcessorSelection')
-=======
 l1tHGCalBackEndStage1Producer = cms.EDProducer(
     "HGCalBackendStage1Producer",
     InputTriggerCells = cms.InputTag('l1tHGCalConcentratorProducer:HGCalConcentratorProcessorSelection'),
@@ -81,5 +77,4 @@ l1tHGCalBackEndStage1Producer = cms.EDProducer(
 
 l1tHGCalBackEndLayer1ProducerHFNose = l1tHGCalBackEndLayer1Producer.clone(
     InputTriggerCells = 'l1tHGCalConcentratorProducerHFNose:HGCalConcentratorProcessorSelection'
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 )

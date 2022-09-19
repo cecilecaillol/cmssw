@@ -11,13 +11,8 @@ def create_distance(process, inputs,
                     seed_threshold=distance_C2d_params.seeding_threshold_silicon,  # MipT
                     cluster_threshold=distance_C2d_params.clustering_threshold_silicon  # MipT
                     ):
-<<<<<<< HEAD
-    producer = process.hgcalBackEndLayer1Producer.clone(
-            InputTriggerCells = cms.InputTag('{}:HGCalConcentratorProcessorSelection'.format(inputs))
-=======
     producer = process.l1tHGCalBackEndLayer1Producer.clone(
             InputTriggerCells = cms.InputTag(inputs)
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
             )
     producer.ProcessorParameters.C2d_parameters = distance_C2d_params.clone(
             dR_cluster = distance
@@ -30,13 +25,8 @@ def create_topological(process, inputs,
                        seed_threshold=topological_C2d_params.seeding_threshold_silicon,  # MipT
                        cluster_threshold=topological_C2d_params.clustering_threshold_silicon  # MipT
                        ):
-<<<<<<< HEAD
-    producer = process.hgcalBackEndLayer1Producer.clone(
-            InputTriggerCells = cms.InputTag('{}:HGCalConcentratorProcessorSelection'.format(inputs))
-=======
     producer = process.l1tHGCalBackEndLayer1Producer.clone(
             InputTriggerCells = cms.InputTag(inputs)
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
             )
     producer.ProcessorParameters.C2d_parameters = topological_C2d_params.clone()
     set_threshold_params(producer.ProcessorParameters.C2d_parameters, seed_threshold, cluster_threshold)
@@ -48,13 +38,8 @@ def create_constrainedtopological(process, inputs,
                                   seed_threshold=constrTopological_C2d_params.seeding_threshold_silicon,  # MipT
                                   cluster_threshold=constrTopological_C2d_params.clustering_threshold_silicon  # MipT
                                   ):
-<<<<<<< HEAD
-    producer = process.hgcalBackEndLayer1Producer.clone(
-            InputTriggerCells = cms.InputTag('{}:HGCalConcentratorProcessorSelection'.format(inputs))
-=======
     producer = process.l1tHGCalBackEndLayer1Producer.clone(
             InputTriggerCells = cms.InputTag(inputs)
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
             )
     producer.ProcessorParameters.C2d_parameters = constrTopological_C2d_params.clone(
             dR_cluster = distance
@@ -70,14 +55,6 @@ def create_dummy(process, inputs):
     producer.ProcessorParameters.C2d_parameters = dummy_C2d_params.clone()
     return producer
 
-<<<<<<< HEAD
-def create_truth_dummy(process, inputs):
-    producer = process.hgcalBackEndLayer1Producer.clone(
-            InputTriggerCells = cms.InputTag('{}'.format(inputs))
-            )
-    producer.ProcessorParameters.C2d_parameters = dummy_C2d_params.clone()
-    return producer
-=======
 class CreateDummy(object):
     def __call__(self, process, inputs):
         producer = process.l1tHGCalBackEndLayer1Producer.clone(
@@ -110,4 +87,3 @@ class RozBinTruncation(object):
                 ProcessorParameters = self.processor
                 )
         return producer
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions

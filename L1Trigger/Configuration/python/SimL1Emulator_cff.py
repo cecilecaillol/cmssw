@@ -94,28 +94,7 @@ _phase2_siml1emulator.add(l1tEGammaClusterEmuProducer)
 # Barrel and EndCap CaloJet/HT
 # ########################################################################
 # ----    Produce the calibrated tower collection combining Barrel, HGCal, HF
-<<<<<<< HEAD
-from L1Trigger.L1CaloTrigger.L1TowerCalibrationProducer_cfi import *
-<<<<<<< HEAD
-L1TowerCalibration = L1TowerCalibrationProducer.clone(
-  L1HgcalTowersInputTag = cms.InputTag("hgcalTowerProducer","HGCalTowerProcessor",""),
-  #l1CaloTowers = cms.InputTag("L1EGammaClusterEmuProducer","","")
-  l1CaloTowers = cms.InputTag("L1EGammaClusterEmuProducer","L1CaloTowerCollection","")
-)
-# ----    Produce the L1CaloJets
-from L1Trigger.L1CaloTrigger.L1CaloJetProducer_cfi import *
-L1CaloJet = L1CaloJetProducer.clone (
-    l1CaloTowers = cms.InputTag("L1TowerCalibration","L1CaloTowerCalibratedCollection",""),
-    L1CrystalClustersInputTag = cms.InputTag("L1EGammaClusterEmuProducer", "","")
-)
-# ----    Produce the CaloJet HTT Sums
-from L1Trigger.L1CaloTrigger.L1CaloJetHTTProducer_cfi import *
-L1CaloJetHTT = L1CaloJetHTTProducer.clone(
-    BXVCaloJetsInputTag = cms.InputTag("L1CaloJet", "CaloJets") 
-=======
-=======
 from L1Trigger.L1CaloTrigger.l1tTowerCalibrationProducer_cfi import *
->>>>>>> 780186283da... rename cfis
 l1tTowerCalibration = l1tTowerCalibrationProducer.clone(
   L1HgcalTowersInputTag = ("l1tHGCalTowerProducer","HGCalTowerProcessor",""),
   l1CaloTowers = ("l1tEGammaClusterEmuProducer","L1CaloTowerCollection","")
@@ -130,7 +109,6 @@ l1tCaloJet = l1tCaloJetProducer.clone (
 from L1Trigger.L1CaloTrigger.l1tCaloJetHTTProducer_cfi import *
 l1tCaloJetHTT = l1tCaloJetHTTProducer.clone(
     BXVCaloJetsInputTag = ("L1CaloJet", "CaloJets") 
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 )
 
 
@@ -141,24 +119,9 @@ _phase2_siml1emulator.add(l1tCaloJetHTT)
 # ########################################################################
 # Phase-2 L1T - TrackTrigger dependent modules
 # ########################################################################
-<<<<<<< HEAD
-from L1Trigger.L1TTrackMatch.L1GTTInputProducer_cfi import *
-<<<<<<< HEAD
-from L1Trigger.VertexFinder.VertexProducer_cff import *
-L1VertexFinder = VertexProducer.clone()
-L1VertexFinderEmulator = VertexProducer.clone()
-L1VertexFinderEmulator.VertexReconstruction.Algorithm = "fastHistoEmulation"
-L1VertexFinderEmulator.l1TracksInputTag = cms.InputTag("L1GTTInputProducer","Level1TTTracksConverted")
-_phase2_siml1emulator.add(L1VertexFinder)
-_phase2_siml1emulator.add(L1GTTInputProducer)
-_phase2_siml1emulator.add(L1GTTInputProducerExtended)
-_phase2_siml1emulator.add(L1VertexFinderEmulator)
-=======
 from L1Trigger.VertexFinder.VertexProducer_cfi import *
-=======
 from L1Trigger.L1TTrackMatch.l1tGTTInputProducer_cfi import *
 from L1Trigger.VertexFinder.l1tVertexProducer_cfi import *
->>>>>>> 780186283da... rename cfis
 l1tVertexFinder = l1tVertexProducer.clone()
 l1tVertexFinderEmulator = l1tVertexProducer.clone()
 l1tVertexFinderEmulator.VertexReconstruction.Algorithm = "fastHistoEmulation"
@@ -167,20 +130,13 @@ _phase2_siml1emulator.add(l1tVertexFinder)
 _phase2_siml1emulator.add(l1tGTTInputProducer)
 _phase2_siml1emulator.add(l1tGTTInputProducerExtended)
 _phase2_siml1emulator.add(l1tVertexFinderEmulator)
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 
 # Emulated GMT Muons (Tk + Stub, Tk + MuonTFT, StandaloneMuon)
 # ########################################################################
 from L1Trigger.Phase2L1GMT.gmt_cfi  import *
-<<<<<<< HEAD
-L1TkStubsGmt = gmtStubs.clone()
-L1TkMuonsGmt = gmtMuons.clone(
-    srcStubs  = cms.InputTag('L1TkStubsGmt')
-=======
 l1tTkStubsGmt = l1tGMTStubs.clone()
 l1tTkMuonsGmt = l1tGMTMuons.clone(
     srcStubs  = 'l1tTkStubsGmt'
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 )
 l1tSAMuonsGmt = l1tStandaloneMuons.clone()
 _phase2_siml1emulator.add( l1tTkStubsGmt )
@@ -194,21 +150,6 @@ from L1Trigger.L1TTrackMatch.l1tTrackFastJets_cfi import *
 from L1Trigger.L1TTrackMatch.l1tTrackerEtMiss_cfi import *
 from L1Trigger.L1TTrackMatch.l1tTrackerHTMiss_cfi import *
 # make the input tags consistent with the choice L1VertexFinder above
-<<<<<<< HEAD
-L1TrackJets.L1PVertexCollection  = cms.InputTag("L1VertexFinder", L1VertexFinder.l1VertexCollectionName.value())
-L1TrackJetsExtended.L1PVertexCollection  = cms.InputTag("L1VertexFinder", L1VertexFinder.l1VertexCollectionName.value())
-L1TrackFastJets.L1PrimaryVertexTag  = ("L1VertexFinder", L1VertexFinder.l1VertexCollectionName.value())
-L1TrackerEtMiss.L1VertexInputTag = cms.InputTag("L1VertexFinder", L1VertexFinder.l1VertexCollectionName.value())
-L1TrackerEtMissExtended.L1VertexInputTag = cms.InputTag("L1VertexFinder", L1VertexFinder.l1VertexCollectionName.value())
-_phase2_siml1emulator.add(L1TrackJets)
-_phase2_siml1emulator.add(L1TrackJetsExtended)
-_phase2_siml1emulator.add(L1TrackFastJets)
-
-_phase2_siml1emulator.add(L1TrackerEtMiss)
-_phase2_siml1emulator.add(L1TrackerHTMiss)
-#_phase2_siml1emulator.add(L1TrackerEtMissExtended)
-#_phase2_siml1emulator.add(L1TrackerHTMissExtended)
-=======
 l1tTrackJets.L1PVertexCollection  = ("L1VertexFinder", "l1vertices")
 l1tTrackJetsExtended.L1PVertexCollection  = ("L1VertexFinder", "l1vertices")
 #L1TrackerEtMiss.L1VertexInputTag = ("L1VertexFinder", "l1vertices")
@@ -219,29 +160,15 @@ _phase2_siml1emulator.add(l1tTrackFastJets)
 
 _phase2_siml1emulator.add(l1tTrackerEtMiss)
 _phase2_siml1emulator.add(l1tTrackerHTMiss)
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 
 #Emulated tracker objects
 from L1Trigger.L1TTrackMatch.l1tTrackJetsEmulation_cfi import *
 _phase2_siml1emulator.add(l1tTrackJetsEmulation)
 _phase2_siml1emulator.add(l1tTrackJetsExtendedEmulation)
 
-<<<<<<< HEAD
-from L1Trigger.L1TTrackMatch.L1TrackSelectionProducer_cfi import L1TrackSelectionProducer, L1TrackSelectionProducerExtended
-_phase2_siml1emulator.add(L1TrackSelectionProducer)
-_phase2_siml1emulator.add(L1TrackSelectionProducerExtended)
-
-from L1Trigger.L1TTrackMatch.L1TrackerEtMissEmulatorProducer_cfi import *
-<<<<<<< HEAD
-L1TrackerEmuEtMiss.L1VertexInputTag = cms.InputTag("L1VertexFinderEmulator","l1verticesEmulation")
-_phase2_siml1emulator.add(L1TrackerEmuEtMiss)
-=======
-=======
 from L1Trigger.L1TTrackMatch.l1tTrackerEmuEtMiss_cfi import *
->>>>>>> 780186283da... rename cfis
 l1tTrackerEmuEtMiss.L1VertexInputTag = ("L1VertexFinderEmulator","l1verticesEmulation")
 _phase2_siml1emulator.add(l1tTrackerEmuEtMiss)
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 
 from L1Trigger.L1TTrackMatch.l1tTrackerEmuHTMiss_cfi import *
 _phase2_siml1emulator.add(l1tTrackerEmuHTMiss)
@@ -284,15 +211,7 @@ _phase2_siml1emulator.add(l1tMETPFProducer)
 # NNTaus
 # ########################################################################
 from L1Trigger.Phase2L1ParticleFlow.L1NNTauProducer_cff import *
-<<<<<<< HEAD
-
-_phase2_siml1emulator.add(L1NNTauProducerPuppi)
-#_phase2_siml1emulator.add(L1NNTauProducerPuppi2Vtx)
-_phase2_siml1emulator.add(tau2VtxTaskHW)
-
-=======
 _phase2_siml1emulator.add(l1tNNTauProducerPuppi)
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 
 # --> add modules
 from Configuration.Eras.Modifier_phase2_trigger_cff import phase2_trigger

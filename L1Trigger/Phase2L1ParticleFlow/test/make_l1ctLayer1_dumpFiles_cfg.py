@@ -38,16 +38,9 @@ process.l1tVertexFinderEmulator.l1TracksInputTag = cms.InputTag("l1tGTTInputProd
 from L1Trigger.Phase2L1GMT.gmt_cfi import l1tStandaloneMuons
 process.l1tSAMuonsGmt = l1tStandaloneMuons.clone()
 
-<<<<<<< HEAD
-process.l1ctLayer1Barrel9 = process.l1ctLayer1Barrel.clone()
-process.l1ctLayer1Barrel9.puAlgo.nFinalSort = 32
-process.l1ctLayer1Barrel9.regions[0].etaBoundaries = [ -1.5, -0.5, 0.5, 1.5 ] 
-process.l1ctLayer1Barrel9.boards=cms.VPSet(
-=======
 process.l1tLayer1Barrel9 = process.l1tLayer1Barrel.clone()
 process.l1tLayer1Barrel9.regions[0].etaBoundaries = [ -1.5, -0.5, 0.5, 1.5 ] 
 process.l1tLayer1Barrel9.boards=cms.VPSet(
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
         cms.PSet(
             regions=cms.vuint32(*[0+9*ie+i for ie in range(3) for i in range(3)])),
         cms.PSet(
@@ -57,26 +50,6 @@ process.l1tLayer1Barrel9.boards=cms.VPSet(
     )
 
 process.runPF = cms.Path( 
-<<<<<<< HEAD
-        process.L1SAMuonsGmt +
-        process.L1GTTInputProducer +
-        process.L1VertexFinderEmulator +
-        process.l1ctLayer1Barrel +
-        process.l1ctLayer1Barrel9 +
-        process.l1ctLayer1HGCal +
-        process.l1ctLayer1HGCalNoTK +
-        process.l1ctLayer1HF
-)
-process.runPF.associate(process.l1ctLayer1TaskInputsTask)
-
-
-for det in "Barrel", "Barrel9", "HGCal", "HGCalNoTK", "HF":
-    l1pf = getattr(process, 'l1ctLayer1'+det)
-    l1pf.dumpFileName = cms.untracked.string("TTbar_PU200_"+det+".dump")
-
-process.source.fileNames  = [ '/store/cmst3/group/l1tr/gpetrucc/11_1_0/NewInputs110X/110121.done/TTbar_PU200/inputs110X_%d.root' % i for i in (1,3,7,8,9) ]
-process.pfClustersFromCombinedCaloHCal.phase2barrelCaloTowers = [cms.InputTag("L1EGammaClusterEmuProducer",)]
-=======
         process.l1tSAMuonsGmt +
         process.l1tGTTInputProducer +
         process.l1tVertexFinderEmulator +
@@ -102,4 +75,3 @@ process.l1tPFClustersFromCombinedCaloHCal.phase2barrelCaloTowers = [cms.InputTag
 for det in "Barrel", "Barrel9", "HGCal", "HGCalNoTK", "HF":
     l1pf = getattr(process, 'l1tLayer1'+det)
     l1pf.dumpFileName = cms.untracked.string("TTbar_PU200_110X_"+det+".dump")
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions

@@ -175,14 +175,11 @@ l1tHGCalBackEndLayer2Producer = cms.EDProducer(
     ProcessorParameters = be_proc.clone()
     )
 
-<<<<<<< HEAD
-=======
 l1tHGCalBackEndStage2Producer = cms.EDProducer(
     "HGCalBackendLayer2Producer",
     InputCluster = cms.InputTag('l1tHGCalBackEndStage1Producer:HGCalBackendStage1Processor'),
     ProcessorParameters = be_proc.clone()
     )
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 
 l1tHGCalBackEndLayer2ProducerHFNose = l1tHGCalBackEndLayer2Producer.clone(
     InputCluster = cms.InputTag('l1tHGCalBackEndLayer1ProducerHFNose:HGCalBackendLayer1Processor2DClustering'),

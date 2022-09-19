@@ -108,23 +108,6 @@ process.load('L1Trigger.VertexFinder.l1tVertexProducer_cfi')
 ############################################################
 process.l1tVertexFinder = process.l1tVertexProducer.clone()
 process.pPV = cms.Path(process.L1VertexFinder)
-<<<<<<< HEAD
-process.L1VertexFinderEmulator = process.VertexProducer.clone()
-process.L1VertexFinderEmulator.VertexReconstruction.Algorithm = "fastHistoEmulation"
-process.L1VertexFinderEmulator.l1TracksInputTag = cms.InputTag("L1GTTInputProducer","Level1TTTracksConverted")
-process.L1VertexFinderEmulator.VertexReconstruction.VxMinTrackPt = cms.double(0.0)
-process.pPVemu = cms.Path(process.L1VertexFinderEmulator)
-
-process.L1TrackFastJets.L1PrimaryVertexTag = cms.InputTag("L1VertexFinder", "l1vertices")
-process.L1TrackFastJetsExtended.L1PrimaryVertexTag = cms.InputTag("L1VertexFinder", "l1vertices")
-process.L1TrackJets.L1PVertexCollection = cms.InputTag("L1VertexFinder", "l1vertices")
-process.L1TrackJetsExtended.L1PVertexCollection = cms.InputTag("L1VertexFinder", "l1vertices")
-process.L1TrackerEtMiss.L1VertexInputTag = cms.InputTag("L1VertexFinder", "l1vertices")
-process.L1TrackerHTMiss.L1VertexInputTag = cms.InputTag("L1VertexFinder", "l1vertices")
-process.L1TrackerEtMissExtended.L1VertexInputTag = cms.InputTag("L1VertexFinder", "l1vertices")
-process.L1TrackerHTMissExtended.L1VertexInputTag = cms.InputTag("L1VertexFinder", "l1vertices")
-process.L1TrackerEmuEtMiss.L1VertexInputTag = cms.InputTag("L1VertexFinderEmulator", "l1verticesEmulation")
-=======
 process.l1tVertexFinderEmulator = process.l1tVertexProducer.clone()
 process.l1tVertexFinderEmulator.VertexReconstruction.Algorithm = "fastHistoEmulation"
 process.l1tVertexFinderEmulator.l1TracksInputTag = cms.InputTag("l1tGTTInputProducer","Level1TTTracksConverted")
@@ -139,7 +122,6 @@ process.l1tTrackerHTMiss.L1VertexInputTag = cms.InputTag("l1tVertexFinder", "l1v
 process.l1tTrackerEtMissExtended.L1VertexInputTag = cms.InputTag("l1tVertexFinder", "l1vertices")
 process.l1tTrackerHTMissExtended.L1VertexInputTag = cms.InputTag("l1tVertexFinder", "l1vertices")
 process.l1tTrackerEmuEtMiss.L1VertexInputTag = cms.InputTag("l1tVertexFinderEmulator", "l1verticesEmulation")
->>>>>>> e68eee3787a... Rename L1T modules/sequences/tasks to follow conventions
 
 
 # HYBRID: prompt tracking
