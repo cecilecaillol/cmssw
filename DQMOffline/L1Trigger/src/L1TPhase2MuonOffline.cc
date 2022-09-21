@@ -18,9 +18,7 @@ using namespace l1t;
 
 //__________RECO-GMT Muon Pair Helper Class____________________________
 GenMuonGMTPair::GenMuonGMTPair(const reco::GenParticle* muon, const l1t::L1Candidate* gmtmu)
-  : mu_(muon), gmtmu_(gmtmu) {
-
- 
+    : mu_(muon), gmtmu_(gmtmu) {
   if (gmtmu) {
     gmtEta_ = gmtmu_->eta();
     gmtPhi_ = gmtmu_->phi();
@@ -35,11 +33,10 @@ GenMuonGMTPair::GenMuonGMTPair(const reco::GenParticle* muon, const l1t::L1Candi
     muEta_ = 999.;
     muPhi_ = 999.;
   }
-
 };
 
 GenMuonGMTPair::GenMuonGMTPair(const GenMuonGMTPair& muonGmtPair) {
-  mu_    = muonGmtPair.mu_;
+  mu_ = muonGmtPair.mu_;
   gmtmu_ = muonGmtPair.gmtmu_;
 
   gmtEta_ = muonGmtPair.gmtEta_;
@@ -141,7 +138,6 @@ L1TPhase2MuonOffline::L1TPhase2MuonOffline(const ParameterSet& ps)
     }
     cuts_.emplace_back(std::make_pair(c.getUntrackedParameter<int>("ptCut"), qLevel));
   }
-
 }
 
 //_____________________________________________________________________
@@ -151,9 +147,10 @@ void L1TPhase2MuonOffline::dqmBeginRun(const edm::Run& run, const edm::EventSetu
   edm::LogInfo("L1TPhase2MuonOFfline") << "L1TPhase2MuonOffline::dqmBeginRun" << endl;
 }
 
-
 //_____________________________________________________________________
-void L1TPhase2MuonOffline::bookHistograms(DQMStore::IBooker& ibooker, const edm::Run& run, const edm::EventSetup& iSetup) {
+void L1TPhase2MuonOffline::bookHistograms(DQMStore::IBooker& ibooker,
+                                          const edm::Run& run,
+                                          const edm::EventSetup& iSetup) {
   edm::LogInfo("L1TPhase2MuonOFfline") << "L1TPhase2MuonOffline::bookHistograms" << endl;
 
   //book histos
@@ -167,33 +164,30 @@ void L1TPhase2MuonOffline::bookHistograms(DQMStore::IBooker& ibooker, const edm:
 //_____________________________________________________________________
 void L1TPhase2MuonOffline::analyze(const Event& iEvent, const EventSetup& eventSetup) {
   edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::analyze() " << endl;
-  
-  // COLLECT GEN MUONS 
+
+  // COLLECT GEN MUONS
   iEvent.getByToken(genParticleToken_, genparticles_);
-  
+
   std::vector<const reco::GenParticle*> genmus;
   for (const reco::GenParticle& gen : *genparticles_) {
-    if (std::abs(gen.pdgId()) != 13) continue;
+    if (std::abs(gen.pdgId()) != 13)
+      continue;
     genmus.push_back(&gen);
   }
-  edm::LogInfo("L1TPhase2MuonOffline") << 
-    "L1TPhase2MuonOffline::analyze() N of genmus: "<< genmus.size() << endl;
+  edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::analyze() N of genmus: " << genmus.size() << endl;
 
-  // Collect both muon collection: 
+  // Collect both muon collection:
   iEvent.getByToken(gmtMuonToken_, gmtSAMuon_);
   iEvent.getByToken(gmtTkMuonToken_, gmtTkMuon_);
-  
-   
+
   // Fill Control histograms
   edm::LogInfo("L1TPhase2MuonOffline") << "Fill Control histograms for GMT Muons" << endl;
-  fillControlHistos(); 
-  
+  fillControlHistos();
 
   // Match each muon to a gen muon, if possible.
-  edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::analyze() calling matchMuonsToGen() "<< endl;
+  edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::analyze() calling matchMuonsToGen() " << endl;
   matchMuonsToGen(genmus);
-  
-  
+
   // Fill efficiency and resolution once, matching has been done...
   fillEfficiencyHistos();
   fillResolutionHistos();
@@ -203,151 +197,163 @@ void L1TPhase2MuonOffline::analyze(const Event& iEvent, const EventSetup& eventS
 //_____________________________________________________________________
 void L1TPhase2MuonOffline::bookControlHistos(DQMStore::IBooker& ibooker, MuType mutype) {
   edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::bookControlHistos()" << endl;
-  
-  ibooker.setCurrentFolder(histFolder_ + "/" + muonNames_[mutype] + "/control_variables"); 
 
-  controlHistos_[mutype][kPt]   = ibooker.book1D(muonNames_[mutype]+"Pt"  , "MuonPt; p_{T}"    , 50, 0., 100.);
-  controlHistos_[mutype][kPhi]  = ibooker.book1D(muonNames_[mutype]+"Phi" , "MuonPhi; #phi"    , 66, -3.3, 3.3);
-  controlHistos_[mutype][kEta]  = ibooker.book1D(muonNames_[mutype]+"Eta" , "MuonEta; #eta"    , 50, -2.5, 2.5);
-  controlHistos_[mutype][kIso]  = ibooker.book1D(muonNames_[mutype]+"Iso" , "MuonIso; RelIso"  , 50, 0, 1.0);
-  controlHistos_[mutype][kQual] = ibooker.book1D(muonNames_[mutype]+"Qual", "MuonQual; Quality", 15, 0.5, 15.5); 
-  controlHistos_[mutype][kZ0]   = ibooker.book1D(muonNames_[mutype]+"Z0"  , "MuonZ0; Z_{0}"    , 50, 0, 50.0);
-  controlHistos_[mutype][kD0]   = ibooker.book1D(muonNames_[mutype]+"D0"  , "MuonD0; D_{0}"    , 50, 0, 200.); 
+  ibooker.setCurrentFolder(histFolder_ + "/" + muonNames_[mutype] + "/control_variables");
+
+  controlHistos_[mutype][kPt] = ibooker.book1D(muonNames_[mutype] + "Pt", "MuonPt; p_{T}", 50, 0., 100.);
+  controlHistos_[mutype][kPhi] = ibooker.book1D(muonNames_[mutype] + "Phi", "MuonPhi; #phi", 66, -3.3, 3.3);
+  controlHistos_[mutype][kEta] = ibooker.book1D(muonNames_[mutype] + "Eta", "MuonEta; #eta", 50, -2.5, 2.5);
+  controlHistos_[mutype][kIso] = ibooker.book1D(muonNames_[mutype] + "Iso", "MuonIso; RelIso", 50, 0, 1.0);
+  controlHistos_[mutype][kQual] = ibooker.book1D(muonNames_[mutype] + "Qual", "MuonQual; Quality", 15, 0.5, 15.5);
+  controlHistos_[mutype][kZ0] = ibooker.book1D(muonNames_[mutype] + "Z0", "MuonZ0; Z_{0}", 50, 0, 50.0);
+  controlHistos_[mutype][kD0] = ibooker.book1D(muonNames_[mutype] + "D0", "MuonD0; D_{0}", 50, 0, 200.);
 }
 void L1TPhase2MuonOffline::bookEfficiencyHistos(DQMStore::IBooker& ibooker, MuType mutype) {
   edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::bookEfficiencyHistos()" << endl;
-  
-  ibooker.setCurrentFolder(histFolder_ + "/" + muonNames_[mutype] + "/nums_and_dens"); 
-  
+
+  ibooker.setCurrentFolder(histFolder_ + "/" + muonNames_[mutype] + "/nums_and_dens");
+
   std::string histoname = "";
   for (const auto eta : etaRegions_) {
     for (const auto q : qualLevels_) {
       histoname = "Eff_" + muonNames_[mutype] + "_" + etaNames_[eta] + "_" + qualNames_[q];
-      
+
       auto histBins = getHistBinsEff(kEffPt);
-      efficiencyNum_[mutype][eta][q][kEffPt]  = ibooker.book1D(histoname + "_Pt_Num",  "MuonPt; p_{T} ;", histBins.size()-1, &histBins[0]);
-      efficiencyDen_[mutype][eta][q][kEffPt]  = ibooker.book1D(histoname + "_Pt_Den",  "MuonPt; p_{T} ;", histBins.size()-1, &histBins[0]);      
-      
+      efficiencyNum_[mutype][eta][q][kEffPt] =
+          ibooker.book1D(histoname + "_Pt_Num", "MuonPt; p_{T} ;", histBins.size() - 1, &histBins[0]);
+      efficiencyDen_[mutype][eta][q][kEffPt] =
+          ibooker.book1D(histoname + "_Pt_Den", "MuonPt; p_{T} ;", histBins.size() - 1, &histBins[0]);
+
       histBins = getHistBinsEff(kEffEta);
-      efficiencyNum_[mutype][eta][q][kEffEta] = ibooker.book1D(histoname + "_Eta_Num", "MuonEta; #eta ;", histBins.size()-1, &histBins[0]);
-      efficiencyDen_[mutype][eta][q][kEffEta] = ibooker.book1D(histoname + "_Eta_Den", "MuonEta; #eta ;", histBins.size()-1, &histBins[0]);
-      
+      efficiencyNum_[mutype][eta][q][kEffEta] =
+          ibooker.book1D(histoname + "_Eta_Num", "MuonEta; #eta ;", histBins.size() - 1, &histBins[0]);
+      efficiencyDen_[mutype][eta][q][kEffEta] =
+          ibooker.book1D(histoname + "_Eta_Den", "MuonEta; #eta ;", histBins.size() - 1, &histBins[0]);
+
       histBins = getHistBinsEff(kEffPhi);
-      efficiencyNum_[mutype][eta][q][kEffPhi] = ibooker.book1D(histoname + "_Phi_Num", "MuonPhi; #phi ;", histBins.size()-1, &histBins[0]);
-      efficiencyDen_[mutype][eta][q][kEffPhi] = ibooker.book1D(histoname + "_Phi_Den", "MuonPhi; #phi ;", histBins.size()-1, &histBins[0]);
-      
-    }    
+      efficiencyNum_[mutype][eta][q][kEffPhi] =
+          ibooker.book1D(histoname + "_Phi_Num", "MuonPhi; #phi ;", histBins.size() - 1, &histBins[0]);
+      efficiencyDen_[mutype][eta][q][kEffPhi] =
+          ibooker.book1D(histoname + "_Phi_Den", "MuonPhi; #phi ;", histBins.size() - 1, &histBins[0]);
+    }
   }
 }
 void L1TPhase2MuonOffline::bookResolutionHistos(DQMStore::IBooker& ibooker, MuType mutype) {
   edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::bookResolutionHistos()" << endl;
 
-  ibooker.setCurrentFolder(histFolder_ + "/" + muonNames_[mutype] + "/resolution"); 
+  ibooker.setCurrentFolder(histFolder_ + "/" + muonNames_[mutype] + "/resolution");
   std::string histoname = "";
   for (const auto eta : etaRegions_) {
     for (const auto q : qualLevels_) {
-      for (const auto var : resTypes_){
-	histoname = "Res_" + muonNames_[mutype] + "_" + etaNames_[eta] + "_" + qualNames_[q] + "_" + resNames_[var];
-	auto nbins = std::get<0>(getHistBinsRes(var));
-	auto xmin = std::get<1>(getHistBinsRes(var));
-	auto xmax = std::get<2>(getHistBinsRes(var));	
-	resolutionHistos_[mutype][eta][q][var] = ibooker.book1D(histoname, resNames_[var] +";" + resLabels_[var], nbins, xmin, xmax);
+      for (const auto var : resTypes_) {
+        histoname = "Res_" + muonNames_[mutype] + "_" + etaNames_[eta] + "_" + qualNames_[q] + "_" + resNames_[var];
+        auto nbins = std::get<0>(getHistBinsRes(var));
+        auto xmin = std::get<1>(getHistBinsRes(var));
+        auto xmax = std::get<2>(getHistBinsRes(var));
+        resolutionHistos_[mutype][eta][q][var] =
+            ibooker.book1D(histoname, resNames_[var] + ";" + resLabels_[var], nbins, xmin, xmax);
       }
     }
   }
 }
 
 //____________________________________________________________________
-void L1TPhase2MuonOffline::fillControlHistos(){
-    
-  for (auto& muIt : *gmtSAMuon_) {   
-    controlHistos_[kSAMuon][kPt]  ->Fill(lsb_pt  * muIt.hwPt());
-    controlHistos_[kSAMuon][kPhi] ->Fill(lsb_phi * muIt.hwPhi());
-    controlHistos_[kSAMuon][kEta] ->Fill(lsb_eta * muIt.hwEta());
-    controlHistos_[kSAMuon][kIso] ->Fill(muIt.hwIso());
+void L1TPhase2MuonOffline::fillControlHistos() {
+  for (auto& muIt : *gmtSAMuon_) {
+    controlHistos_[kSAMuon][kPt]->Fill(lsb_pt * muIt.hwPt());
+    controlHistos_[kSAMuon][kPhi]->Fill(lsb_phi * muIt.hwPhi());
+    controlHistos_[kSAMuon][kEta]->Fill(lsb_eta * muIt.hwEta());
+    controlHistos_[kSAMuon][kIso]->Fill(muIt.hwIso());
     controlHistos_[kSAMuon][kQual]->Fill(muIt.hwQual());
-    controlHistos_[kSAMuon][kZ0]  ->Fill(lsb_z0 * muIt.hwZ0());
-    controlHistos_[kSAMuon][kD0]  ->Fill(lsb_d0 * muIt.hwD0());
+    controlHistos_[kSAMuon][kZ0]->Fill(lsb_z0 * muIt.hwZ0());
+    controlHistos_[kSAMuon][kD0]->Fill(lsb_d0 * muIt.hwD0());
   }
-  
+
   for (auto& muIt : *gmtTkMuon_) {
-    controlHistos_[kTkMuon][kPt]  ->Fill(lsb_pt  * muIt.hwPt());
-    controlHistos_[kTkMuon][kPhi] ->Fill(lsb_phi * muIt.hwPhi());
-    controlHistos_[kTkMuon][kEta] ->Fill(lsb_eta * muIt.hwEta());
-    controlHistos_[kTkMuon][kIso] ->Fill(muIt.hwIso());
+    controlHistos_[kTkMuon][kPt]->Fill(lsb_pt * muIt.hwPt());
+    controlHistos_[kTkMuon][kPhi]->Fill(lsb_phi * muIt.hwPhi());
+    controlHistos_[kTkMuon][kEta]->Fill(lsb_eta * muIt.hwEta());
+    controlHistos_[kTkMuon][kIso]->Fill(muIt.hwIso());
     controlHistos_[kTkMuon][kQual]->Fill(muIt.hwQual());
-    controlHistos_[kTkMuon][kZ0]  ->Fill(lsb_z0 * muIt.hwZ0());
-    controlHistos_[kTkMuon][kD0]  ->Fill(lsb_d0 * muIt.hwD0());   
-  }  
+    controlHistos_[kTkMuon][kZ0]->Fill(lsb_z0 * muIt.hwZ0());
+    controlHistos_[kTkMuon][kD0]->Fill(lsb_d0 * muIt.hwD0());
+  }
 }
-void L1TPhase2MuonOffline::fillEfficiencyHistos(){
-      
-  for (auto muIt : gmtSAMuonPairs_){
+void L1TPhase2MuonOffline::fillEfficiencyHistos() {
+  for (const auto& muIt : gmtSAMuonPairs_) {
     auto eta = muIt.etaRegion();
     for (const auto var : effTypes_) {
       auto varToFill = muIt.getVar(var);
-      for (const auto& cut : cuts_){
-	const auto gmtPtCut = cut.first;
-	const auto q        = cut.second;
-	
-	efficiencyDen_[kSAMuon][eta][q][var]->Fill(varToFill) ;     
-	if (muIt.gmtPt() < 0) continue;	  // gmt muon does not exits
-	
-	if (muIt.gmtQual() < q*4) continue;    //quality requirements
-	if (var != kEffPt && muIt.gmtPt() < gmtPtCut) continue; // pt requirement 
-	
-	efficiencyNum_[kSAMuon][eta][q][var]->Fill(varToFill);
+      for (const auto& cut : cuts_) {
+        const auto gmtPtCut = cut.first;
+        const auto q = cut.second;
+
+        efficiencyDen_[kSAMuon][eta][q][var]->Fill(varToFill);
+        if (muIt.gmtPt() < 0)
+          continue;  // gmt muon does not exits
+
+        if (muIt.gmtQual() < q * 4)
+          continue;  //quality requirements
+        if (var != kEffPt && muIt.gmtPt() < gmtPtCut)
+          continue;  // pt requirement
+
+        efficiencyNum_[kSAMuon][eta][q][var]->Fill(varToFill);
       }
     }
   }
 
   /// FOR TK MUONS
-  for (auto muIt : gmtTkMuonPairs_){
+  for (const auto& muIt : gmtTkMuonPairs_) {
     auto eta = muIt.etaRegion();
     for (const auto var : effTypes_) {
       auto varToFill = muIt.getVar(var);
-      for (const auto& cut : cuts_){
-	const auto gmtPtCut = cut.first;
-	const auto q        = cut.second;
-	
-	efficiencyDen_[kTkMuon][eta][q][var]->Fill(varToFill) ;     
-	if (muIt.gmtPt() < 0) continue;	  // gmt muon does not exits
-	
-	if (muIt.gmtQual() < q*4) continue;    //quality requirements
-	if (var != kEffPt && muIt.gmtPt() < gmtPtCut) continue; // pt requirement 
-	
-	efficiencyNum_[kTkMuon][eta][q][var]->Fill(varToFill);
+      for (const auto& cut : cuts_) {
+        const auto gmtPtCut = cut.first;
+        const auto q = cut.second;
+
+        efficiencyDen_[kTkMuon][eta][q][var]->Fill(varToFill);
+        if (muIt.gmtPt() < 0)
+          continue;  // gmt muon does not exits
+
+        if (muIt.gmtQual() < q * 4)
+          continue;  //quality requirements
+        if (var != kEffPt && muIt.gmtPt() < gmtPtCut)
+          continue;  // pt requirement
+
+        efficiencyNum_[kTkMuon][eta][q][var]->Fill(varToFill);
       }
     }
   }
-  
 }
-void L1TPhase2MuonOffline::fillResolutionHistos(){
-  
-  for (auto muIt : gmtSAMuonPairs_){
-    if (muIt.gmtPt() < 0) continue;
-    
-    auto eta = muIt.etaRegion();
-    for (const auto q : qualLevels_) {
-      if (muIt.gmtQual() < q*4) continue;
-      for (const auto var : resTypes_) {
-	auto varToFill = muIt.getDeltaVar(var);
-	
-	resolutionHistos_[kSAMuon][eta][q][var]->Fill(varToFill) ;
-      }
-    }
-  }
-  
-  for (auto muIt : gmtTkMuonPairs_){
-    if (muIt.gmtPt() < 0) continue;
+void L1TPhase2MuonOffline::fillResolutionHistos() {
+  for (const auto& muIt : gmtSAMuonPairs_) {
+    if (muIt.gmtPt() < 0)
+      continue;
 
     auto eta = muIt.etaRegion();
     for (const auto q : qualLevels_) {
-      if (muIt.gmtQual() < q*4) continue;
+      if (muIt.gmtQual() < q * 4)
+        continue;
       for (const auto var : resTypes_) {
-	auto varToFill = muIt.getDeltaVar(var);
-	
-	resolutionHistos_[kTkMuon][eta][q][var]->Fill(varToFill) ;
+        auto varToFill = muIt.getDeltaVar(var);
+
+        resolutionHistos_[kSAMuon][eta][q][var]->Fill(varToFill);
+      }
+    }
+  }
+
+  for (const auto& muIt : gmtTkMuonPairs_) {
+    if (muIt.gmtPt() < 0)
+      continue;
+
+    auto eta = muIt.etaRegion();
+    for (const auto q : qualLevels_) {
+      if (muIt.gmtQual() < q * 4)
+        continue;
+      for (const auto var : resTypes_) {
+        auto varToFill = muIt.getDeltaVar(var);
+
+        resolutionHistos_[kTkMuon][eta][q][var]->Fill(varToFill);
       }
     }
   }
@@ -358,19 +364,18 @@ void L1TPhase2MuonOffline::matchMuonsToGen(std::vector<const reco::GenParticle*>
   gmtTkMuonPairs_.clear();
 
   edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::matchMuonsToGen() " << endl;
-  
-  
-  for (const reco::GenParticle * gen : genmus){
-    edm::LogInfo("L1TPhase2MuonOffline") << "Looping on genmus: "<< gen << endl;
+
+  for (const reco::GenParticle* gen : genmus) {
+    edm::LogInfo("L1TPhase2MuonOffline") << "Looping on genmus: " << gen << endl;
     GenMuonGMTPair pairBestCand(&(*gen), nullptr);
-    for (auto& muIt : *gmtSAMuon_) {   
+    for (auto& muIt : *gmtSAMuon_) {
       GenMuonGMTPair pairTmpCand(&(*gen), &(muIt));
       if ((pairTmpCand.dR() < maxGmtMuonDR_) && (pairTmpCand.dR() < pairBestCand.dR())) {
         pairBestCand = pairTmpCand;
       }
     }
     gmtSAMuonPairs_.emplace_back(pairBestCand);
-  
+
     GenMuonGMTPair pairBestCand2(&(*gen), nullptr);
     for (auto& tkmuIt : *gmtTkMuon_) {
       GenMuonGMTPair pairTmpCand(&(*gen), &(tkmuIt));
@@ -378,14 +383,14 @@ void L1TPhase2MuonOffline::matchMuonsToGen(std::vector<const reco::GenParticle*>
         pairBestCand2 = pairTmpCand;
       }
     }
-    gmtTkMuonPairs_.emplace_back(pairBestCand2);    
-    
-  } 
-  edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::matchMuonsToGen() gmtSAMuons: " << gmtSAMuonPairs_.size()<< endl;
-  edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::matchMuonsToGen() gmtTkMuons: " << gmtTkMuonPairs_.size()<< endl;
+    gmtTkMuonPairs_.emplace_back(pairBestCand2);
+  }
+  edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::matchMuonsToGen() gmtSAMuons: "
+                                       << gmtSAMuonPairs_.size() << endl;
+  edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::matchMuonsToGen() gmtTkMuons: "
+                                       << gmtTkMuonPairs_.size() << endl;
   edm::LogInfo("L1TPhase2MuonOffline") << "L1TPhase2MuonOffline::matchMuonsToGen() END " << endl;
 }
-
 
 std::vector<float> L1TPhase2MuonOffline::getHistBinsEff(EffType eff) {
   if (eff == kEffPt) {

@@ -44,7 +44,7 @@ namespace l1t {
     void setMuonRef(const edm::Ref<l1t::RegionalMuonCandBxCollection>& p) { muRef_ = p; }
     void setHwIsoSum(int isoSum) { hwIsoSum_ = isoSum; }
     void setHwIsoSumAp(int isoSum) { hwIsoSumAp_ = isoSum; }
- 
+
     // For HLT
     const double phZ0() const { return Phase2L1GMT::LSBGTz0 * hwZ0(); }
     const double phD0() const { return Phase2L1GMT::LSBGTd0 * hwD0(); }

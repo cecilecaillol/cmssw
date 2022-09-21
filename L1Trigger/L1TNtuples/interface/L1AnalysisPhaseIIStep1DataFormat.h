@@ -16,7 +16,6 @@ namespace L1Analysis {
     ~L1AnalysisPhaseIIStep1DataFormat(){};
 
     void Reset() {
-
       z0L1TkPV = 0;
       z0L1TkAll.clear();
       nL1TkPVs = 0;
@@ -138,7 +137,7 @@ namespace L1Analysis {
       tkPhotonPassesLooseTrackID.clear();
       tkPhotonPassesPhotonID.clear();
 
-/*
+      /*
       nStandaloneMuons = 0;
       standaloneMuonPt.clear();
       standaloneMuonPt2.clear();
@@ -320,7 +319,6 @@ namespace L1Analysis {
       trackerHTDisplaced = 0;
       trackerMHTDisplaced = 0;
       trackerMHTPhiDisplaced = 0;
-
     }
 
     //double z0Puppi;
@@ -446,7 +444,7 @@ namespace L1Analysis {
     std::vector<unsigned int> tkPhotonPassesLooseTrackID;
     std::vector<unsigned int> tkPhotonPassesPhotonID;
 
-/*
+    /*
     unsigned short int nStandaloneMuons;
     std::vector<double> standaloneMuonPt;
     std::vector<double> standaloneMuonPt2;
@@ -624,7 +622,6 @@ namespace L1Analysis {
     double trackerHTDisplaced;
     double trackerMHTDisplaced;
     double trackerMHTPhiDisplaced;
-
   };
 }  // namespace L1Analysis
 #endif
