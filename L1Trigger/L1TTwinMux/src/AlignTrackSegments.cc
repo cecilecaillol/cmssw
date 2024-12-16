@@ -25,7 +25,7 @@ AlignTrackSegments::AlignTrackSegments(L1MuDTChambPhContainer inm_phiDigis)
 void AlignTrackSegments::run() {
   std::vector<L1MuDTChambPhDigi> l1ttma_out;
 
-  for (int bx = -3; bx <= 3; bx++) {
+  for (int bx = -10; bx <= 10; bx++) { //FIXME Cecile
     for (int wheel = -3; wheel <= 3; wheel++) {
       for (int sector = 0; sector < 12; sector++) {
         for (int station = 1; station <= 4; station++) {

@@ -94,7 +94,7 @@ void L1TTwinMuxAlgorithm::run(edm::Handle<L1MuDTChambPhContainer> inphiDigis,
 
   int bx = 0, wheel = 0, sector = 0, station = 1;
 
-  for (bx = -3; bx <= 3; bx++) {
+  for (bx = -10; bx <= 10; bx++) { //FIXME Cecile was -3 3
     for (wheel = -2; wheel <= 2; wheel++) {
       for (sector = 0; sector < 12; sector++) {
         for (station = 1; station <= 4; station++) {

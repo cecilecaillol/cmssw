@@ -51,7 +51,7 @@ void DTLowQMatching::Matching(int track_seg) {
   for (wheel = -2; wheel <= 2; wheel++) {
     for (sector = 0; sector < 12; sector++) {
       for (station = 1; station <= 4; station++) {
-        for (bx = -3; bx <= 3; bx++) {
+        for (bx = -10; bx <= 10; bx++) { //FIXME Cecile
           int matched = 0;
           for (int rpcbx = bx - 1; rpcbx <= bx + 1; rpcbx++) {
             dtts = nullptr;

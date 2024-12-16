@@ -28,8 +28,8 @@ using namespace std;
 RPCHitCleaner::RPCHitCleaner(RPCDigiCollection const& inrpcDigis) : m_inrpcDigis{inrpcDigis} {}
 
 namespace {
-  constexpr int max_rpc_bx = 3;
-  constexpr int min_rpc_bx = -3;
+  constexpr int max_rpc_bx = 10; //FIXME Cecile
+  constexpr int min_rpc_bx = -10; //FIXME Cecile
 
   //Need to shift the index so that index 0
   // corresponds to min_rpc_bx
@@ -64,7 +64,7 @@ void RPCHitCleaner::run() {
     if (detid.region() != 0)
       continue;  //Region = 0 Barrel
     for (auto digi = (*chamber).second.first; digi != (*chamber).second.second; ++digi) {
-      if (fabs(digi->bx()) > 3)
+      if (fabs(digi->bx()) > 10) //FIXME Cecile
         continue;
       ///Create cluster ids and store their size
       //if((digi->strip()-1!=strip_n1) || digi->bx()!=bx_n1){

@@ -29,8 +29,8 @@ using namespace std;
 RPCtoDTTranslator::RPCtoDTTranslator(RPCDigiCollection const& inrpcDigis) : m_rpcDigis{inrpcDigis} {}
 
 namespace {
-  constexpr int max_rpc_bx = 2;
-  constexpr int min_rpc_bx = -2;
+  constexpr int max_rpc_bx = 10; //FIXME Cecile
+  constexpr int min_rpc_bx = -10;
 
   struct rpc_hit {
     int bx;
@@ -135,7 +135,7 @@ void RPCtoDTTranslator::run(const RPCGeometry& rpcGeometry) {
     if (detid.region() != 0)
       continue;  //Region = 0 Barrel
     for (auto digi = (*chamber).second.first; digi != (*chamber).second.second; ++digi) {
-      if (fabs(digi->bx()) > 3)
+      if (fabs(digi->bx()) > 10) //FIXME Cecile
         continue;
       //Create cluster ids and store their size
       //if((digi->strip()+1!=strip_n1)|| digi->bx()!=bx_n1){

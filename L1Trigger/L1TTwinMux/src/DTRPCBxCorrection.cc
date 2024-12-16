@@ -54,12 +54,12 @@ void DTRPCBxCorrection::BxCorrection(int track_seg) {
   for (int wheel = -2; wheel <= 2; wheel++) {
     for (int sector = 0; sector < 12; sector++) {
       for (int station = 1; station <= 4; station++) {
-        bool shifted[7] = {false, false, false, false, false, false, false};
-        bool dups[7] = {false, false, false, false, false, false, false};
-        bool secondTs[7] = {false, false, false, false, false, false, false};
+        bool shifted[21] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+        bool dups[21] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+        bool secondTs[21] = {false, false, false, false, false, false, false,false, false, false, false, false, false, false,false, false, false, false, false, false, false};
         L1MuTMChambPhContainer shiftedPhiDTDigis;
         L1MuDTChambPhDigi* dtts_sh2nd = nullptr;
-        for (int bx = 3; bx >= -3; bx--) {
+        for (int bx = 10; bx >= -10; bx--) {
           vector<int> delta_m, delta_p, delta_0;
           for (int rpcbx = bx - 1; rpcbx <= bx + 1; rpcbx++) {
             L1MuDTChambPhDigi* dtts = nullptr;
@@ -119,7 +119,7 @@ void DTRPCBxCorrection::BxCorrection(int track_seg) {
             dtts = m_phiDTDigis_tm.chPhiSegm(wheel, station, sector, init_bx, track_seg);
             dttsnew = m_phiDTDigis_tm.chPhiSegm(wheel, station, sector, final_bx, track_seg);
             bool shift_1 = false;
-            if (dtts && dtts->code() < m_QualityLimit && (!dttsnew || shifted[final_bx + 3] || dups[final_bx + 3])) {
+            if (dtts && dtts->code() < m_QualityLimit && (!dttsnew || shifted[final_bx + 10] || dups[final_bx + 10])) {
               dtts_sh = new L1MuDTChambPhDigi(final_bx,
                                               dtts->whNum(),
                                               dtts->scNum(),
@@ -131,11 +131,11 @@ void DTRPCBxCorrection::BxCorrection(int track_seg) {
                                               dtts->BxCnt(),
                                               1);
               l1ttma_outsh.push_back(*dtts_sh);
-              shifted[init_bx + 3] = true;
+              shifted[init_bx + 10] = true;
               shift_1 = true;
             }
             if (dtts && dtts->code() < m_QualityLimit && dttsnew)
-              dups[init_bx + 3] = true;
+              dups[init_bx + 10] = true;
 
             //dtts exists and qual lt m_QualityLimit and dttsnew exists and the previous (shift_1) prim was not shifted and there is empty space in second TS
             if (dtts && dtts->code() < m_QualityLimit && dttsnew && !shift_1 &&
@@ -155,18 +155,18 @@ void DTRPCBxCorrection::BxCorrection(int track_seg) {
                                                    flipBit(track_seg),
                                                    dtts->BxCnt(),
                                                    1);
-                secondTs[final_bx + 3] = true;
-                dups[init_bx + 3] = false;
-                shifted[init_bx + 3] = true;
+                secondTs[final_bx + 10] = true;
+                dups[init_bx + 10] = false;
+                shifted[init_bx + 10] = true;
               }
             }
             shiftedPhiDTDigis.setContainer(l1ttma_outsh);
           }
         }  //end of bx
 
-        for (int bx = -3; bx <= 3; bx++) {
+        for (int bx = -10; bx <= 10; bx++) {
           L1MuDTChambPhDigi* dtts = nullptr;
-          if (secondTs[bx + 3])
+          if (secondTs[bx + 10])
             if (dtts_sh2nd) {
               m_l1ttma_out.push_back(*dtts_sh2nd);
             }
@@ -175,11 +175,11 @@ void DTRPCBxCorrection::BxCorrection(int track_seg) {
             m_l1ttma_out.push_back(*dtts);
             continue;
           }
-          if (dups[bx + 3])
+          if (dups[bx + 10])
             continue;
           ///if there is no shift then put the original primitive
           dtts = m_phiDTDigis_tm.chPhiSegm(wheel, station, sector, bx, track_seg);
-          if (!shifted[bx + 3] && dtts) {
+          if (!shifted[bx + 10] && dtts) {
             m_l1ttma_out.push_back(*dtts);
           }
         }

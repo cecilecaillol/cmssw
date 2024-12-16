@@ -28,8 +28,8 @@ namespace l1t {
       static const unsigned int qualShift = 22;
       static const unsigned int rpcMask = 0x1;
       static const unsigned int rpcShift = 26;
-      static const unsigned int bxCntMask = 0x3;
-      static const unsigned int bxCntShift = 30;
+      static const unsigned int bxCntMask = 0x3;//FIXME was 0x3
+      static const unsigned int bxCntShift = 30; //FIXME was 30
 
       static const int ownLinks_[];
     };

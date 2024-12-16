@@ -26,7 +26,7 @@ void IOPrinter::run(edm::Handle<L1MuDTChambPhContainer> inphiDigis,
   cout << "DT Inputs/RPCDT Inputs" << endl;
   cout << "bx\twheel\tsector\tstation\tphi\tphib\tcode\tts2tag\tbxcnt\trpcbit" << endl;
 
-  for (bx = -2; bx <= 2; bx++) {
+  for (bx = -10; bx <= 10; bx++) { //FIXME Cecile
     for (wheel = -2; wheel <= 2; wheel++) {
       for (sector = 0; sector < 12; sector++) {
         for (station = 1; station <= 4; station++) {
@@ -70,7 +70,7 @@ void IOPrinter::run(edm::Handle<L1MuDTChambPhContainer> inphiDigis,
   cout << "TwinMux Output" << endl;
   cout << "bx\twheel\tsector\tstation\tphi\tphib\tcode\tts2tag\tbxcnt\trpcbit" << endl;
 
-  for (bx = -2; bx <= 2; bx++) {
+  for (bx = -10; bx <= 10; bx++) { //FIXME Cecile
     for (wheel = -2; wheel <= 2; wheel++) {
       for (sector = 0; sector < 12; sector++) {
         for (station = 1; station <= 4; station++) {
@@ -110,7 +110,7 @@ void IOPrinter::run(L1MuDTChambPhContainer const* inphiDigis,
   cout << "RPC->DT Inputs" << endl;
   cout << "bx\twheel\tsector\tstation\tphi\tphib\tcode\tts2tag\tbxcnt\trpcbit" << endl;
 
-  for (bx = -2; bx <= 2; bx++) {
+  for (bx = -10; bx <= 10; bx++) { //FIXME Cecile
     for (wheel = -2; wheel <= 2; wheel++) {
       for (sector = 0; sector < 12; sector++) {
         for (station = 1; station <= 4; station++) {
@@ -149,7 +149,7 @@ void IOPrinter::run(L1MuDTChambPhContainer const* inphiDigis,
   cout << "TwinMux Output" << endl;
   cout << "bx\twheel\tsector\tstation\tphi\tphib\tcode\tts2tag\tbxcnt\trpcbit" << endl;
 
-  for (bx = -2; bx <= 2; bx++) {
+  for (bx = -10; bx <= 10; bx++) { //FIXME Cecile
     for (wheel = -2; wheel <= 2; wheel++) {
       for (sector = 0; sector < 12; sector++) {
         for (station = 1; station <= 4; station++) {
