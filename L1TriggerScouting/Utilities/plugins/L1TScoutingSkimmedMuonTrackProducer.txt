@@ -1,0 +1,108 @@
+#include <memory>
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
+
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
+
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/Utilities/interface/StreamID.h"
+
+#include "L1Trigger/L1TMuonBarrel/interface/L1TMuonBarrelKalmanAlgo.h"
+#include "L1Trigger/L1TMuonBarrel/interface/L1TMuonBarrelKalmanTrackFinder.h"
+#include "L1Trigger/L1TMuonBarrel/interface/L1TMuonBarrelKalmanStubProcessor.h"
+
+#include "DataFormats/L1TMuon/interface/L1MuKBMTCombinedStub.h"
+#include "DataFormats/L1TMuon/interface/RegionalMuonCand.h"
+#include "DataFormats/L1TMuon/interface/RegionalMuonCandFwd.h"
+
+#include "DataFormats/L1Scouting/interface/OrbitCollection.h"
+#include "DataFormats/L1Scouting/interface/L1ScoutingMuon.h"
+#include "DataFormats/L1Scouting/interface/L1ScoutingBMTFStub.h"
+
+#include "L1TriggerScouting/Utilities/interface/conversion.h"
+#include "L1TriggerScouting/Utilities/interface/convertToL1TFormat.h"
+
+using namespace l1ScoutingRun3;
+
+//
+// class declaration
+//
+
+class L1TScoutingSkimmedMuonTrackProducer : public edm::stream::EDProducer<> {
+public:
+  explicit L1TScoutingSkimmedMuonTrackProducer(const edm::ParameterSet&);
+  ~L1TScoutingSkimmedMuonTrackProducer() override;
+
+  static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
+
+private:
+  void beginStream(edm::StreamID) override;
+  void produce(edm::Event&, const edm::EventSetup&) override;
+  void endStream() override;
+
+  edm::EDGetTokenT<L1MuKBMTrackOrbitCollection> src_;
+};
+L1TScoutingSkimmedMuonTrackProducer::L1TScoutingSkimmedMuonTrackProducer(const edm::ParameterSet& iConfig)
+    : src_(consumes<L1MuKBMTrackOrbitCollection>(iConfig.getParameter<edm::InputTag>("src"))) {
+  // produces<L1MuKBMTrackBxCollection>("BMTF");
+  produces<L1MuKBMTrackOrbitCollection>("L1MuKBMTrack").setBranchAlias("L1MuKBMTrackOrbitCollection");
+}
+
+L1TScoutingSkimmedMuonTrackProducer::~L1TScoutingSkimmedMuonTrackProducer() {
+  // do anything here that needs to be done at destruction time
+  // (e.g. close files, deallocate resources etc.)
+}
+
+//
+// member functions
+//
+
+// ------------ method called to produce the data  ------------
+void L1TScoutingSkimmedMuonTrackProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
+  using namespace edm;
+
+  edm::Handle<L1MuKBMTrackOrbitCollection> src;
+  iEvent.getByToken(src_, src);
+
+  std::unique_ptr<L1MuKBMTrackOrbitCollection> kbmTrackCollection(new L1MuKBMTrackOrbitCollection);
+  std::vector<std::vector<L1MuKBMTrack>> kbmTrackBuffer(3565);
+  unsigned nKbmTrack = 0;
+
+  std::vector<int> seenBxs;
+  L1MuKBMTCombinedStubRefVector stubs;
+  for (int i=0; i<src->size(); ++i) {
+    seenBxs.push_back((*src)[i].bxNum());
+  }
+
+  std::sort(seenBxs.begin(), seenBxs.end());
+  seenBxs.erase(std::unique(seenBxs.begin(), seenBxs.end()), seenBxs.end());
+
+  for (const auto& bx : seenBxs) {
+      const auto& tmp = src->bxIterator(bx);
+      for (const auto& track : tmp) {
+        kbmTrackBuffer[bx].push_back(track);
+        nKbmTrack++;
+      }
+  }
+
+  kbmTrackCollection->fillAndClear(kbmTrackBuffer, nKbmTrack);
+  iEvent.put(std::move(kbmTrackCollection), "L1MuKBMTrackSkimmed");
+}
+
+// ------------ method called once each stream before processing any runs, lumis or events  ------------
+void L1TScoutingSkimmedMuonTrackProducer::beginStream(edm::StreamID) {}
+
+// ------------ method called once each stream after processing all runs, lumis and events  ------------
+void L1TScoutingSkimmedMuonTrackProducer::endStream() {}
+
+void L1TScoutingSkimmedMuonTrackProducer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+  //The following says we do not know what parameters are allowed so do no validation
+  // Please change this to state exactly what you do use, even if it is no parameters
+  edm::ParameterSetDescription desc;
+  desc.setUnknown();
+  descriptions.addDefault(desc);
+}
+
+//define this as a plug-in
+DEFINE_FWK_MODULE(L1TScoutingSkimmedMuonTrackProducer);

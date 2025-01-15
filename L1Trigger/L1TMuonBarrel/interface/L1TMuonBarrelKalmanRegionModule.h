@@ -12,7 +12,7 @@ public:
 
   const int wheel() const { return wheel_; }
 
-  L1MuKBMTrackCollection process(L1TMuonBarrelKalmanAlgo*, const L1MuKBMTCombinedStubRefVector& stubs, int bx);
+  L1MuKBMTrackCollection process(L1TMuonBarrelKalmanAlgo*, const L1MuKBMTCombinedStubRefVector& stubs, int bx, int bxspread);
 
 private:
   int verbose_;

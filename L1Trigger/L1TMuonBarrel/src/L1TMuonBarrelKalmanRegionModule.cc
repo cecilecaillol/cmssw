@@ -46,14 +46,16 @@ L1TMuonBarrelKalmanRegionModule::~L1TMuonBarrelKalmanRegionModule() {}
 
 L1MuKBMTrackCollection L1TMuonBarrelKalmanRegionModule::process(L1TMuonBarrelKalmanAlgo* trackMaker,
                                                                 const L1MuKBMTCombinedStubRefVector& stubsAll,
-                                                                int bx) {
+                                                                int bx, 
+								int bxspread) {
   L1MuKBMTCombinedStubRefVector stubs;
   L1MuKBMTCombinedStubRefVector seeds;
   L1MuKBMTrackCollection pretracks2;
   L1MuKBMTrackCollection pretracks3;
   L1MuKBMTrackCollection pretracks4;
   for (const auto& stub : stubsAll) {
-    if (stub->bxNum() != bx)
+    //if (stub->bxNum() != bx)
+    if (stub->bxNum()-bx<-bxspread or stub->bxNum()-bx>bxspread) // FIXME new condition to make tracks with stubs at most 10 Bx apart
       continue;
 
     if ((stub->scNum() == nextSector_ && stub->phi() >= -112) ||

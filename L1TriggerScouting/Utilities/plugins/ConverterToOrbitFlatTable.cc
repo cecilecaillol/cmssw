@@ -39,7 +39,9 @@ private:
   // the tokens to access the data
   edm::EDGetTokenT<OrbitCollection<T>> src_;
 
-  std::string name_, doc_;
+  std::string name_;
+  float minpt_;
+  std::string doc_;
 };
 // -----------------------------------------------------------------------------
 
@@ -49,6 +51,7 @@ template <typename T>
 ConverterToOrbitFlatTable<T>::ConverterToOrbitFlatTable(const edm::ParameterSet& iConfig)
     : src_(consumes<OrbitCollection<T>>(iConfig.getParameter<edm::InputTag>("src"))),
       name_(iConfig.getParameter<std::string>("name")),
+      minpt_(iConfig.getParameter<double>("minpt")),
       doc_(iConfig.getParameter<std::string>("doc")) {
   produces<OrbitFlatTable>();
 }
@@ -62,22 +65,23 @@ void ConverterToOrbitFlatTable<T>::produce(edm::StreamID, edm::Event& iEvent, ed
   auto out = std::make_unique<OrbitFlatTable>(src->bxOffsets(), name_);
   out->setDoc(doc_);
   std::vector<float> pt(out->size()), eta(out->size()), phi(out->size());
+  std::vector<float> ptUnconstrained(out->size()), etaAtVtx(out->size()), phiAtVtx(out->size());
+  std::vector<int> charge(out->size()), quality(out->size()), dxy(out->size()), index(out->size());
   if constexpr (std::is_same<T, l1ScoutingRun3::Muon>()) {
-    std::vector<float> ptUnconstrained(out->size()), etaAtVtx(out->size()), phiAtVtx(out->size());
-    std::vector<int> charge(out->size()), quality(out->size()), dxy(out->size()), index(out->size());
     unsigned int i = 0;
     for (const l1ScoutingRun3::Muon& muon : *src) {
-      pt[i] = ugmt::fPt(muon.hwPt());
-      eta[i] = ugmt::fEta(muon.hwEta());
-      phi[i] = ugmt::fPhi(muon.hwPhi());
-      charge[i] = muon.hwCharge();
-      quality[i] = muon.hwQual();
-      dxy[i] = muon.hwDXY();
-      index[i] = muon.tfMuonIndex();
-      ptUnconstrained[i] = ugmt::fPtUnconstrained(muon.hwPtUnconstrained());
-      etaAtVtx[i] = ugmt::fEtaAtVtx(muon.hwEtaAtVtx());
-      phiAtVtx[i] = ugmt::fPhiAtVtx(muon.hwPhiAtVtx());
-      ++i;
+         pt[i] = ugmt::fPt(muon.hwPt());
+         eta[i] = ugmt::fEta(muon.hwEta());
+         phi[i] = ugmt::fPhi(muon.hwPhi());
+         charge[i] = muon.hwCharge();
+         quality[i] = muon.hwQual();
+         dxy[i] = muon.hwDXY();
+         index[i] = muon.tfMuonIndex();
+         ptUnconstrained[i] = ugmt::fPtUnconstrained(muon.hwPtUnconstrained());
+         etaAtVtx[i] = ugmt::fEtaAtVtx(muon.hwEtaAtVtx());
+         phiAtVtx[i] = ugmt::fPhiAtVtx(muon.hwPhiAtVtx());
+	 //std::cout<<"L1Mu: "<<pt[i]<<" "<<eta[i]<<" "<<phi[i]<<endl;
+	 ++i;
     }
     out->template addColumn<int>("hwCharge", charge, "charge (0 = not valid)");
     out->template addColumn<int>("hwQual", quality, "quality");
@@ -89,6 +93,9 @@ void ConverterToOrbitFlatTable<T>::produce(edm::StreamID, edm::Event& iEvent, ed
     out->template addColumn<float>("ptUnconstrained", ptUnconstrained, "Unconstrained p_{T} (GeV)");
     out->template addColumn<float>("etaAtVtx", etaAtVtx, "eta extrapolated at beam line (natural units)");
     out->template addColumn<float>("phiAtVtx", phiAtVtx, "phi extrapolated at beam line (natural units)");
+    out->template addColumn<float>("pt", pt, "pt (GeV)");
+    out->template addColumn<float>("eta", eta, "eta (natural units)", 8);
+    out->template addColumn<float>("phi", phi, "phi (natural units)", 8);
   } else {
     std::vector<int> isolation(out->size());
     unsigned int i = 0;
@@ -100,10 +107,10 @@ void ConverterToOrbitFlatTable<T>::produce(edm::StreamID, edm::Event& iEvent, ed
       ++i;
     }
     out->template addColumn<int>("hwIso", isolation, "isolation (trigger units)");
+    out->template addColumn<float>("pt", pt, "pt (GeV)");
+    out->template addColumn<float>("eta", eta, "eta (natural units)", 8);
+    out->template addColumn<float>("phi", phi, "phi (natural units)", 8);
   }
-  out->template addColumn<float>("pt", pt, "pt (GeV)");
-  out->template addColumn<float>("eta", eta, "eta (natural units)", 8);
-  out->template addColumn<float>("phi", phi, "phi (natural units)", 8);
 
   iEvent.put(std::move(out));
 }
@@ -114,6 +121,7 @@ void ConverterToOrbitFlatTable<T>::fillDescriptions(edm::ConfigurationDescriptio
 
   desc.add<edm::InputTag>("src");
   desc.add<std::string>("name");
+  desc.add<double>("minpt");
   desc.add<std::string>("doc");
 
   descriptions.addDefault(desc);

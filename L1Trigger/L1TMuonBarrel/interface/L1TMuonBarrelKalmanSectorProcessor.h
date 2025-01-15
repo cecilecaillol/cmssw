@@ -12,7 +12,7 @@ public:
   L1TMuonBarrelKalmanSectorProcessor(const edm::ParameterSet&, int sector);
   ~L1TMuonBarrelKalmanSectorProcessor();
 
-  L1MuKBMTrackCollection process(L1TMuonBarrelKalmanAlgo*, const L1MuKBMTCombinedStubRefVector& stubs, int bx);
+  L1MuKBMTrackCollection process(L1TMuonBarrelKalmanAlgo*, const L1MuKBMTCombinedStubRefVector& stubs, int bx, int bxspread);
   void verbose(L1TMuonBarrelKalmanAlgo*, const L1MuKBMTrackCollection&);
 
 private:

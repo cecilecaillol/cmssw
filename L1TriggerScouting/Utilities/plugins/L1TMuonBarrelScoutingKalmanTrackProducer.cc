@@ -48,6 +48,7 @@ private:
   edm::EDGetTokenT<MuonOrbitCollection> gmtSrc_;
   L1TMuonBarrelKalmanAlgo* algo_;
   L1TMuonBarrelKalmanTrackFinder* trackFinder_;
+  int bxspread_;
   bool matchGmt_;
   double drCut_;
   double phiMult_;
@@ -59,6 +60,7 @@ L1TMuonBarrelScoutingKalmanTrackProducer::L1TMuonBarrelScoutingKalmanTrackProduc
       gmtSrc_(consumes<MuonOrbitCollection>(iConfig.getParameter<edm::InputTag>("gmtSrc"))),
       algo_(new L1TMuonBarrelKalmanAlgo(iConfig.getParameter<edm::ParameterSet>("algoSettings"))),
       trackFinder_(new L1TMuonBarrelKalmanTrackFinder(iConfig.getParameter<edm::ParameterSet>("trackFinderSettings"))),
+      bxspread_(iConfig.getParameter<int>("bxspread")),
       matchGmt_(iConfig.getParameter<bool>("matchGmt")),
       drCut_(iConfig.getParameter<double>("drCut")),
       phiMult_(iConfig.getParameter<double>("phiMult")),
@@ -114,7 +116,7 @@ void L1TMuonBarrelScoutingKalmanTrackProducer::produce(edm::Event& iEvent, const
   // double l1_gmt_m_physPhi, l1_gmt_m_physEta;
 
   for (const auto& bx : seenBxs) {
-    L1MuKBMTrackCollection tmp = trackFinder_->process(algo_, stubs, bx);
+    L1MuKBMTrackCollection tmp = trackFinder_->process(algo_, stubs, bx, bxspread_);
     if (tmp.size()==0) continue;
 
     if (matchGmt_) {

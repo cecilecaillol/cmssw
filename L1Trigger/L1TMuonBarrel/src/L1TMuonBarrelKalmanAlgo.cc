@@ -1259,10 +1259,10 @@ int L1TMuonBarrelKalmanAlgo::ptLUT(int K) {
   float lsb = 1.25 / float(1 << 13);
   float FK = fabs(K);
 
-  if (FK > 2047)
-    FK = 2047.;
-  if (FK < 26)
-    FK = 26.;
+  if (FK > 2047) 
+    FK = 2047.; 
+  if (FK < 26) 
+    FK = 26.; 
 
   FK = FK * lsb;
 
@@ -1277,8 +1277,8 @@ int L1TMuonBarrelKalmanAlgo::ptLUT(int K) {
   if (FK != 0)
     pt = int(2.0 / FK);
 
-  if (pt > 511)
-    pt = 511;
+  //if (pt > 511) //FIXME Cecile
+  //  pt = 511; //FIXME Cecile
 
   if (pt < 8)
     pt = 8;

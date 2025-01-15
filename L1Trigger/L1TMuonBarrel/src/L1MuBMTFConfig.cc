@@ -178,8 +178,8 @@ edm::InputTag L1MuBMTFConfig::m_BMThetaDigiInputTag = edm::InputTag();
 
 bool L1MuBMTFConfig::m_debug = false;
 int L1MuBMTFConfig::m_dbgLevel = -1;
-int L1MuBMTFConfig::m_BxMin = -9;
-int L1MuBMTFConfig::m_BxMax = 7;
+int L1MuBMTFConfig::m_BxMin = -15; //FIXME Cecile
+int L1MuBMTFConfig::m_BxMax = 15;
 int L1MuBMTFConfig::m_extTSFilter = 1;
 bool L1MuBMTFConfig::m_openLUTs = false;
 bool L1MuBMTFConfig::m_useEX21 = false;

@@ -12,10 +12,11 @@ L1TMuonBarrelKalmanTrackFinder::~L1TMuonBarrelKalmanTrackFinder() {}
 
 L1MuKBMTrackCollection L1TMuonBarrelKalmanTrackFinder::process(L1TMuonBarrelKalmanAlgo* trackMaker,
                                                                const L1MuKBMTCombinedStubRefVector& stubsAll,
-                                                               int bx) {
+                                                               int bx,
+							       int bxspread) {
   L1MuKBMTrackCollection pretracks;
   for (auto& sector : sectors_) {
-    L1MuKBMTrackCollection tmp = sector.process(trackMaker, stubsAll, bx);
+    L1MuKBMTrackCollection tmp = sector.process(trackMaker, stubsAll, bx, bxspread);
     if (!tmp.empty())
       pretracks.insert(pretracks.end(), tmp.begin(), tmp.end());
   }

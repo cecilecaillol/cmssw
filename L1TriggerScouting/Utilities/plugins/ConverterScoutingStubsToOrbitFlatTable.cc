@@ -78,6 +78,7 @@ void ConvertScoutingStubsToOrbitFlatTable::produce(edm::StreamID, edm::Event& iE
     wheel[i] = stub.wheel();
     sector[i] = stub.sector();
     tag[i] = stub.tag();
+    //std::cout<<"Stub: "<<hwEta[i]<<" "<<hwPhi[i]<<std::endl;
     ++i;
   }
 
