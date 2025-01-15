@@ -87,7 +87,8 @@ void L1TMuonBarrelKalmanStubProducer::produce(edm::Event& iEvent, const edm::Eve
   L1MuKBMTCombinedStubCollection stubs = proc_->makeStubs(phiIn.product(), thetaIn.product(), bmtfParams);
   if (verbose_ == 1)
     for (const auto& stub : stubs) {
-      printf("Stub: wheel=%d sector=%d station =%d tag=%d eta1=%d qeta1=%d eta2=%d qeta2=%d\n",
+      printf("Stub: bx=%d wheel=%d sector=%d station =%d tag=%d eta1=%d qeta1=%d eta2=%d qeta2=%d\n",
+	     stub.bxNum(),
              stub.whNum(),
              stub.scNum(),
              stub.stNum(),

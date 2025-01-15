@@ -12,7 +12,8 @@ L1TMuonBarrelKalmanSectorProcessor::~L1TMuonBarrelKalmanSectorProcessor() {}
 
 L1MuKBMTrackCollection L1TMuonBarrelKalmanSectorProcessor::process(L1TMuonBarrelKalmanAlgo* trackMaker,
                                                                    const L1MuKBMTCombinedStubRefVector& stubsAll,
-                                                                   int bx) {
+                                                                   int bx,
+								   int bxspread) {
   L1MuKBMTrackCollection tracksM2;
   L1MuKBMTrackCollection tracksM1;
   L1MuKBMTrackCollection tracks0;
@@ -20,7 +21,7 @@ L1MuKBMTrackCollection L1TMuonBarrelKalmanSectorProcessor::process(L1TMuonBarrel
   L1MuKBMTrackCollection tracksP2;
 
   for (auto& region : regions_) {
-    L1MuKBMTrackCollection tmp = region.process(trackMaker, stubsAll, bx);
+    L1MuKBMTrackCollection tmp = region.process(trackMaker, stubsAll, bx, bxspread);
     if (region.wheel() == -2)
       tracksM2.insert(tracksM2.end(), tmp.begin(), tmp.end());
     if (region.wheel() == -1)

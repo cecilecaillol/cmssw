@@ -12,7 +12,7 @@ public:
   L1TMuonBarrelKalmanTrackFinder(const edm::ParameterSet&);
   ~L1TMuonBarrelKalmanTrackFinder();
 
-  L1MuKBMTrackCollection process(L1TMuonBarrelKalmanAlgo*, const L1MuKBMTCombinedStubRefVector& stubs, int bx);
+  L1MuKBMTrackCollection process(L1TMuonBarrelKalmanAlgo*, const L1MuKBMTCombinedStubRefVector& stubs, int bx, int bxspread);
 
 private:
   int verbose_;

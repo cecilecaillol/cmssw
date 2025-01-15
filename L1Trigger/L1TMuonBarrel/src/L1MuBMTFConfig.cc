@@ -159,3 +159,25 @@ void L1MuBMTFConfig::setDefaultsES(const L1TMuonBarrelParams& bmtfParams) {
   if (Debug(1))
     cout << "L1 barrel Track Finder : # of bits used for phib (phi-assignment) : " << m_NbitsPhiPhib << endl;
 }
+
+// static data members
+
+edm::InputTag L1MuBMTFConfig::m_BMDigiInputTag = edm::InputTag();
+edm::InputTag L1MuBMTFConfig::m_BMThetaDigiInputTag = edm::InputTag();
+
+bool L1MuBMTFConfig::m_debug = false;
+int L1MuBMTFConfig::m_dbgLevel = -1;
+int L1MuBMTFConfig::m_BxMin = -15; //FIXME Cecile
+int L1MuBMTFConfig::m_BxMax = 15;
+int L1MuBMTFConfig::m_extTSFilter = 1;
+bool L1MuBMTFConfig::m_openLUTs = false;
+bool L1MuBMTFConfig::m_useEX21 = false;
+bool L1MuBMTFConfig::m_etaTF = true;
+bool L1MuBMTFConfig::m_TSOutOfTimeFilter = false;
+int L1MuBMTFConfig::m_TSOutOfTimeWindow = 1;
+int L1MuBMTFConfig::m_NbitsExtPhi = 8;
+int L1MuBMTFConfig::m_NbitsExtPhib = 8;
+int L1MuBMTFConfig::m_NbitsPtaPhi = 12;
+int L1MuBMTFConfig::m_NbitsPtaPhib = 10;
+int L1MuBMTFConfig::m_NbitsPhiPhi = 10;
+int L1MuBMTFConfig::m_NbitsPhiPhib = 10;

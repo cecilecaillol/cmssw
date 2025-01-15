@@ -10,7 +10,7 @@
 #include <string>
 #include <sstream>
 
-L1TMuonBarrelKalmanStubProcessor::L1TMuonBarrelKalmanStubProcessor() : minPhiQuality_(0), minBX_(-3), maxBX_(3) {}
+L1TMuonBarrelKalmanStubProcessor::L1TMuonBarrelKalmanStubProcessor() : minPhiQuality_(0), minBX_(-10), maxBX_(10) {}
 
 L1TMuonBarrelKalmanStubProcessor::L1TMuonBarrelKalmanStubProcessor(const edm::ParameterSet& iConfig)
     : minPhiQuality_(iConfig.getParameter<int>("minPhiQuality")),
