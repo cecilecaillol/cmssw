@@ -266,7 +266,7 @@ void DTBtiCard::loadBTI(const DTDigiCollection dtDigis) {
         std::cout << " drift time after subtraction : " << tdrift << std::endl;
       }
 
-      if (tdrift < 500 && tdrift > -500) {
+      if (tdrift < 1000 && tdrift > -1000) {
         if (debug())
           (*digiIt).print();
 
