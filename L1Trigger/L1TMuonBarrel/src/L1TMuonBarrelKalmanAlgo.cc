@@ -828,7 +828,8 @@ void L1TMuonBarrelKalmanAlgo::setFloatingPointValues(L1MuKBMTrack& track, bool v
 }
 
 std::pair<bool, L1MuKBMTrack> L1TMuonBarrelKalmanAlgo::chain(const L1MuKBMTCombinedStubRef& seed,
-                                                             const L1MuKBMTCombinedStubRefVector& stubs) {
+                                                             const L1MuKBMTCombinedStubRefVector& stubs,
+							     const int bx) {
   L1MuKBMTrackCollection pretracks;
   std::vector<int> combinatorics;
   int seedQual;
@@ -1010,8 +1011,18 @@ std::pair<bool, L1MuKBMTrack> L1TMuonBarrelKalmanAlgo::chain(const L1MuKBMTCombi
     }
   }
 
+  // FIXME Cecile
+  //
+  L1MuKBMTrackCollection bxtracks;
+  for (const auto& tmp_track : pretracks) {
+     for (const auto& tmp_stub : tmp_track.stubs()) {
+	if (tmp_stub->stNum()==1 and tmp_stub->bxNum()==bx) bxtracks.push_back(tmp_track);
+     }
+  }
+
   //Now for all the pretracks we need only one
-  L1MuKBMTrackCollection cleaned = clean(pretracks, seed->stNum());
+  //L1MuKBMTrackCollection cleaned = clean(pretracks, seed->stNum());
+  L1MuKBMTrackCollection cleaned = clean(bxtracks, seed->stNum());
 
   if (!cleaned.empty()) {
     return std::make_pair(true, cleaned[0]);

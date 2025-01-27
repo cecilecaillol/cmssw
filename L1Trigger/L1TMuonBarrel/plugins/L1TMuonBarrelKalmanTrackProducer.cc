@@ -13,6 +13,10 @@
 #include "DataFormats/L1TMuon/interface/L1MuKBMTCombinedStub.h"
 #include "DataFormats/L1TMuon/interface/RegionalMuonCandFwd.h"
 
+#include "TMath.h"
+#include<algorithm>
+using namespace std;
+
 //
 // class declaration
 //
@@ -76,18 +80,18 @@ void L1TMuonBarrelKalmanTrackProducer::produce(edm::Event& iEvent, const edm::Ev
   outBMTF->setBXRange(bx_.front(), bx_.back());
   out->setBXRange(bx_.front(), bx_.back());
   /*for (const auto& bx : bx_) {
-    L1MuKBMTrackCollection tmp = trackFinder_->process(algo_, stubs, bx);
+    L1MuKBMTrackCollection tmp = trackFinder_->process(algo_, stubs, bx, bxspread_);
     for (const auto& track : tmp) {
       out->push_back(bx, track);
       algo_->addBMTFMuon(bx, track, outBMTF);
     }
   }*/ //FIXME Cecile
-  /*L1MuKBMTrackCollection tmp = trackFinder_->process(algo_, stubs, 0);
+  L1MuKBMTrackCollection tmp = trackFinder_->process(algo_, stubs, 0, bxspread_);
   for (const auto& track : tmp) {
     out->push_back(0, track);
     algo_->addBMTFMuon(0, track, outBMTF);
-  }*/
-  for (const auto& bx : bx_) {
+  }
+  /*for (const auto& bx : bx_) {
     L1MuKBMTrackCollection tmp = trackFinder_->process(algo_, stubs, bx, bxspread_);
     for (const auto& track : tmp) {
 	unsigned j = 0;
@@ -99,7 +103,7 @@ void L1TMuonBarrelKalmanTrackProducer::produce(edm::Event& iEvent, const edm::Ev
 	   }
 	}
     }
-  }
+  }*/
   iEvent.put(std::move(outBMTF), "BMTF");
   iEvent.put(std::move(out));
 }

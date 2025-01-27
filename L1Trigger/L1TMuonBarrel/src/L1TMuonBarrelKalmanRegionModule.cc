@@ -81,7 +81,7 @@ L1MuKBMTrackCollection L1TMuonBarrelKalmanRegionModule::process(L1TMuonBarrelKal
   }
 
   for (const auto& seed : seeds) {
-    std::pair<bool, L1MuKBMTrack> trackInfo = trackMaker->chain(seed, stubs);
+    std::pair<bool, L1MuKBMTrack> trackInfo = trackMaker->chain(seed, stubs, bx);
     //printf("Kalman Track %d valid=%d tag=%d rank=%d charge=%d pt=%f eta=%f phi=%f curvature=%d curvature STA =%d stubs=%d chi2=%d pts=%f %f pattern=%d\n",seed->stNum(),trackInfo.first, trackInfo.second.stubs()[0]->tag(),trackInfo.second.rank(),trackInfo.second.charge(),trackInfo.second.pt(),trackInfo.second.eta(),trackInfo.second.phi(),trackInfo.second.curvatureAtVertex(),trackInfo.second.curvatureAtMuon(),int(trackInfo.second.stubs().size()),trackInfo.second.approxChi2(),trackInfo.second.pt(),trackInfo.second.ptUnconstrained(),trackInfo.second.hitPattern());
 
     L1MuKBMTrack nullTrack(seed, seed->phi(), 8 * seed->phiB());
