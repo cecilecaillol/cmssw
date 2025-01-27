@@ -24,7 +24,7 @@ public:
   typedef ROOT::Math::SMatrix<double, 3, 3> Matrix33;
 
   L1TMuonBarrelKalmanAlgo(const edm::ParameterSet& settings);
-  std::pair<bool, L1MuKBMTrack> chain(const L1MuKBMTCombinedStubRef&, const L1MuKBMTCombinedStubRefVector&);
+  std::pair<bool, L1MuKBMTrack> chain(const L1MuKBMTCombinedStubRef&, const L1MuKBMTCombinedStubRefVector&, const int);
 
   L1MuKBMTrackCollection clean(const L1MuKBMTrackCollection&, uint);
 
