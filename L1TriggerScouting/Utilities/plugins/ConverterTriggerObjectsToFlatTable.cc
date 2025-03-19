@@ -93,7 +93,7 @@ void ConverterTriggerObjectsToFlatTable::produce(edm::Event& iEvent, const edm::
      std::vector pathNamesAll = obj.pathNames(false);
      for (unsigned h = 0, n = pathNamesAll.size(); h < n; ++h) {
 	 string hltName = pathNamesAll[h];
-         if(!(hltName.find("HLT_IsoMu24_v") == string::npos)){
+         if(!(hltName.find("HLT_IsoMu24_v") == string::npos) or !(hltName.find("HLT_Mu50_v") == string::npos)){
             bool isLF   = obj.hasPathName( pathNamesAll[h], true, false );
 	    if (isLF){
                pt.push_back(obj.pt());

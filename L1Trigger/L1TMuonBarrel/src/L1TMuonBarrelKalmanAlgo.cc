@@ -1013,12 +1013,32 @@ std::pair<bool, L1MuKBMTrack> L1TMuonBarrelKalmanAlgo::chain(const L1MuKBMTCombi
 
   // FIXME Cecile
   //
-  L1MuKBMTrackCollection bxtracks;
+  /*L1MuKBMTrackCollection bxtracks;
   for (const auto& tmp_track : pretracks) {
      for (const auto& tmp_stub : tmp_track.stubs()) {
 	if (tmp_stub->stNum()==1 and tmp_stub->bxNum()==bx) bxtracks.push_back(tmp_track);
      }
+  }*/
+  L1MuKBMTrackCollection bxtracks;
+  for (const auto& tmp_track : pretracks) {
+     bool do_push=false;
+     for (const auto& tmp_stub : tmp_track.stubs()) {
+        if (tmp_stub->bxNum()==bx) do_push=true;
+     }
+     if (do_push) bxtracks.push_back(tmp_track);
   }
+  /*L1MuKBMTrackCollection bxtracks;
+  for (const auto& tmp_track : pretracks) {
+     int k=0;
+     for (const auto& tmp_stub : tmp_track.stubs()) {
+        if (k==0 and tmp_stub->bxNum()==bx) bxtracks.push_back(tmp_track);
+	++k;
+     }
+  }*/ //FIXME original solution
+  /*L1MuKBMTrackCollection bxtracks;
+  for (const auto& tmp_track : pretracks) {
+     bxtracks.push_back(tmp_track);
+  }*/
 
   //Now for all the pretracks we need only one
   //L1MuKBMTrackCollection cleaned = clean(pretracks, seed->stNum());

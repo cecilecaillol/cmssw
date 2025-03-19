@@ -84,10 +84,11 @@ void L1TMuonBarrelKalmanStubProducer::produce(edm::Event& iEvent, const edm::Eve
 
   const L1TMuonBarrelParams& bmtfParams = iSetup.getData(bmtfParamsToken_);
 
+  std::cout<<"New event "<<iEvent.id().event()<<std::endl;
   L1MuKBMTCombinedStubCollection stubs = proc_->makeStubs(phiIn.product(), thetaIn.product(), bmtfParams);
   if (verbose_ == 1)
     for (const auto& stub : stubs) {
-      printf("Stub: bx=%d wheel=%d sector=%d station =%d tag=%d eta1=%d qeta1=%d eta2=%d qeta2=%d\n",
+      printf("Stub: bx=%d wheel=%d sector=%d station =%d tag=%d eta1=%d qeta1=%d eta2=%d qeta2=%d quality=%d \n",
 	     stub.bxNum(),
              stub.whNum(),
              stub.scNum(),
@@ -96,7 +97,8 @@ void L1TMuonBarrelKalmanStubProducer::produce(edm::Event& iEvent, const edm::Eve
              stub.eta1(),
              stub.qeta1(),
              stub.eta2(),
-             stub.qeta2());
+             stub.qeta2(),
+	     stub.quality());
     }
 
   if (verbose_ == 2) {

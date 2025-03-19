@@ -14,7 +14,7 @@ process = cms.Process( "DUMP", run3_2024_L1T )
 
 
 process.maxEvents = cms.untracked.PSet(
-  input = cms.untracked.int32(-1) #FIXME was -1
+  input = cms.untracked.int32(100) #FIXME was -1
 )
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
@@ -159,7 +159,9 @@ process.skimMuons = cms.EDProducer("SkimmerScoutingMuonCollection",
 
 process.kbmtfEmulation = cms.EDProducer("L1TMuonBarrelScoutingKalmanTrackProducer",
   src = cms.InputTag("kbmtfConvert"),
-  bxspread = cms.int32(10),
+  #bxspread = cms.int32(5), # between -5 and +5
+  bxL = cms.int32(3),
+  bxH = cms.int32(3),
   algoSettings = bmtfKalmanTrackingSettings,
   trackFinderSettings = cms.PSet(
     sectorsToProcess = cms.vint32(0,1,2,3,4,5,6,7,8,9,10,11),
@@ -174,7 +176,8 @@ process.kbmtfEmulation = cms.EDProducer("L1TMuonBarrelScoutingKalmanTrackProduce
     )
   ),
   gmtSrc = cms.InputTag("FinalBxSelectorMuon" if selbx else "l1ScGmtUnpacker", "Muon"),
-  matchGmt = cms.bool(True),
+  metSrc = cms.InputTag("l1ScCaloUnpacker", "EtSum"),
+  matchGmt = cms.bool(False),
   drCut = cms.double(0.1),
   phiMult = cms.double(576./(2*math.pi)),
   etaMult = cms.double(1./0.010875),
@@ -183,7 +186,9 @@ process.kbmtfEmulation = cms.EDProducer("L1TMuonBarrelScoutingKalmanTrackProduce
 
 process.kbmtfEmulationSameBx = cms.EDProducer("L1TMuonBarrelScoutingKalmanTrackProducer",
   src = cms.InputTag("kbmtfConvert"),
-  bxspread = cms.int32(0),
+  #bxspread = cms.int32(0),
+  bxL = cms.int32(0),
+  bxH = cms.int32(0),
   algoSettings = bmtfKalmanTrackingSettings,
   trackFinderSettings = cms.PSet(
     sectorsToProcess = cms.vint32(0,1,2,3,4,5,6,7,8,9,10,11),
@@ -198,7 +203,8 @@ process.kbmtfEmulationSameBx = cms.EDProducer("L1TMuonBarrelScoutingKalmanTrackP
     )
   ),
   gmtSrc = cms.InputTag("FinalBxSelectorMuon" if selbx else "l1ScGmtUnpacker", "Muon"),
-  matchGmt = cms.bool(True),
+  metSrc = cms.InputTag("l1ScCaloUnpacker", "EtSum"),
+  matchGmt = cms.bool(False),
   drCut = cms.double(0.1),
   phiMult = cms.double(576./(2*math.pi)),
   etaMult = cms.double(1./0.010875),
@@ -220,9 +226,12 @@ process.kbmtfOfflineEmulation = cms.EDProducer("L1TMuonBarrelScoutingKalmanTrack
       )
     )
   ),
-  bxspread = cms.int32(10),
+  #bxspread = cms.int32(10),
+  bxL = cms.int32(3),
+  bxH = cms.int32(3),
   gmtSrc = cms.InputTag("FinalBxSelectorMuon" if selbx else "l1ScGmtUnpacker", "Muon"),
-  matchGmt = cms.bool(True),
+  metSrc = cms.InputTag("l1ScCaloUnpacker", "EtSum"),
+  matchGmt = cms.bool(False),
   drCut = cms.double(0.1),
   phiMult = cms.double(576./(2*math.pi)),
   etaMult = cms.double(1./0.010875),

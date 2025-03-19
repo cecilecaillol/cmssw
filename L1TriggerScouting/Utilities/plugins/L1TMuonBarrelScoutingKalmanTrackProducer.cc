@@ -46,9 +46,11 @@ private:
 
   edm::EDGetTokenT<L1MuKBMTCombinedStubCollection> src_;
   edm::EDGetTokenT<MuonOrbitCollection> gmtSrc_;
+  edm::EDGetTokenT<BxSumsOrbitCollection> metSrc_;
   L1TMuonBarrelKalmanAlgo* algo_;
   L1TMuonBarrelKalmanTrackFinder* trackFinder_;
-  int bxspread_;
+  int bxL_;
+  int bxH_;
   bool matchGmt_;
   double drCut_;
   double phiMult_;
@@ -58,9 +60,11 @@ private:
 L1TMuonBarrelScoutingKalmanTrackProducer::L1TMuonBarrelScoutingKalmanTrackProducer(const edm::ParameterSet& iConfig)
     : src_(consumes<L1MuKBMTCombinedStubCollection>(iConfig.getParameter<edm::InputTag>("src"))),
       gmtSrc_(consumes<MuonOrbitCollection>(iConfig.getParameter<edm::InputTag>("gmtSrc"))),
+      metSrc_(consumes<BxSumsOrbitCollection>(iConfig.getParameter<edm::InputTag>("metSrc"))),
       algo_(new L1TMuonBarrelKalmanAlgo(iConfig.getParameter<edm::ParameterSet>("algoSettings"))),
       trackFinder_(new L1TMuonBarrelKalmanTrackFinder(iConfig.getParameter<edm::ParameterSet>("trackFinderSettings"))),
-      bxspread_(iConfig.getParameter<int>("bxspread")),
+      bxL_(iConfig.getParameter<int>("bxL")),
+      bxH_(iConfig.getParameter<int>("bxH")),
       matchGmt_(iConfig.getParameter<bool>("matchGmt")),
       drCut_(iConfig.getParameter<double>("drCut")),
       phiMult_(iConfig.getParameter<double>("phiMult")),
@@ -93,6 +97,9 @@ void L1TMuonBarrelScoutingKalmanTrackProducer::produce(edm::Event& iEvent, const
   iEvent.getByToken(src_, stubsCollection);
   if (matchGmt_) iEvent.getByToken(gmtSrc_, muonsCollection);
 
+  Handle<BxSumsOrbitCollection> metSrc;
+  iEvent.getByToken(metSrc_, metSrc);
+
   std::vector<int> seenBxs;
   L1MuKBMTCombinedStubRefVector stubs;
   for (size_t i=0; i<stubsCollection->size(); ++i) {
@@ -116,7 +123,7 @@ void L1TMuonBarrelScoutingKalmanTrackProducer::produce(edm::Event& iEvent, const
   // double l1_gmt_m_physPhi, l1_gmt_m_physEta;
 
   for (const auto& bx : seenBxs) {
-    L1MuKBMTrackCollection tmp = trackFinder_->process(algo_, stubs, bx, bxspread_);
+    L1MuKBMTrackCollection tmp = trackFinder_->process(algo_, stubs, bx, bxL_, bxH_);
     if (tmp.size()==0) continue;
 
     if (matchGmt_) {
@@ -154,7 +161,41 @@ void L1TMuonBarrelScoutingKalmanTrackProducer::produce(edm::Event& iEvent, const
         }
       }
     } else {
-      for (const auto& track : tmp) {
+      for (auto& track : tmp) {
+	const auto& mets0 = metSrc->bxIterator(track.bx());
+	for (const auto& sums : mets0) {
+	   track.setMetBx0(demux::fEt(sums.hwMissEt()));
+	}
+	if (track.bx()-1>0){
+	   const auto& mets1 = metSrc->bxIterator(track.bx()-1);
+	   for (const auto& sums : mets1) {
+              track.setMetBxm1(demux::fEt(sums.hwMissEt()));
+           }
+	}
+	if (track.bx()-2>0){
+           const auto& mets2 = metSrc->bxIterator(track.bx()-2);
+           for (const auto& sums : mets2) {
+              track.setMetBxm2(demux::fEt(sums.hwMissEt()));
+           }
+        }
+	if (track.bx()-3>0){
+           const auto& mets3 = metSrc->bxIterator(track.bx()-3);
+           for (const auto& sums : mets3) {
+              track.setMetBxm3(demux::fEt(sums.hwMissEt()));
+           }
+        }
+	if (track.bx()-4>0){
+           const auto& mets4 = metSrc->bxIterator(track.bx()-4);
+           for (const auto& sums : mets4) {
+              track.setMetBxm4(demux::fEt(sums.hwMissEt()));
+           }
+        }
+	if (track.bx()-5>0){
+           const auto& mets5 = metSrc->bxIterator(track.bx()-5);
+           for (const auto& sums : mets5) {
+              track.setMetBxm5(demux::fEt(sums.hwMissEt()));
+           }
+        }
         kbmTrackBuffer[bx].push_back(track);
         nKbmTrack++;
       }

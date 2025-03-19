@@ -20,6 +20,6 @@ config.Data.inputDataset = "/L1Scouting/Run2024H-v1/L1SCOUT"
 config.Data.inputDBS = "global"
 config.Data.splitting = 'Automatic'
 config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions24/Cert_Collisions2024_378981_386951_Golden.json'
-config.Data.outLFNDirBase = '/store/group/cmst3/user/ccaillol/L1Scouting/Mu8Skim/'
+config.Data.outLFNDirBase = '/store/group/cmst3/group/slowmuons/Mu8Skim/'
 config.Data.publication = False
 config.Site.storageSite = 'T2_CH_CERN'

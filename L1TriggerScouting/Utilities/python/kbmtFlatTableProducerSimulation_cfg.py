@@ -160,10 +160,10 @@ run3_2024_L1T.toModify(
 
 process.kbmtfConvert = cms.EDProducer("L1TMuonBarrelKalmanStubProducer",
     verbose = cms.int32(1),
-    srcPhi = cms.InputTag("simTwinMuxDigis"),
-    srcTheta = cms.InputTag("simDtTriggerPrimitiveDigis"),
-    #srcPhi = cms.InputTag("bmtfDigis", "", "RECO"),
-    #srcTheta = cms.InputTag("bmtfDigis", "", "RECO"),
+    #srcPhi = cms.InputTag("simTwinMuxDigis"),
+    #srcTheta = cms.InputTag("simDtTriggerPrimitiveDigis"),
+    srcPhi = cms.InputTag("bmtfDigis", "", "RECO"),
+    srcTheta = cms.InputTag("bmtfDigis", "", "RECO"),
     minPhiQuality = cms.int32(0),
     minThetaQuality = cms.int32(0),
     minBX = cms.int32(-10),#FIXME
@@ -199,8 +199,9 @@ process.kbmtfConvert = cms.EDProducer("L1TMuonBarrelKalmanStubProducer",
 
 process.kbmtfEmulation = cms.EDProducer("L1TMuonBarrelKalmanTrackProducer",
     src = cms.InputTag("kbmtfConvert"),
-    bx = cms.vint32(-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10),
-    bxspread = cms.int32(5),
+    bx = cms.vint32(-1,0,1,2,3,4,5,6,7,8),
+    bxL = cms.int32(1), # between -10 and +10
+    bxH = cms.int32(10),
     #bx = cms.vint32(0),
     algoSettings = bmtfKalmanTrackingSettings,
     trackFinderSettings = cms.PSet(
@@ -218,9 +219,10 @@ process.kbmtfEmulation = cms.EDProducer("L1TMuonBarrelKalmanTrackProducer",
 
 process.kbmtfOfflineEmulation = cms.EDProducer("L1TMuonBarrelKalmanTrackProducer",
     src = cms.InputTag("kbmtfConvert"),
-    bx = cms.vint32(-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10),
+    bx = cms.vint32(-1,0,1,2,3,4,5,6,7,8),
 #    bx = cms.vint32(0),
-    bxspread = cms.int32(0),
+    bxL = cms.int32(0),
+    bxH = cms.int32(0),
     algoSettings = bmtfKalmanTrackingOfflineSettings,
     trackFinderSettings = cms.PSet(
         sectorsToProcess = cms.vint32(0,1,2,3,4,5,6,7,8,9,10,11),
@@ -263,6 +265,12 @@ process.scMuonTable = cms.EDProducer("ConverterMuonsToFlatTable",
   src = cms.InputTag("gmtStage2Digis", "Muon"),
   name = cms.string("SkimmedL1Mu"),
   doc = cms.string("Muons from GMT"),
+)
+
+process.scEtSumTable = cms.EDProducer("ConverterEtSumToFlatTable",
+  src = cms.InputTag("gtStage2Digis", "EtSum"),
+  name = cms.string("L1MET"),
+  doc = cms.string("EtSum kMissingEt"),
 )
 
 process.stubTable = cms.EDProducer("ConverterStubsToFlatTable",
@@ -315,6 +323,7 @@ process.triggerObjectsTable = cms.EDProducer("ConverterTriggerObjectsToFlatTable
 process.p = cms.Path(
   process.esProd + 
   process.scMuonTable + 
+  process.scEtSumTable +
   # process.scKbmtfTable
   #process.scJetTable +
   #process.scEgammaTable +
