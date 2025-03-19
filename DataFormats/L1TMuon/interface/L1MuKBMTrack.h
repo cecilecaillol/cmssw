@@ -45,6 +45,12 @@ public:
   //Approximate Chi2 metric
   int approxChi2() const;
   int trackCompatibility() const;
+  float met_bxm5() const;
+  float met_bxm4() const;
+  float met_bxm3() const;
+  float met_bxm2() const;
+  float met_bxm1() const;
+  float met_bx0() const;
 
   //Approximate Chi2 metric
   int hitPattern() const;
@@ -116,6 +122,12 @@ public:
   //Set chi2 like metric
   void setApproxChi2(int);
   void setTrackCompatibility(int);
+  void setMetBxm5(float);
+  void setMetBxm4(float);
+  void setMetBxm3(float);
+  void setMetBxm2(float);
+  void setMetBxm1(float);
+  void setMetBx0(float);
 
   //Set floating point coordinates for studies
   void setPtEtaPhi(double, double, double);
@@ -166,6 +178,12 @@ private:
   //Approximate Chi2 metric
   int approxChi2_ = 0;
   int trackCompatibility_ = 0;
+  float met_bxm5_ = 0;
+  float met_bxm4_ = 0;
+  float met_bxm3_ = 0;
+  float met_bxm2_ = 0;
+  float met_bxm1_ = 0;
+  float met_bx0_ = 0;
 
   //phi bitmask
   int hitPattern_ = 0;

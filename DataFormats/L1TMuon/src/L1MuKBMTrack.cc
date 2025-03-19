@@ -41,6 +41,12 @@ int L1MuKBMTrack::coarseEta() const { return coarseEta_; }
 
 int L1MuKBMTrack::approxChi2() const { return approxChi2_; }
 int L1MuKBMTrack::trackCompatibility() const { return trackCompatibility_; }
+float L1MuKBMTrack::met_bxm5() const { return met_bxm5_; }
+float L1MuKBMTrack::met_bxm4() const { return met_bxm4_; }
+float L1MuKBMTrack::met_bxm3() const { return met_bxm3_; }
+float L1MuKBMTrack::met_bxm2() const { return met_bxm2_; }
+float L1MuKBMTrack::met_bxm1() const { return met_bxm1_; }
+float L1MuKBMTrack::met_bx0() const { return met_bx0_; }
 
 int L1MuKBMTrack::hitPattern() const { return hitPattern_; }
 
@@ -89,6 +95,12 @@ void L1MuKBMTrack::setHitPattern(int pattern) { hitPattern_ = pattern; }
 
 void L1MuKBMTrack::setApproxChi2(int chi) { approxChi2_ = chi; }
 void L1MuKBMTrack::setTrackCompatibility(int chi) { trackCompatibility_ = chi; }
+void L1MuKBMTrack::setMetBxm5(float met5) { met_bxm5_ = met5; }
+void L1MuKBMTrack::setMetBxm4(float met4) { met_bxm4_ = met4; }
+void L1MuKBMTrack::setMetBxm3(float met3) { met_bxm3_ = met3; }
+void L1MuKBMTrack::setMetBxm2(float met2) { met_bxm2_ = met2; }
+void L1MuKBMTrack::setMetBxm1(float met1) { met_bxm1_ = met1; }
+void L1MuKBMTrack::setMetBx0(float met0) { met_bx0_ = met0; }
 
 void L1MuKBMTrack::setPtEtaPhi(double pt, double eta, double phi) {
   PolarLorentzVector v(pt, eta, phi, 0.105);

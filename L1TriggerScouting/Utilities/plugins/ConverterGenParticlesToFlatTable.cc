@@ -76,6 +76,7 @@ void ConverterGenParticlesToFlatTable::produce(edm::Event& iEvent, const edm::Ev
   std::vector<int16_t> charge;
   std::vector<int16_t> pdgid;
   std::vector<float> beta;
+  std::vector<float> mass;
 
   edm::Handle<GenParticleCollection> pruned;
   iEvent.getByToken(src_,pruned);
@@ -89,6 +90,7 @@ void ConverterGenParticlesToFlatTable::produce(edm::Event& iEvent, const edm::Ev
          eta.push_back(p.eta());
          phi.push_back(p.phi());
          beta.push_back(p.p()/p.energy());
+	 mass.push_back(p.mass());
          charge.push_back(p.charge());
          pdgid.push_back(p.pdgId());
       }
@@ -102,6 +104,7 @@ void ConverterGenParticlesToFlatTable::produce(edm::Event& iEvent, const edm::Ev
   out->addColumn<float>("eta", eta, "eta");
   out->addColumn<float>("phi", phi, "phi");
   out->addColumn<float>("beta", beta, "beta");
+  out->addColumn<float>("mass", mass, "mass");
   out->addColumn<int16_t>("pdgid", pdgid, "pdgid");
   out->addColumn<int16_t>("charge", charge, "charge");
 

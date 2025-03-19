@@ -47,15 +47,17 @@ L1TMuonBarrelKalmanRegionModule::~L1TMuonBarrelKalmanRegionModule() {}
 L1MuKBMTrackCollection L1TMuonBarrelKalmanRegionModule::process(L1TMuonBarrelKalmanAlgo* trackMaker,
                                                                 const L1MuKBMTCombinedStubRefVector& stubsAll,
                                                                 int bx, 
-								int bxspread) {
+								int bxL,
+								int bxH) {
   L1MuKBMTCombinedStubRefVector stubs;
   L1MuKBMTCombinedStubRefVector seeds;
   L1MuKBMTrackCollection pretracks2;
   L1MuKBMTrackCollection pretracks3;
   L1MuKBMTrackCollection pretracks4;
   for (const auto& stub : stubsAll) {
+    //std::cout<<"Found stub (bx, wh, sc): "<<stub->bxNum()<<" "<<stub->whNum()<<" "<<stub->scNum()<<std::endl;
     //if (stub->bxNum() != bx)
-    if (stub->bxNum()-bx<-bxspread or stub->bxNum()-bx>bxspread) // FIXME new condition to make tracks with stubs at most 10 Bx apart
+    if (stub->bxNum()-bx<-bxL or stub->bxNum()-bx>bxH) // FIXME new condition to make tracks with stubs in different BX
       continue;
 
     if ((stub->scNum() == nextSector_ && stub->phi() >= -112) ||
@@ -82,7 +84,7 @@ L1MuKBMTrackCollection L1TMuonBarrelKalmanRegionModule::process(L1TMuonBarrelKal
 
   for (const auto& seed : seeds) {
     std::pair<bool, L1MuKBMTrack> trackInfo = trackMaker->chain(seed, stubs, bx);
-    //printf("Kalman Track %d valid=%d tag=%d rank=%d charge=%d pt=%f eta=%f phi=%f curvature=%d curvature STA =%d stubs=%d chi2=%d pts=%f %f pattern=%d\n",seed->stNum(),trackInfo.first, trackInfo.second.stubs()[0]->tag(),trackInfo.second.rank(),trackInfo.second.charge(),trackInfo.second.pt(),trackInfo.second.eta(),trackInfo.second.phi(),trackInfo.second.curvatureAtVertex(),trackInfo.second.curvatureAtMuon(),int(trackInfo.second.stubs().size()),trackInfo.second.approxChi2(),trackInfo.second.pt(),trackInfo.second.ptUnconstrained(),trackInfo.second.hitPattern());
+    printf("Kalman Track %d valid=%d tag=%d rank=%d charge=%d pt=%f eta=%f phi=%f curvature=%d curvature STA =%d stubs=%d chi2=%d pts=%f %f pattern=%d\n",seed->stNum(),trackInfo.first, trackInfo.second.stubs()[0]->tag(),trackInfo.second.rank(),trackInfo.second.charge(),trackInfo.second.pt(),trackInfo.second.eta(),trackInfo.second.phi(),trackInfo.second.curvatureAtVertex(),trackInfo.second.curvatureAtMuon(),int(trackInfo.second.stubs().size()),trackInfo.second.approxChi2(),trackInfo.second.pt(),trackInfo.second.ptUnconstrained(),trackInfo.second.hitPattern());
 
     L1MuKBMTrack nullTrack(seed, seed->phi(), 8 * seed->phiB());
     nullTrack.setPtEtaPhi(0, 0, 0);
