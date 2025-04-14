@@ -85,7 +85,7 @@ void ConverterGenParticlesToFlatTable::produce(edm::Event& iEvent, const edm::Ev
       const Candidate * mom = p.mother();
       //if (p.status()==1) cout<<p.pdgId()<<"    "<<p.pt()<<"    "<<p.eta()<<" "<<p.phi()<<" "<<mom->pdgId()<<endl;
       //if (i>1) cout<<p.pdgId()<<"    "<<p.pt()<<"    "<<p.eta()<<" "<<p.phi()<<" "<<mom->pdgId()<<" "<<p.status()<<endl;
-      if (p.status()==1){
+      if (p.status()==1 or fabs(p.pdgId())==32 or fabs(p.pdgId())==17){
          pt.push_back(p.pt());
          eta.push_back(p.eta());
          phi.push_back(p.phi());
