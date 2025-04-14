@@ -41,6 +41,10 @@ int L1MuKBMTrack::coarseEta() const { return coarseEta_; }
 
 int L1MuKBMTrack::approxChi2() const { return approxChi2_; }
 int L1MuKBMTrack::trackCompatibility() const { return trackCompatibility_; }
+float L1MuKBMTrack::met_bxm9() const { return met_bxm9_; }
+float L1MuKBMTrack::met_bxm8() const { return met_bxm8_; }
+float L1MuKBMTrack::met_bxm7() const { return met_bxm7_; }
+float L1MuKBMTrack::met_bxm6() const { return met_bxm6_; }
 float L1MuKBMTrack::met_bxm5() const { return met_bxm5_; }
 float L1MuKBMTrack::met_bxm4() const { return met_bxm4_; }
 float L1MuKBMTrack::met_bxm3() const { return met_bxm3_; }
@@ -95,6 +99,10 @@ void L1MuKBMTrack::setHitPattern(int pattern) { hitPattern_ = pattern; }
 
 void L1MuKBMTrack::setApproxChi2(int chi) { approxChi2_ = chi; }
 void L1MuKBMTrack::setTrackCompatibility(int chi) { trackCompatibility_ = chi; }
+void L1MuKBMTrack::setMetBxm9(float met9) { met_bxm9_ = met9; }
+void L1MuKBMTrack::setMetBxm8(float met8) { met_bxm8_ = met8; }
+void L1MuKBMTrack::setMetBxm7(float met7) { met_bxm7_ = met7; }
+void L1MuKBMTrack::setMetBxm6(float met6) { met_bxm6_ = met6; }
 void L1MuKBMTrack::setMetBxm5(float met5) { met_bxm5_ = met5; }
 void L1MuKBMTrack::setMetBxm4(float met4) { met_bxm4_ = met4; }
 void L1MuKBMTrack::setMetBxm3(float met3) { met_bxm3_ = met3; }
