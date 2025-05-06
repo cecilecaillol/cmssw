@@ -67,7 +67,7 @@ private:
 
   //LUT service
   L1TMuonBarrelKalmanLUTs* lutService_;
-  int ptLUT(int K);
+  int ptLUT(int K); 
 
   //Initial Curvature
   std::vector<double> initK_;
@@ -107,7 +107,7 @@ private:
   std::vector<int> combos1_;
 
   //bits for fixed point precision
-  static const int BITSCURV = 14;
+  static const int BITSCURV = 14; //FIXME Cecile was 14
   static const int BITSPHI = 12;
   static const int BITSPHIB = 13;
   static const int BITSPARAM = 14;

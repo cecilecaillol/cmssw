@@ -778,13 +778,13 @@ void L1TMuonBarrelKalmanAlgo::vertexConstraintLUT(L1MuKBMTrack& track) {
       -(ap_ufixed<GAIN_V0, GAIN_V0INT>(fabs(GAIN.first))) * ap_fixed<BITSPHIB, BITSPHIB>(residual);
   int KNew = ap_fixed<BITSCURV, BITSCURV>(k_0 + ap_fixed<BITSCURV, BITSCURV>(track.curvature()));
 
-  if (verbose_) {
+  /*if (verbose_) {
     printf("VERTEX GAIN(%d)= -%f * %d = %d\n",
            absK / 2,
            ap_ufixed<GAIN_V0, GAIN_V0INT>(fabs(GAIN.first)).to_float(),
            ap_fixed<BITSPHIB, BITSPHIB>(residual).to_int(),
            k_0.to_int());
-  }
+  }*/
 
   int p_0 = fp_product(GAIN.second, int(residual), 7);
   int phiNew = wrapAround(track.positionAngle() + p_0, 8192);
@@ -1285,15 +1285,15 @@ int L1TMuonBarrelKalmanAlgo::fp_product(float a, int b, uint bits) {
   return (long((a * (1 << bits)) * b)) >> bits;
 }
 
-int L1TMuonBarrelKalmanAlgo::ptLUT(int K) {
+int L1TMuonBarrelKalmanAlgo::ptLUT(int K) { //FIXME was int
   int charge = (K >= 0) ? +1 : -1;
   float lsb = 1.25 / float(1 << 13);
   float FK = fabs(K);
 
   if (FK > 2047) 
     FK = 2047.; 
-  if (FK < 26) 
-    FK = 26.; 
+  //if (FK < 26) 
+  //  FK = 26.; 
 
   FK = FK * lsb;
 

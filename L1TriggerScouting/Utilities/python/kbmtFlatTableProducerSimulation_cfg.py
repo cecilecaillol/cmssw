@@ -159,7 +159,7 @@ run3_2024_L1T.toModify(
 #)
 
 process.kbmtfConvert = cms.EDProducer("L1TMuonBarrelKalmanStubProducer",
-    verbose = cms.int32(1),
+    verbose = cms.int32(0),
     #srcPhi = cms.InputTag("simTwinMuxDigis"),
     #srcTheta = cms.InputTag("simDtTriggerPrimitiveDigis"),
     srcPhi = cms.InputTag("bmtfDigis", "", "RECO"),
@@ -221,8 +221,8 @@ process.kbmtfOfflineEmulation = cms.EDProducer("L1TMuonBarrelKalmanTrackProducer
     src = cms.InputTag("kbmtfConvert"),
     bx = cms.vint32(-1,0,1,2,3,4,5,6,7,8),
 #    bx = cms.vint32(0),
-    bxL = cms.int32(0),
-    bxH = cms.int32(0),
+    bxL = cms.int32(1),
+    bxH = cms.int32(9),
     algoSettings = bmtfKalmanTrackingOfflineSettings,
     trackFinderSettings = cms.PSet(
         sectorsToProcess = cms.vint32(0,1,2,3,4,5,6,7,8,9,10,11),
