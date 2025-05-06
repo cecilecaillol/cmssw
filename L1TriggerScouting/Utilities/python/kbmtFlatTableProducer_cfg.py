@@ -14,7 +14,7 @@ process = cms.Process( "DUMP", run3_2024_L1T )
 
 
 process.maxEvents = cms.untracked.PSet(
-  input = cms.untracked.int32(100) #FIXME was -1
+  input = cms.untracked.int32(-1) #FIXME was -1
 )
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
@@ -153,7 +153,7 @@ process.kbmtfConvert = cms.EDProducer("convertToL1MuKBMTCombinedStub",
 
 process.skimMuons = cms.EDProducer("SkimmerScoutingMuonCollection",
   gmtSrc = cms.InputTag("FinalBxSelectorMuon" if selbx else "l1ScGmtUnpacker", "Muon"),
-  ptmin = cms.double(8.0),
+  ptmin = cms.double(14.0),
   etamax = cms.double(0.9),
 )
 
@@ -162,7 +162,7 @@ process.kbmtfEmulation = cms.EDProducer("L1TMuonBarrelScoutingKalmanTrackProduce
   #bxspread = cms.int32(5), # between -5 and +5
   bxL = cms.int32(1),
   bxH = cms.int32(7),
-  algoSettings = bmtfKalmanTrackingSettings,
+  algoSettings = bmtfKalmanTrackingOfflineSettings, # was bmtfKalmanTrackingSettings,
   trackFinderSettings = cms.PSet(
     sectorsToProcess = cms.vint32(0,1,2,3,4,5,6,7,8,9,10,11),
     verbose = cms.int32(0),
@@ -242,30 +242,30 @@ process.kbmtfOfflineEmulation = cms.EDProducer("L1TMuonBarrelScoutingKalmanTrack
 process.skimKbmtf = cms.EDProducer("SkimmerScoutingKBMTFCollection",
   src = cms.InputTag("kbmtfEmulation", "L1MuKBMTrack"),
   algoSettings = bmtfKalmanTrackingSettings,
-  ptmin = cms.double(8.0), 
+  ptmin = cms.double(14.0), 
   etamax = cms.double(0.9),
 )
 
-process.skimKbmtfSameBx = cms.EDProducer("SkimmerScoutingKBMTFCollection",
-  src = cms.InputTag("kbmtfEmulationSameBx", "L1MuKBMTrack"),
-  algoSettings = bmtfKalmanTrackingSettings,
-  ptmin = cms.double(8.0),
-  etamax = cms.double(0.9),
-)
+#process.skimKbmtfSameBx = cms.EDProducer("SkimmerScoutingKBMTFCollection",
+#  src = cms.InputTag("kbmtfEmulationSameBx", "L1MuKBMTrack"),
+#  algoSettings = bmtfKalmanTrackingSettings,
+#  ptmin = cms.double(8.0),
+#  etamax = cms.double(0.9),
+#)
 
 
 
 process.scMuonTable = cms.EDProducer("ConvertScoutingMuonsToOrbitFlatTable",
   src = cms.InputTag("FinalBxSelectorMuon" if selbx else "l1ScGmtUnpacker", "Muon"),
   name = cms.string("L1Mu"),
-  minpt = cms.double(8.0),
+  minpt = cms.double(14.0),
   doc = cms.string("Muons from GMT"),
 )
 
 process.scSkimmedMuonTable = cms.EDProducer("ConvertScoutingMuonsToOrbitFlatTable",
   src = cms.InputTag("skimMuons", "L1MuonSkimmed"),
   name = cms.string("SkimmedL1Mu"),
-  minpt = cms.double(8.0),
+  minpt = cms.double(14.0),
   doc = cms.string("Skimmed Muons from GMT"),
 )
 
@@ -292,13 +292,13 @@ process.scSkimmedKbmtfTable = cms.EDProducer("ConverterScoutingKbmtfTracksToOrbi
   addStubs = cms.bool(True)
 )
 
-process.scSkimmedKbmtfSameBxTable = cms.EDProducer("ConverterScoutingKbmtfTracksToOrbitFlatTable",
-  src = cms.InputTag("skimKbmtfSameBx", "L1MuKBMTrackSkimmed"),
-  name = cms.string("L1KBMTFSkimmedSameBx"),
-  doc = cms.string("Re-emulated KBMTF muons in same BX skimmed"),
-  algoSettings = bmtfKalmanTrackingSettings,
-  addStubs = cms.bool(True)
-)
+#process.scSkimmedKbmtfSameBxTable = cms.EDProducer("ConverterScoutingKbmtfTracksToOrbitFlatTable",
+#  src = cms.InputTag("skimKbmtfSameBx", "L1MuKBMTrackSkimmed"),
+#  name = cms.string("L1KBMTFSkimmedSameBx"),
+#  doc = cms.string("Re-emulated KBMTF muons in same BX skimmed"),
+#  algoSettings = bmtfKalmanTrackingSettings,
+#  addStubs = cms.bool(True)
+#)
 
 process.scKbmtfOfflineTable = cms.EDProducer("ConverterScoutingKbmtfTracksToOrbitFlatTable",
   src = cms.InputTag("kbmtfOfflineEmulation", "L1MuKBMTrack"),
@@ -326,7 +326,7 @@ process.p = cms.Path(
   process.kbmtfConvert +
   process.kbmtfEmulation +
   #process.kbmtfEmulationSameBx +
-  process.kbmtfOfflineEmulation +
+  #process.kbmtfOfflineEmulation +
   process.skimKbmtf +
   #process.skimKbmtfSameBx +
   process.nanoAOD_selection +
