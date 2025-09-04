@@ -131,6 +131,7 @@ void ConverterScoutingKbmtfTracksToOrbitFlatTable::produce(edm::Event& iEvent, c
   std::vector<int16_t> charge(out->size());
   std::vector<int16_t> quality(out->size());
   std::vector<int16_t> dxy(out->size());
+  std::vector<int16_t> curvature(out->size());
   std::vector<int16_t> index(out->size());
   std::vector<float> ptUnconstrained(out->size());
   std::vector<float> etaAtVtx(out->size());
@@ -173,6 +174,7 @@ void ConverterScoutingKbmtfTracksToOrbitFlatTable::produce(edm::Event& iEvent, c
     quality[i] = bmtf_m.hwQual();
     //dxy[i] = track.dxy(); // do we need this variable?
     dxy[i] = bmtf_m.hwDXY();
+    curvature[i] = bmtf_m.hwK();
     index[i] = bmtf_m.processor(); // wrong for now
     ptUnconstrained[i] = ugmt::fPtUnconstrained(bmtf_m.hwPtUnconstrained());
 
@@ -242,6 +244,7 @@ void ConverterScoutingKbmtfTracksToOrbitFlatTable::produce(edm::Event& iEvent, c
   out->addColumn<int16_t>("hwCharge", charge, "hwCharge (hw units)");
   out->addColumn<int16_t>("hwQual", quality, "hwQual (hw units)");
   out->addColumn<int16_t>("hwDXY", dxy, "untruncated transverse impact parameter (hw units)");
+  out->addColumn<int16_t>("hwK", curvature, "curvature (hw units)");
   out->addColumn<int16_t>("processor", index, "processor ([0-11])");
   out->addColumn<float>("ptUnconstrained", ptUnconstrained, "pt without vertex constraint (physical units)");
   out->addColumn<float>("etaAtVtx", etaAtVtx, "eta re-extrapolated at vertex (physical units)");

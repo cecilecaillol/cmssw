@@ -132,6 +132,7 @@ void ConverterKbmtfTracksToFlatTable::produce(edm::Event& iEvent, const edm::Eve
   std::vector<int16_t> charge;
   std::vector<int16_t> quality;
   std::vector<int16_t> dxy;
+  std::vector<int16_t> curvature;
   std::vector<int16_t> index;
   std::vector<float> ptUnconstrained;
   std::vector<float> etaAtVtx;
@@ -224,6 +225,7 @@ void ConverterKbmtfTracksToFlatTable::produce(edm::Event& iEvent, const edm::Eve
     quality.push_back(bmtf_m.hwQual());
     //dxy.push_back(track.dxy()); // Do we need this quantity?
     dxy.push_back(bmtf_m.hwDXY());
+    curvature.push_back(bmtf_m.hwK());
     index.push_back(bmtf_m.processor()); // wrong for now
     ptUnconstrained.push_back(ugmt::fPtUnconstrained(bmtf_m.hwPtUnconstrained()));
 
@@ -378,6 +380,7 @@ void ConverterKbmtfTracksToFlatTable::produce(edm::Event& iEvent, const edm::Eve
   out->addColumn<int16_t>("hwCharge", charge, "hwCharge (hw units)");
   out->addColumn<int16_t>("hwQual", quality, "hwQual (hw units)");
   out->addColumn<int16_t>("hwDXY", dxy, "untruncated transverse impact parameter (hw units)");
+  out->addColumn<int16_t>("hwK", curvature, "curvature");
   out->addColumn<int16_t>("processor", index, "processor ([0-11])");
   out->addColumn<float>("ptUnconstrained", ptUnconstrained, "pt without vertex constraint (physical units)");
   out->addColumn<float>("etaAtVtx", etaAtVtx, "eta re-extrapolated at vertex (physical units)");

@@ -47,6 +47,7 @@ namespace l1t {
         : m_hwPt(0),
           m_hwPtUnconstrained(0),
           m_hwDXY(0),
+	  m_hwK(0),
           m_hwPhi(0),
           m_hwEta(0),
           m_hwHF(false),
@@ -57,10 +58,11 @@ namespace l1t {
       setTFIdentifiers(0, bmtf);
     };
 
-    RegionalMuonCand(int pt, int phi, int eta, int sign, int signvalid, int quality, int processor, tftype trackFinder)
+    RegionalMuonCand(int pt, int phi, int eta, int sign, int signvalid, int quality, int processor, tftype trackFinder, int curvature)
         : m_hwPt(pt),
           m_hwPtUnconstrained(0),
           m_hwDXY(0),
+	  m_hwK(curvature),
           m_hwPhi(phi),
           m_hwEta(eta),
           m_hwHF(false),
@@ -105,10 +107,12 @@ namespace l1t {
                      int quality,
                      int processor,
                      tftype trackFinder,
-                     std::map<int, int> trackAddress)
+                     std::map<int, int> trackAddress,
+		     int curvature)
         : m_hwPt(pt),
           m_hwPtUnconstrained(0),
           m_hwDXY(0),
+	  m_hwK(curvature),
           m_hwPhi(phi),
           m_hwEta(eta),
           m_hwHF(false),
@@ -128,6 +132,8 @@ namespace l1t {
     void setHwPtUnconstrained(int bits) { m_hwPtUnconstrained = bits; };
     /// Set compressed impact parameter with respect to beamspot (4 bits)
     void setHwDXY(int bits) { m_hwDXY = bits; };
+
+    void setHwK(int bits) { m_hwK = bits; };
     /// Set compressed relative phi as transmitted by hardware LSB = 2*pi/576 (8 bits)
     void setHwPhi(int bits) { m_hwPhi = bits; };
     /// Set compressed eta as transmitted by hardware LSB = 0.010875 (9 bits)
@@ -165,6 +171,8 @@ namespace l1t {
     const int hwPtUnconstrained() const { return m_hwPtUnconstrained; };
     /// Get compressed impact parameter (4 bits)
     const int hwDXY() const { return m_hwDXY; };
+
+    const int hwK() const { return m_hwK; };
     /// Get compressed local phi (returned int * 2*pi/576 = local phi in rad)
     const int hwPhi() const { return m_hwPhi; };
     /// Get compressed eta (returned int * 0.010875 = eta)
@@ -207,6 +215,7 @@ namespace l1t {
     int m_hwPt;
     int m_hwPtUnconstrained;
     int m_hwDXY;
+    int m_hwK;
     int m_hwPhi;
     int m_hwEta;
     bool m_hwHF;
