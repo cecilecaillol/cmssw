@@ -71,7 +71,17 @@ ConverterHLTToFlatTable::~ConverterHLTToFlatTable() {
 void ConverterHLTToFlatTable::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
 
   std::vector<int16_t> v_HLT_IsoMu24;
+  std::vector<int16_t> v_HLT_Mu50;
+  std::vector<int16_t> v_HLT_PFMET120_PFMHT120_IDTight;
+  std::vector<int16_t> v_HLT_PFHT500_PFMET100_PFMHT100_IDTight;
+  std::vector<int16_t> v_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60;
+  std::vector<int16_t> v_HLT_MET105_IsoTrk50;
   int HLT_IsoMu24=0;
+  int HLT_Mu50=0;
+  int HLT_PFMET120_PFMHT120_IDTight=0;
+  int HLT_PFHT500_PFMET100_PFMHT100_IDTight=0;
+  int HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60=0;
+  int HLT_MET105_IsoTrk50=0;
 
   /*edm::Handle<edm::TriggerResults> handle;
   iEvent.getByToken(m_token, handle);
@@ -88,8 +98,28 @@ void ConverterHLTToFlatTable::produce(edm::Event& iEvent, const edm::EventSetup&
       if(!(hltName.find("HLT_IsoMu24_v") == string::npos)){ 
          if( triggerBits->wasrun(i_hlt) && !triggerBits->error(i_hlt) && triggerBits->accept(i_hlt )) HLT_IsoMu24 = 1;
       }
+      if(!(hltName.find("HLT_Mu50_v") == string::npos)){
+         if( triggerBits->wasrun(i_hlt) && !triggerBits->error(i_hlt) && triggerBits->accept(i_hlt )) HLT_Mu50 = 1;
+      }
+      if(!(hltName.find("HLT_PFMET120_PFMHT120_IDTight_v") == string::npos)){
+         if( triggerBits->wasrun(i_hlt) && !triggerBits->error(i_hlt) && triggerBits->accept(i_hlt )) HLT_PFMET120_PFMHT120_IDTight = 1;
+      }
+      if(!(hltName.find("HLT_PFHT500_PFMET100_PFMHT100_IDTight_v") == string::npos)){
+         if( triggerBits->wasrun(i_hlt) && !triggerBits->error(i_hlt) && triggerBits->accept(i_hlt )) HLT_PFHT500_PFMET100_PFMHT100_IDTight = 1;
+      }
+      if(!(hltName.find("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60_v") == string::npos)){
+         if( triggerBits->wasrun(i_hlt) && !triggerBits->error(i_hlt) && triggerBits->accept(i_hlt )) HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60 = 1;
+      }
+      if(!(hltName.find("HLT_MET105_IsoTrk50_v") == string::npos)){
+         if( triggerBits->wasrun(i_hlt) && !triggerBits->error(i_hlt) && triggerBits->accept(i_hlt )) HLT_MET105_IsoTrk50 = 1;
+      }
   }
   v_HLT_IsoMu24.push_back(HLT_IsoMu24);
+  v_HLT_Mu50.push_back(HLT_Mu50);
+  v_HLT_PFMET120_PFMHT120_IDTight.push_back(HLT_PFMET120_PFMHT120_IDTight);
+  v_HLT_PFHT500_PFMET100_PFMHT100_IDTight.push_back(HLT_PFHT500_PFMET100_PFMHT100_IDTight);
+  v_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60.push_back(HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60);
+  v_HLT_MET105_IsoTrk50.push_back(HLT_MET105_IsoTrk50);
 
   //std::cout << "\n == TRIGGER PATHS= " << std::endl;
   /*for (unsigned int i = 0, n = triggerBits->size(); i < n; ++i) {
@@ -121,6 +151,11 @@ void ConverterHLTToFlatTable::produce(edm::Event& iEvent, const edm::EventSetup&
   out->setDoc(doc_);
 
   out->addColumn<int>("IsoMu24", v_HLT_IsoMu24, "IsoMu24");
+  out->addColumn<int>("Mu50", v_HLT_Mu50, "Mu50");
+  out->addColumn<int>("PFMET120_PFMHT120_IDTight", v_HLT_PFMET120_PFMHT120_IDTight, "PFMET120_PFMHT120_IDTight");
+  out->addColumn<int>("PFHT500_PFMET100_PFMHT100_IDTight", v_HLT_PFHT500_PFMET100_PFMHT100_IDTight, "PFHT500_PFMET100_PFMHT100_IDTight");
+  out->addColumn<int>("PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60", v_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60, "PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60");
+  out->addColumn<int>("MET105_IsoTrk50", v_HLT_MET105_IsoTrk50, "MET105_IsoTrk50");
 
   iEvent.put(std::move(out));
 }

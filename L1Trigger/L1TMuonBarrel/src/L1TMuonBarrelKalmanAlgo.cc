@@ -122,7 +122,7 @@ l1t::RegionalMuonCand L1TMuonBarrelKalmanAlgo::convertToBMTF(const L1MuKBMTrack&
   int trackAddr;
   std::map<int, int> addr = trackAddress(track, trackAddr);
 
-  l1t::RegionalMuonCand muon(pt, phi, eta, sign, signValid, quality, processor, l1t::bmtf, addr);
+  l1t::RegionalMuonCand muon(pt, phi, eta, sign, signValid, quality, processor, l1t::bmtf, addr, track.curvatureAtVertex());
   muon.setHwHF(HF);
   muon.setHwPtUnconstrained(pt2);
   muon.setHwDXY(dxy);
@@ -1292,8 +1292,8 @@ int L1TMuonBarrelKalmanAlgo::ptLUT(int K) { //FIXME was int
 
   if (FK > 2047) 
     FK = 2047.; 
-  //if (FK < 26) 
-  //  FK = 26.; 
+  if (FK < 26) //FIXME comment it to go above 512
+    FK = 26.; //FIXME comment it to go above 512
 
   FK = FK * lsb;
 
@@ -1314,6 +1314,7 @@ int L1TMuonBarrelKalmanAlgo::ptLUT(int K) { //FIXME was int
   if (pt < 8)
     pt = 8;
 
+  //cout<<pt<<endl;
   return pt;
 }
 
