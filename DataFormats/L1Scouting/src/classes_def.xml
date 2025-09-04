@@ -47,7 +47,8 @@
   <class name="edm::Wrapper<l1ScoutingRun3::MuonOrbitCollection>"/>
   <class name="edm::Wrapper<l1ScoutingRun3::TauOrbitCollection>"/>
   
-  <class name="l1ScoutingRun3::OrbitFlatTable" ClassVersion="3">
+  <class name="l1ScoutingRun3::OrbitFlatTable" ClassVersion="4">
+    <version ClassVersion="4" checksum="1910072015"/>
     <version ClassVersion="3" checksum="2511790685"/>
   </class>
   <class name="edm::Wrapper<l1ScoutingRun3::OrbitFlatTable>"/>
